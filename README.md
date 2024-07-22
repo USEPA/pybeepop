@@ -2,9 +2,9 @@
 
 
 # pybeepop
-Python-based wrapper for the USDA/EPA's honey bee colony model BeePop+.
+Python-based wrapper for the USDA/EPA's honey bee colony model **BeePop+**.
 
-For more information about BeePop+ see the [publication in Ecologies](https://doi.org/10.3390/ecologies3030022).
+For more information about **BeePop+** see the [publication in Ecologies](https://doi.org/10.3390/ecologies3030022).
 
 Developed by: Jeffrey Minucci
 <br><br>
@@ -13,19 +13,21 @@ Developed by: Jeffrey Minucci
 
 1. **Requirements:** 
     * You must have **BeePop+ (aka VPopLib) version 0.1.0-beta or greater** installed locally. 
-    * Currently, BeePop+ is only available on **Linux**. Source code and compliation instructions are available on [GitHub](https://github.com/quanted/vpoplib]).
+    * Currently, BeePop+ is only available on **Linux**. Source code and compliation instructions are available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
     * You must also have the **pandas** package installed in your python environment.
 
 2. **Clone this repo**, ideally into the directory where your python code or project will be.
 
-3.  **Import the PyBeePop class** from  VarroaPy/VarroaPy/RunVarroaPop in python,
+        git clone https://github.com/USEPA/pybeepop.git
+        
+3.  **Import the PyBeePop class** from your python code,
     e.g.:
     
         from pybeepop import PyBeePop
     
-    
-    if pybeepop is cloned to the same directory that your python script is in.
-    
+    (if pybeepop is cloned to the same directory that your python script is in.)
+  
+  
 4. **Instantiate a BeePop+ object**, using a dictionary of parameters (parameter_name: value), and the path to a valid weather file.
 
 
@@ -58,5 +60,5 @@ Developed by: Jeffrey Minucci
     params_new = {"ICWorkerAdults": 22200, "InitColPollen": 4000}
     # Updates value for ICWorkerAdults, new value for InitColPollen, other values set previously remain the same.
     beepop.set_parameters(parameters = params_new)
-    vp.run_model()
+    beepop.run_model()
     ```
