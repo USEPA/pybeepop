@@ -10,14 +10,15 @@ Developed by: Jeffrey Minucci
 <br><br>
 
 ### Requirements
+---
 
 * You must have **BeePop+ (aka VPopLib) version 0.1.0-beta or greater** installed locally. 
 * Currently, BeePop+ is only available on **Linux**. Instructions for compiling the model's shared library are below. Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
 * You must also have the **pandas** package installed in your python environment.
 
----
 
-### Quick Start guide:
+### Quick Start Guide
+---
 
 1. **Clone this repo**, ideally into the directory where your python code or project will be.
 
@@ -48,9 +49,9 @@ Developed by: Jeffrey Minucci
      
     <br>Parameters that are not set by the user will take on the BeePop+ default values. For more information see [the BeePop+ publication](https://doi.org/10.3390/ecologies3030022).
     
-    For a list of exposed BeePop+ parameters, see docs/BeePop_exposed_parameters.xlsx
+    For a list of exposed BeePop+ parameters, see docs/BeePop_exposed_parameters.xlsx.
     
-    For an explanation of the required weather file formet, see docs/weather_readme.txt
+    For an explanation of the required weather file formet, see docs/weather_readme.txt.
     
 5. **Run the Model** 
     ```
@@ -72,9 +73,9 @@ Developed by: Jeffrey Minucci
     beepop.set_parameters(parameters = params_new)
     new_results = beepop.run_model()
     ```
----
 
 ### How to compile BeePop+ on Linux
+---
 
 #### Prerequesites
 * cmake > 3.2
