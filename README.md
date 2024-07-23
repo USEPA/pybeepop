@@ -112,7 +112,7 @@ Developed by: Jeffrey Minucci
 ## Compiling BeePop+ on Linux
 
 
-### Prerequesites for compilation
+### Requirements for compilation
 * cmake > 3.2
 * gcc and g++ compilers
 
