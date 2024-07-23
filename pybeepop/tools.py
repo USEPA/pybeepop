@@ -183,18 +183,17 @@ class BeePopModel:
         theCount = ctypes.c_int(0)
         p_Results = ctypes.POINTER(ctypes.c_char_p)()
         if self.lib.GetResultsCPA(ctypes.byref(p_Results),ctypes.byref(theCount)):
-            # Store Reaults
+            # store Reaults
             n_result_lines = int(theCount.value)
             self.lib.ClearResultsBuffer()
             out_lines = []
             for j in range(0, n_result_lines-1): 
                 out_lines.append(p_Results[j].decode('utf-8', errors='replace'))
-                #out_lines.append(str(p_Results[j]))
             out_str = io.StringIO('\n'.join(out_lines))
             out_df = pd.read_csv(out_str, delim_whitespace=True, skiprows=3, names = colnames, dtype={'Date': str})
             self.results = out_df
         else:
-            print('Error getting results')
+            print('Error running BeePop+ and fetching results')
         self.clear_buffers()
         #del theCount  # shouldn't be needed but trying to fix progressive slowdown issue
         #del p_Results
@@ -207,52 +206,38 @@ class BeePopModel:
         self.results.to_csv(results_file, index=False)
         if self.verbose():
             print('Wrote results to file')
-            
+    
     def get_errors(self):
         p_Errors = ctypes.POINTER(ctypes.c_char_p)()
-        NumErrors = ctypes.c_int(0)
-        error_str = ""
-        if self.lib.GetErrorListCPA(ctypes.byref(p_Errors), ctypes.byref(NumErrors)):
-            print("inside error list function")
-            n_error_lines = int(NumErrors.value)
+        count = ctypes.c_int()
+        if self.lib.GetErrorListCPA(ctypes.byref(p_Errors), ctypes.byref(count)):
             error_lines = []
-            for j in range(0, n_error_lines-1): 
-                error_lines.append(p_Errors[j])#.decode('ISO-8859-1', errors='replace'))
-            #error_str = io.StringIO('\n'.join(error_lines)).getvalue()
-            #outfile = open(errorpath, "w")
-            #for j in range(0,max-1):
-            #    outfile.write(p_Errors[j].decode("utf-8"))
-            #outfile.close()
-            #if self.verbose and (max > 0):
-            #    print('Wrote errors to {}'.format(errorpath))
-            self.lib.ClearErrorList()
-        return error_lines
+            for j in range(count.value): 
+                error_lines.append(p_Errors[j].decode('utf-8', errors='replace'))
+            #self.lib.ClearErrorList()
+        else:
+            raise RuntimeError("Failed to get error log")
+        return '\n'.join(error_lines)
     
     def get_info(self):
         p_Info = ctypes.POINTER(ctypes.c_char_p)()
-        NumInfo = ctypes.c_int(0)
-        info_str = ""
-        if self.lib.GetInfoListCPA(ctypes.byref(p_Info), ctypes.byref(NumInfo)):
-            print("inside info list function")
-            n_info_lines = int(NumInfo.value)
+        count = ctypes.c_int()
+        if self.lib.GetInfoListCPA(ctypes.byref(p_Info), ctypes.byref(count)):
             info_lines = []
-            for j in range(0, n_info_lines-1): 
+            for j in range(count.value): 
                 info_lines.append(p_Info[j].decode('utf-8', errors='replace'))
-            into_str = io.StringIO('\n'.join(info_lines)).getvalue()
-            self.lib.ClearInfoList()
-        return info_str
+            #self.lib.ClearInfoList()
+        return '\n'.join(info_lines)
     
     def get_version(self):
-        p_version= ctypes.POINTER(ctypes.c_char_p)()
-        buffsize = ctypes.c_int(0)
-        print("getting version")
-        version = []
-        if self.lib.GetLibVersionCP(ctypes.byref(p_version), ctypes.byref(buffsize)):
-            n_version_lines = int(buffsize.value)
-            for j in range(0, n_version_lines-1): 
-                version.append(p_version[j].decode('utf-8', errors='replace'))
-        return version
-            
+        buffsize = 16
+        version_buffer = ctypes.create_string_buffer(buffsize)
+        result = self.lib.GetLibVersionCP(version_buffer, buffsize)
+        if result:
+            return version_buffer.value.decode('utf-8')
+        else:
+            raise RuntimeError("Failed to get library version")
+                 
     def close_library(self):
         dlclose_func = ctypes.CDLL(None).dlclose
         dlclose_func.argtypes = [ctypes.c_void_p]
