@@ -9,16 +9,20 @@ For more information about **BeePop+** see the [publication in Ecologies](https:
 Developed by: Jeffrey Minucci
 <br><br>
 
-### Requirements
----
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Quick Start Guide](#quick-start-guide)
+- [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
+
+## Requirements
 
 * You must have **BeePop+ (aka VPopLib) version 0.1.0-beta or greater** installed locally. 
-* Currently, BeePop+ is only available on **Linux**. Instructions for compiling the model's shared library are below. Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
+* Currently, BeePop+ has only been tested on **Linux**. Instructions for compiling the model's shared library are below. Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
 * You must also have the **pandas** package installed in your python environment.
 
 
-### Quick Start Guide
----
+## Quick Start Guide
 
 1. **Clone this repo**, ideally into the directory where your python code or project will be.
 
@@ -84,13 +88,15 @@ Developed by: Jeffrey Minucci
     ```
 
 
-8. You can also set parameters using a .txt file where each line gives a parameter in the format "Parameter=Value". <br>Example my_parameters.txt:
+8. You can also set parameters using a .txt file where each line gives a parameter in the format "Parameter=Value". 
+
+    Example my_parameters.txt:
         
         RQEggLayDelay=10
         RQReQueenDate=06/25/2015
         RQEnableReQueen=False
 
-    In Python:
+    In python:
 
         parameter_file = 'home/example/defaults_dinote2.txt'
         my_parameters = beepop.load_input_file()
@@ -103,14 +109,14 @@ Developed by: Jeffrey Minucci
         print(my_parameters)
 
 
-### How to compile BeePop+ on Linux
----
+## Compiling BeePop+ on Linux
 
-#### Prerequesites for compilation
+
+### Prerequesites for compilation
 * cmake > 3.2
 * gcc and g++ compilers
 
-#### Compiling BeePop+
+### Compiling BeePop+
 
 1. Clone the BeePop+ repo:
 
