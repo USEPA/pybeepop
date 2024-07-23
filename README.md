@@ -59,7 +59,7 @@ Developed by: Jeffrey Minucci
      
     <br>Parameters that are not set by the user will take on the BeePop+ default values. For more information see [the BeePop+ publication](https://doi.org/10.3390/ecologies3030022).
     
-    For a list of exposed BeePop+ parameters, see docs/BeePop_exposed_parameters.xlsx.
+    For a list of exposed BeePop+ parameters, see [docs/BeePop_exposed_parameters.csv](https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv).
     
     For an explanation of the required weather file formet, see docs/weather_readme.txt.
     
