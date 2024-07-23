@@ -103,6 +103,11 @@ SupNectarEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,End date of ne
 ForagerMaxProp,,Float,0,1,,Max proportion of total adult worker population that can be active foragers
 NeedResourcesToLive,,Boolean,N/A,N/A,"true, false","If true, colony dies when pollen or nectar mass reaches 0"
 Latitude,,Float,-65,65,,Latitude in decimal degrees for calculating day length
-,,,,,,
-,,,,,,
-,,,,,,
+EtoLXitionEn,,Boolean,N/A,N/A,"true, false",Enable Eggs to Larvae transition survival rate variable?
+LtoBXitionEn,,Boolean,N/A,N/A,"true, false",Enable Larave to Pupae transition survival rate variable?
+BtoAXitionEn,,Boolean,N/A,N/A,"true, false",Enable Pupae to Adult transition survival rate variable?
+AtoFXitionEn,,Boolean,N/A,N/A,"true, false",Enable Adult to Forager transition survival rate variable?
+EtoLXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Eggs to Larvae Transition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
+LtoBXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Larvae to Pupae Transition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
+BtoAXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Pupae to AdultTransition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
+AtoFXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Adult to Forager Transition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
