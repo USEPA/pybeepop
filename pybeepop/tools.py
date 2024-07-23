@@ -33,6 +33,7 @@ class BeePopModel:
 
     def __init__(self, library_file, new_features=False, verbose = False):
         self.parameters = dict()
+        self.valid_parameters = pd.read_csv('docs/BeePop_exposed_parameters.csv', skiprows=1)['Exposed Variable Name'].tolist()
         self.weather_file = None
         self.contam_file = None
         #self.new_features = new_features
@@ -96,6 +97,10 @@ class BeePopModel:
     
     # interact with the BeePop+ library to set parameters from a list
     def send_pars_to_beepop(self, parameter_list, refresh=False):
+        for par in parameter_list: # check for invalid parameters
+            par_name = par.split('=')[0].lower()
+            if par_name not in [x.lower() for x in self.valid_parameters]:
+                print("Warning: {} is not a valid parameter and will be ignored.".format(par_name))
         CPA = (ctypes.c_char_p * len(parameter_list))()
         inputlist_bytes = StringList2CPA(parameter_list)
         CPA[:] = inputlist_bytes
