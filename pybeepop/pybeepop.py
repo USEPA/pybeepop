@@ -40,6 +40,7 @@ class PyBeePop:
                 "BeePop+ shared object library does not exist at path: {}!".format(lib_file)
             )
         self.lib_file = lib_file
+        self.parameters = None
         if parameter_file is not None:
             self.load_parameter_file(self.parameter_file)
         else:
@@ -47,7 +48,7 @@ class PyBeePop:
         if weather_file is not None:
             self.load_weather(weather_file)
         else:
-            self.parameter_file = None
+            self.weather_file = None
         if residue_file is not None:
             self.load_residue_file(self.residue_file)
         else:
@@ -128,16 +129,16 @@ class PyBeePop:
         """_summary_
 
         Raises:
-            RunetimeError: If the weather file has not yet been set.
+            RuntimeError: If the weather file has not yet been set.
 
         Returns:
             DataFrame: A DataFrame of the model results for the BeePop+ run.
         """
         # check to see if parameters have been supplied
-        if (self.input_file is None) and (self.parameters is None):
+        if (self.parameter_file is None) and (self.parameters is None):
             print("No parameters have been set. Running with defualt settings.")
         if self.weather_file is None:
-            raise RunetimeError("Weather must be set before running BeePop+!")
+            raise RuntimeError("Weather must be set before running BeePop+!")
         self.output = self.beepop.run_beepop()
         return self.output
 

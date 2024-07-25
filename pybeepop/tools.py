@@ -164,14 +164,14 @@ class BeePopModel:
 
     def load_weather(self, weather_file=None):
         """Load a txt based weather file into BeePop+ using the library interface."""
-        if self.weather_file is not None:
+        if weather_file is not None:
             try:
-                wf = open(self.weather_file)
+                wf = open(weather_file)
                 weatherlines = wf.readlines()
                 wf.close()
-                self.weather_file = weather_file
             except:
                 raise OSError("Weather file is invalid.")
+            self.weather_file = weather_file
             CPA = (ctypes.c_char_p * len(weatherlines))()
             weatherline_bytes = StringList2CPA(weatherlines)
             CPA[:] = weatherline_bytes
