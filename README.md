@@ -17,8 +17,12 @@ Developed by: Jeffrey Minucci
 
 ## Requirements
 
-* You must have **BeePop+ (aka VPopLib) version 0.1.0-beta or greater** installed locally. 
-* Currently, BeePop+ has only been tested on **Linux**. Instructions for compiling the model's shared library are below. Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
+* Supported platforms: 
+    * Windows 64-bit (x64)
+    * Linux
+* For **Windows**: [Microsoft Visual C++ Redistributable 2015-2022](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
+* For **Linux**, the bundled BeePop+ library was compiled on **Red Hat Enterprise Linux 8 (RHEL8)**. If you encounter errors loading the library, you can try compiling BeePop+ yourself from source and passing the path to your library .so file to the PyBeePop object. Instructions for compiling BeePop+ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
+* Python version 3.6 or above.
 * You must also have the **pandas** package installed in your python environment.
 
 
@@ -35,11 +39,9 @@ Developed by: Jeffrey Minucci
     (if pybeepop is cloned to the same directory that your python script is in.)
   
   
-3. **Create a BeePop+ object**, by giving the path to your BeePop+ shared library object (e.g., liblibvpop.so).
+3. **Create a BeePop+ object**:
 
-        # define the path to your previously compiled shared library
-        lib_file = '/home/example/liblibvpop.so'
-        beepop = PyBeePop(lib_file)
+        beepop = PyBeePop()
         
 
 4. **Set parameters, weather and pesticide exposure levels (optional)**.
@@ -71,7 +73,7 @@ Developed by: Jeffrey Minucci
     ```
 
 
-6. Results from last simulation can also be returned using the get_output function, with options to return a DataFrame or a json string.
+6. **Results from last simulation** can also be returned using the get_output function, with options to return a DataFrame or a json string.
     ```
     output = beepop.get_output()  # pandas dataframe
     output_json = beepop.get_output(json_str=True)  # json string
@@ -96,7 +98,7 @@ Developed by: Jeffrey Minucci
         RQReQueenDate=06/25/2015
         RQEnableReQueen=False
 
-    In python:
+    In Python:
 
         parameter_file = 'home/example/defaults_dinote2.txt'
         my_parameters = beepop.load_input_file()
@@ -116,21 +118,26 @@ Developed by: Jeffrey Minucci
 * cmake > 3.2
 * gcc and g++ compilers
 
-### Compiling BeePop+
+### Compiling BeePop+ from source on Linux
 
 1. Clone the BeePop+ repo:
 
         git clone https://github.com/quanted/VPopLib.git
     
-2. Create a build directory
+2. Create a build directory:
 
         cd VPopLib
         mkdir build
         cd build
     
-3. Build the shared library 
+3. Build the shared library:
 
-        cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_C_FLAGS="-fPIC" ..  	
-        make
+        cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
+        cmake --build . --config Release
  
-4. Now the .so file liblibvpop.so should have been created inside the /build directory. This shared library can be moved or renamed, and it is the object that pybeepop must connect to via a valid path.
+4. Now the .so file liblibvpop.so should have been created inside the /build directory. This shared library can be moved or renamed. You can pass the path to this .so file as lib_path when creating a PyBeePop object:
+        
+        # pass the path to your previously compiled shared library file
+        lib_file = '/home/example/liblibvpop.so'
+        beepop = PyBeePop(lib_file)
+         
