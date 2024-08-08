@@ -22,9 +22,10 @@ class PyBeePop:
             lib_file (str): Path to the BeePop+ shared library.
             parameters_file (str, optional): Path to a txt file of BeePop+ parameters where each line specifies
                 parameter=value. Defaults to None.
-            weather_file (str, optional): Path to a txt file containing weather data. For formatting info see
-                docs/weather_readme.txt. Defaults to None.
-            residue_file (str, optional): Path to a txt file containing pesticide residue data. Defaults to None.
+            weather_file (str, optional): Path to a .csv or comma separated .txt file containing weather data. 
+                For formatting info see docs/weather_readme.txt. Defaults to None.
+            residue_file (str, optional): Path to a .csv or comma separated .txt file containing pesticide residue data. 
+                Defaults to None.
             verbose (bool, optional): Print additional debugging statements? Defaults to False.
 
         Raises:
@@ -76,12 +77,12 @@ class PyBeePop:
         return self.beepop.get_parameters()
 
     def load_weather(self, weather_file):
-        """Load a weather txt file. This should be a tab delimited txt file where each line denotes:
+        """Load a weather  file. This should be a csv or comma delimited txt file where each row denotes:
         Date(MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm),
         Hours of daylight (optional).
 
         Args:
-            weather_file (_type_): Path to the weather file .txt.
+            weather_file (_type_): Path to the weather file (csv or txt).
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.
@@ -92,7 +93,7 @@ class PyBeePop:
         self.beepop.load_weather(self.weather_file)
 
     def load_parameter_file(self, parameter_file):
-        """Load a .txt file of parameter values to set. Each line of the file is a string with the
+        """Load a .txt file of parameter values to set. Each row of the file is a string with the
         format 'paramter=value'.
 
         Args:
@@ -110,12 +111,12 @@ class PyBeePop:
         self.beepop.load_input_file(self.parameter_file)
 
     def load_residue_file(self, residue_file):
-        """Load a .txt file of pesticide residues in pollen/nectar. File should be comma separated
-            with each line giving Date(MM/DD/YY), Concentration in nectar (g A.I. / g),
-            Concentration in pollen (g A.I. / g)
+        """Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar. 
+            Each row should specify Date(MM/DD/YY), Concentration in nectar (g A.I. / g),
+            Concentration in pollen (g A.I. / g).
 
         Args:
-            residue_file (_type_): Path to the residue .txt file.
+            residue_file (_type_): Path to the residue .csv or .txt file.
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.

@@ -163,7 +163,7 @@ class BeePopModel:
         return self.parameters
 
     def load_weather(self, weather_file=None):
-        """Load a txt based weather file into BeePop+ using the library interface."""
+        """Load a csv or comma separated txt weather file into BeePop+ using the library interface."""
         if weather_file is not None:
             try:
                 wf = open(weather_file)
@@ -184,7 +184,7 @@ class BeePopModel:
             raise TypeError("Cannot set weather file to None")
 
     def load_contam_file(self, contam_file):
-        """Load txt file of pesticide residues in pollen/nectar using the library interface."""
+        """Load a csv or comma separated txt of pesticide residues in pollen/nectar using the library interface."""
         try:
             ct = open(contam_file)
             contamlines = ct.readlines()
