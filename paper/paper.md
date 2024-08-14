@@ -19,13 +19,13 @@ bibliography: paper.bib
 
 # Summary
 
-Honey bees (<i>Apis mellifera</i> L.) provide critical pollination services
+Honey bees (*Apis mellifera* L.) provide critical pollination services
 for both natural and agricultural systems, with billions of dollars of crops
 completely dependent on pollination. However, honey bees are facing a wide 
 range of stressors resulting in elevated colony failure rates including
 climate change [@zapata:2024], pathogens [@evans:2011], habitat loss and 
 decreased food availability [@donkersley:2014; @goulson:2015], and exposure to 
-pesticides [@goulson:2015; woodcock:2017]. Agent-based colony simulation models, such as the `BeePop+` model
+pesticides [@goulson:2015; @woodcock:2017]. Agent-based colony simulation models, such as the `BeePop+` model
 developed by US EPA and USDA [@garber:2022], offer the opportunity to explore how
 these interacting stressors may impact colony dynamics such as colony size, 
 honey production and overwintering success across a variety of scenarios. 
@@ -41,7 +41,7 @@ application by the scientific, academic and conservation community.
 
 The `BeePop+` colony simulation model was published in 2022 by the US EPA and USDA
 to support the pesticide risk assessment process [@garber:2022]. `BeePop+` was an update to the 
-existing USDA model VarroaPop [@degrandi-hoffman:2005], which added pesticide exposure and effects modeling
+existing USDA model `VarroaPop` [@degrandi-hoffman:2005], which added pesticide exposure and effects modeling
 capabilities. `BeePop+` is an agent-based model which simulates dynamics such as queen
 egg-laying behavior, development and food consumption of brood and adult bees, and
 foraging activity patterns based on weather. Queens are simulated as individual agents,
@@ -59,8 +59,8 @@ The `pybeepop` package is designed to provide a fast and user-friendly method
 for running BeePop+ in Python, a programing language which is widely used in 
 scientific settings. It also allows for rapid modification of BeePop+ parameter values and input files,
 which enables automated, high-throughput analyses that require many hundreds 
-or thousands of model runs. Model results are output as `pandas` [@pandas:2020] DataFrame
-objects (or JSON strings), which facilitates downstream analysis and plotting.
+or thousands of model runs. Model results are output as `pandas` [@pandas:2020] `DataFrame`
+objects (or `JSON` strings), which facilitates downstream analysis and plotting.
 
 An early version of the `pybeepop` package was used to fit `BeePop+` to empirical
 data from a honey bee colony feeding study using Bayesian inference [@minucci:2021].
