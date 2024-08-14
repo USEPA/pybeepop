@@ -1,10 +1,9 @@
 # pybeepop
 Python-based wrapper for the USDA/EPA's honey bee colony model **BeePop+**.
 
-For more information about **BeePop+** see the [publication in Ecologies](https://doi.org/10.3390/ecologies3030022).
+For more information about **BeePop+** see [Garber *et al.* 2022](https://doi.org/10.3390/ecologies3030022).
 
 Developed by: Jeffrey Minucci
-<br><br>
 
 ## Table of Contents
 
