@@ -1,6 +1,3 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3461089.svg)](https://doi.org/10.5281/zenodo.3461089)
-
-
 # pybeepop
 Python-based wrapper for the USDA/EPA's honey bee colony model **BeePop+**.
 
