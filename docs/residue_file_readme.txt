@@ -1,0 +1,2 @@
+Pesticide residue file must be a .csv or comma delimited .txt file of pesticide residues in pollen/nectar.
+Each row should specify Date(MM/DD/YY), Concentration in nectar (g A.I. / g), Concentration in pollen (g A.I. / g).
