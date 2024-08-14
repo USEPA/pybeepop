@@ -213,6 +213,9 @@ class BeePopModel:
     def run_beepop(self):
         """Run the BeePop+ model once using the previously set parameters and weather.
 
+        Raises:
+            RuntimeError: If BeePop+ passes an error code when running the simulation.
+
         Returns:
             DataFrame: A pandas DataFrame of daily BeePop+ outputs.
         """
@@ -220,8 +223,7 @@ class BeePopModel:
             self.lib_status = 1
         else:
             self.lib_status = 2
-            if self.verbose:
-                print("Error in sumulation")
+            raise RuntimeError("Error running BeePop+ simulation.")
         # fetch results
         theCount = ctypes.c_int(0)
         p_Results = ctypes.POINTER(ctypes.c_char_p)()

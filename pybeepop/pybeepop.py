@@ -5,6 +5,7 @@ code by Jeff Minucci
 """
 
 import os
+import platform
 import pandas as pd
 from .tools import BeePopModel
 import json
@@ -14,33 +15,59 @@ class PyBeePop:
     """Wrapper for the BeePop+ honey bee colony simulation model"""
 
     def __init__(
-        self, lib_file, parameter_file=None, weather_file=None, residue_file=None, verbose=False
+        self,
+        lib_file=None,
+        parameter_file=None,
+        weather_file=None,
+        residue_file=None,
+        verbose=False,
     ):
         """Create a PyBeePop object connected to a BeePop+ shared library.
 
         Args:
-            lib_file (str): Path to the BeePop+ shared library.
+            lib_file (str, optional): Path to the BeePop+ shared library (.dll or .so).
             parameters_file (str, optional): Path to a txt file of BeePop+ parameters where each line specifies
                 parameter=value. Defaults to None.
-            weather_file (str, optional): Path to a .csv or comma separated .txt file containing weather data. 
+            weather_file (str, optional): Path to a .csv or comma separated .txt file containing weather data.
                 For formatting info see docs/weather_readme.txt. Defaults to None.
-            residue_file (str, optional): Path to a .csv or comma separated .txt file containing pesticide residue data. 
+            residue_file (str, optional): Path to a .csv or comma separated .txt file containing pesticide residue data.
                 Defaults to None.
             verbose (bool, optional): Print additional debugging statements? Defaults to False.
 
         Raises:
             FileNotFoundError: If a provided file does not exist at the specified path.
+            NotImplementedError: If run on a platform that is not 64-bit Windows or Linux.
         """
 
-        # check file paths
         self.parent = os.path.dirname(os.path.abspath(__file__))
-        # if lib_file is None:
-        #    lib_file = os.path.join(self.parent, "files/exe/liblibvpop.so")
+        self.platform = platform.system()
+        self.verbose = verbose
+        if lib_file is None:  # detect OS and architecture and use pre-compiled BeePop+ if possible
+            if self.platform == "Windows":
+                if platform.architecture()[0] == "32bit":
+                    raise NotImplementedError(
+                        "Windows x86 (32 bit) is not supported by BeePop+. Please run on an x64 platform."
+                    )
+                else:
+                    lib_file = os.path.join(self.parent, "lib/beepop_win_x64.dll")
+            elif self.platform == "Linux":
+                lib_file = os.path.join(self.parent, "lib/beepop_rhel8.so")  # try RHEL8 version
+                if self.verbose:
+                    print(
+                        """
+                        Running in Linux mode. Trying RHEL8 pre-compiled BeePop+.
+                        You may need to compile your own version of BeePop+ from source and pass the path to your .so file with the lib_file option.
+                        See the pybeepop README for instructions.
+                        """
+                    )
+            else:
+                raise NotImplementedError("BeePop+ only supports Windows and Linux.")
         if not os.path.isfile(lib_file):
             raise FileNotFoundError(
                 "BeePop+ shared object library does not exist at path: {}!".format(lib_file)
             )
         self.lib_file = lib_file
+        self.beepop = BeePopModel(self.lib_file, verbose=self.verbose)
         self.parameters = None
         if parameter_file is not None:
             self.load_parameter_file(self.parameter_file)
@@ -55,9 +82,7 @@ class PyBeePop:
         else:
             self.residue_file = None
         # self.new_features = new_features # not being used?
-        self.verbose = verbose
         self.output = None
-        self.beepop = BeePopModel(self.lib_file, verbose=self.verbose)
 
     def set_parameters(self, parameters):
         """Set BeePop+ parameters based on a dictionary {parameter: value}.
@@ -111,7 +136,7 @@ class PyBeePop:
         self.beepop.load_input_file(self.parameter_file)
 
     def load_residue_file(self, residue_file):
-        """Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar. 
+        """Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar.
             Each row should specify Date(MM/DD/YY), Concentration in nectar (g A.I. / g),
             Concentration in pollen (g A.I. / g).
 
