@@ -53,8 +53,8 @@ is available in @kuan:2018.
 
 `pybeepop` is Python package that wraps the C++ based BeePop+ model in an
 easy to use interface. Previously, the BeePop+ model was only accessible via
-build-in c++ interface functions [@], or a web-based 
-[graphical user interface](https://www.ars.usda.gov/pacific-west-area/tucson-az/carl-hayden-bee-research-center/research/beepopplus/beepopplus/).
+build-in c++ interface functions [@curry:2022], or a web-based 
+graphical user interface [@usda:2023].
 The `pybeepop` package is designed to provide a fast and user-friendly method
 for running BeePop+ in Python, a programing language which is widely used in 
 scientific settings. It also allows for rapid modification of BeePop+ parameter values and input files,
