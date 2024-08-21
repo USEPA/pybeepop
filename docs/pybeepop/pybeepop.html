@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.0">
+<title>pybeepop.pybeepop API documentation</title>
+<meta name="description" content="pybeepop - BeePop+ Wrapper for Python
+code by Jeff Minucci
+7/10/24">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pybeepop.pybeepop</code></h1>
+</header>
+<section id="section-intro">
+<p>pybeepop - BeePop+ Wrapper for Python
+code by Jeff Minucci
+7/10/24</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pybeepop.pybeepop.PyBeePop"><code class="flex name class">
+<span>class <span class="ident">PyBeePop</span></span>
+<span>(</span><span>lib_file=None, parameter_file=None, weather_file=None, residue_file=None, verbose=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wrapper for the BeePop+ honey bee colony simulation model</p>
+<p>Create a PyBeePop object connected to a BeePop+ shared library.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lib_file</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Path to the BeePop+ shared library (.dll or .so).</dd>
+<dt><strong><code>parameters_file</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Path to a txt file of BeePop+ parameters where each line specifies
+parameter=value. Defaults to None.</dd>
+<dt><strong><code>weather_file</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Path to a .csv or comma separated .txt file containing weather data.
+For formatting info see docs/weather_readme.txt. Defaults to None.</dd>
+<dt><strong><code>residue_file</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Path to a .csv or comma separated .txt file containing pesticide residue data.
+Defaults to None.</dd>
+<dt><strong><code>verbose</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Print additional debugging statements? Defaults to False.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>FileNotFoundError</code></dt>
+<dd>If a provided file does not exist at the specified path.</dd>
+<dt><code>NotImplementedError</code></dt>
+<dd>If run on a platform that is not 64-bit Windows or Linux.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PyBeePop:
+    &#34;&#34;&#34;Wrapper for the BeePop+ honey bee colony simulation model&#34;&#34;&#34;
+
+    def __init__(
+        self,
+        lib_file=None,
+        parameter_file=None,
+        weather_file=None,
+        residue_file=None,
+        verbose=False,
+    ):
+        &#34;&#34;&#34;Create a PyBeePop object connected to a BeePop+ shared library.
+
+        Args:
+            lib_file (str, optional): Path to the BeePop+ shared library (.dll or .so).
+            parameters_file (str, optional): Path to a txt file of BeePop+ parameters where each line specifies
+                parameter=value. Defaults to None.
+            weather_file (str, optional): Path to a .csv or comma separated .txt file containing weather data.
+                For formatting info see docs/weather_readme.txt. Defaults to None.
+            residue_file (str, optional): Path to a .csv or comma separated .txt file containing pesticide residue data.
+                Defaults to None.
+            verbose (bool, optional): Print additional debugging statements? Defaults to False.
+
+        Raises:
+            FileNotFoundError: If a provided file does not exist at the specified path.
+            NotImplementedError: If run on a platform that is not 64-bit Windows or Linux.
+        &#34;&#34;&#34;
+
+        self.parent = os.path.dirname(os.path.abspath(__file__))
+        self.platform = platform.system()
+        self.verbose = verbose
+        if lib_file is None:  # detect OS and architecture and use pre-compiled BeePop+ if possible
+            if self.platform == &#34;Windows&#34;:
+                if platform.architecture()[0] == &#34;32bit&#34;:
+                    raise NotImplementedError(
+                        &#34;Windows x86 (32 bit) is not supported by BeePop+. Please run on an x64 platform.&#34;
+                    )
+                else:
+                    lib_file = os.path.join(self.parent, &#34;lib/beepop_win_x64.dll&#34;)
+            elif self.platform == &#34;Linux&#34;:
+                lib_file = os.path.join(self.parent, &#34;lib/beepop_rhel8.so&#34;)  # try RHEL8 version
+                if self.verbose:
+                    print(
+                        &#34;&#34;&#34;
+                        Running in Linux mode. Trying RHEL8 pre-compiled BeePop+.
+                        You may need to compile your own version of BeePop+ from source and pass the path to your .so file with the lib_file option.
+                        See the pybeepop README for instructions.
+                        &#34;&#34;&#34;
+                    )
+            else:
+                raise NotImplementedError(&#34;BeePop+ only supports Windows and Linux.&#34;)
+        if not os.path.isfile(lib_file):
+            raise FileNotFoundError(
+                &#34;&#34;&#34;
+                BeePop+ shared object library does not exist or is not compatible with your operating system. 
+                You may need to compile BeePop+ from source (see the README for more info.)
+                &#34;&#34;&#34;
+            )
+        self.lib_file = lib_file
+        self.beepop = BeePopModel(self.lib_file, verbose=self.verbose)
+        self.parameters = None
+        if parameter_file is not None:
+            self.load_parameter_file(self.parameter_file)
+        else:
+            self.parameter_file = None
+        if weather_file is not None:
+            self.load_weather(weather_file)
+        else:
+            self.weather_file = None
+        if residue_file is not None:
+            self.load_residue_file(self.residue_file)
+        else:
+            self.residue_file = None
+        # self.new_features = new_features # not being used?
+        self.output = None
+
+    def set_parameters(self, parameters):
+        &#34;&#34;&#34;Set BeePop+ parameters based on a dictionary {parameter: value}.
+
+        Args:
+            parameters (dict): dictionary of parameteres {parameter: value}.
+
+        Raises:
+            TypeError: If parameters is not a dict.
+            ValueError: If the parameter is not a valid BeePop+ parameter listed in the docs.
+        &#34;&#34;&#34;
+        if (parameters is not None) and (not isinstance(parameters, dict)):
+            raise TypeError(&#34;parameters must be a named dictionary of BeePop+ parameters&#34;)
+        self.parameters = self.beepop.set_parameters(parameters)
+
+    def get_parameters(self):
+        &#34;&#34;&#34;Return all parameters that have been set by the user.&#34;&#34;&#34;
+        return self.beepop.get_parameters()
+
+    def load_weather(self, weather_file):
+        &#34;&#34;&#34;Load a weather  file. This should be a csv or comma delimited txt file where each row denotes:
+        Date(MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm),
+        Hours of daylight (optional).
+
+        Args:
+            weather_file (_type_): Path to the weather file (csv or txt).
+
+        Raises:
+            FileNotFoundError: If the provided file does not exist at the specified path.
+        &#34;&#34;&#34;
+        if not os.path.isfile(weather_file):
+            raise FileNotFoundError(&#34;Weather file does not exist at path: {}!&#34;.format(weather_file))
+        self.weather_file = weather_file
+        self.beepop.load_weather(self.weather_file)
+
+    def load_parameter_file(self, parameter_file):
+        &#34;&#34;&#34;Load a .txt file of parameter values to set. Each row of the file is a string with the
+        format &#39;paramter=value&#39;.
+
+        Args:
+            parameter_file (_type_): Path to a txt file of BeePop+ parameters.
+
+
+        Raises:
+            FileNotFoundError: If the provided file does not exist at the specified path.
+            ValueError: If a listed parameter is not a valid BeePop+ parameter specified in the docs.
+
+        &#34;&#34;&#34;
+        if not os.path.isfile(parameter_file):
+            raise FileNotFoundError(
+                &#34;Paramter file does not exist at path: {}!&#34;.format(parameter_file)
+            )
+        self.parameter_file = parameter_file
+        self.beepop.load_input_file(self.parameter_file)
+
+    def load_residue_file(self, residue_file):
+        &#34;&#34;&#34;Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar.
+            Each row should specify Date(MM/DD/YYYY), Concentration in nectar (g A.I. / g),
+            Concentration in pollen (g A.I. / g). Values can be specified in scientific
+            notation, e.g. &#34;9.00E-08&#34;.
+
+        Args:
+            residue_file (_type_): Path to the residue .csv or .txt file.
+
+        Raises:
+            FileNotFoundError: If the provided file does not exist at the specified path.
+        &#34;&#34;&#34;
+        if not os.path.isfile(residue_file):
+            raise FileNotFoundError(&#34;Residue file does not exist at path: {}!&#34;.format(residue_file))
+        self.residue_file = residue_file
+        self.beepop.load_contam_file(self.residue_file)
+
+    def run_model(self):
+        &#34;&#34;&#34;_summary_
+
+        Raises:
+            RuntimeError: If the weather file has not yet been set.
+
+        Returns:
+            DataFrame: A DataFrame of the model results for the BeePop+ run.
+        &#34;&#34;&#34;
+        # check to see if parameters have been supplied
+        if (self.parameter_file is None) and (self.parameters is None):
+            print(&#34;No parameters have been set. Running with defualt settings.&#34;)
+        if self.weather_file is None:
+            raise RuntimeError(&#34;Weather must be set before running BeePop+!&#34;)
+        self.output = self.beepop.run_beepop()
+        return self.output
+
+    def get_output(self, format=&#34;DataFrame&#34;):
+        &#34;&#34;&#34;Get the output from the last BeePop+ run.
+
+        Args:
+            format (str, optional): Return results as DataFrame (&#39;DataFrame&#39;) or
+                JSON string (&#39;json&#39;)? Defaults to &#34;DataFrame&#34;.
+
+        Returns:
+            DataFrame or json str: A DataFrame or JSON string of the model results for the BeePop+ run.
+        &#34;&#34;&#34;
+        if format == &#34;json&#34;:
+            result = json.dumps(self.output.to_dict(orient=&#34;list&#34;))
+        else:
+            result = self.output
+        return result
+
+    def get_error_log(self):
+        &#34;&#34;&#34;Return the BeePop+ session error log as a string for debugging.&#34;&#34;&#34;
+        return self.beepop.get_errors()
+
+    def get_info_log(self):
+        &#34;&#34;&#34;Return the BeePop+ session info log as a string for debugging.&#34;&#34;&#34;
+        return self.beepop.get_info()
+
+    def version(self):
+        &#34;&#34;&#34;Return the BeePop+ version as a string.&#34;&#34;&#34;
+        version = self.beepop.get_version()
+        return version
+
+    def exit(self):
+        &#34;&#34;&#34;Close the connection to the BeePop+ shared library.&#34;&#34;&#34;
+        self.beepop.close_library()
+        del self.beepop
+        return</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pybeepop.pybeepop.PyBeePop.exit"><code class="name flex">
+<span>def <span class="ident">exit</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Close the connection to the BeePop+ shared library.</p></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.get_error_log"><code class="name flex">
+<span>def <span class="ident">get_error_log</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the BeePop+ session error log as a string for debugging.</p></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.get_info_log"><code class="name flex">
+<span>def <span class="ident">get_info_log</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the BeePop+ session info log as a string for debugging.</p></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.get_output"><code class="name flex">
+<span>def <span class="ident">get_output</span></span>(<span>self, format='DataFrame')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the output from the last BeePop+ run.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>format</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Return results as DataFrame ('DataFrame') or
+JSON string ('json')? Defaults to "DataFrame".</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code> or <code>json str</code></dt>
+<dd>A DataFrame or JSON string of the model results for the BeePop+ run.</dd>
+</dl></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.get_parameters"><code class="name flex">
+<span>def <span class="ident">get_parameters</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return all parameters that have been set by the user.</p></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.load_parameter_file"><code class="name flex">
+<span>def <span class="ident">load_parameter_file</span></span>(<span>self, parameter_file)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load a .txt file of parameter values to set. Each row of the file is a string with the
+format 'paramter=value'.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>parameter_file</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>Path to a txt file of BeePop+ parameters.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>FileNotFoundError</code></dt>
+<dd>If the provided file does not exist at the specified path.</dd>
+<dt><code>ValueError</code></dt>
+<dd>If a listed parameter is not a valid BeePop+ parameter specified in the docs.</dd>
+</dl></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.load_residue_file"><code class="name flex">
+<span>def <span class="ident">load_residue_file</span></span>(<span>self, residue_file)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar.
+Each row should specify Date(MM/DD/YYYY), Concentration in nectar (g A.I. / g),
+Concentration in pollen (g A.I. / g). Values can be specified in scientific
+notation, e.g. "9.00E-08".</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>residue_file</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>Path to the residue .csv or .txt file.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>FileNotFoundError</code></dt>
+<dd>If the provided file does not exist at the specified path.</dd>
+</dl></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.load_weather"><code class="name flex">
+<span>def <span class="ident">load_weather</span></span>(<span>self, weather_file)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load a weather
+file. This should be a csv or comma delimited txt file where each row denotes:
+Date(MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm),
+Hours of daylight (optional).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>weather_file</code></strong> :&ensp;<code>_type_</code></dt>
+<dd>Path to the weather file (csv or txt).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>FileNotFoundError</code></dt>
+<dd>If the provided file does not exist at the specified path.</dd>
+</dl></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.run_model"><code class="name flex">
+<span>def <span class="ident">run_model</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><em>summary</em></p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>RuntimeError</code></dt>
+<dd>If the weather file has not yet been set.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>DataFrame</code></dt>
+<dd>A DataFrame of the model results for the BeePop+ run.</dd>
+</dl></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.set_parameters"><code class="name flex">
+<span>def <span class="ident">set_parameters</span></span>(<span>self, parameters)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set BeePop+ parameters based on a dictionary {parameter: value}.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>parameters</code></strong> :&ensp;<code>dict</code></dt>
+<dd>dictionary of parameteres {parameter: value}.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>If parameters is not a dict.</dd>
+<dt><code>ValueError</code></dt>
+<dd>If the parameter is not a valid BeePop+ parameter listed in the docs.</dd>
+</dl></div>
+</dd>
+<dt id="pybeepop.pybeepop.PyBeePop.version"><code class="name flex">
+<span>def <span class="ident">version</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the BeePop+ version as a string.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pybeepop" href="index.html">pybeepop</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pybeepop.pybeepop.PyBeePop" href="#pybeepop.pybeepop.PyBeePop">PyBeePop</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pybeepop.pybeepop.PyBeePop.exit" href="#pybeepop.pybeepop.PyBeePop.exit">exit</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.get_error_log" href="#pybeepop.pybeepop.PyBeePop.get_error_log">get_error_log</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.get_info_log" href="#pybeepop.pybeepop.PyBeePop.get_info_log">get_info_log</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.get_output" href="#pybeepop.pybeepop.PyBeePop.get_output">get_output</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.get_parameters" href="#pybeepop.pybeepop.PyBeePop.get_parameters">get_parameters</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.load_parameter_file" href="#pybeepop.pybeepop.PyBeePop.load_parameter_file">load_parameter_file</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.load_residue_file" href="#pybeepop.pybeepop.PyBeePop.load_residue_file">load_residue_file</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.load_weather" href="#pybeepop.pybeepop.PyBeePop.load_weather">load_weather</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.run_model" href="#pybeepop.pybeepop.PyBeePop.run_model">run_model</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.set_parameters" href="#pybeepop.pybeepop.PyBeePop.set_parameters">set_parameters</a></code></li>
+<li><code><a title="pybeepop.pybeepop.PyBeePop.version" href="#pybeepop.pybeepop.PyBeePop.version">version</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.0</a>.</p>
+</footer>
+</body>
+</html>
