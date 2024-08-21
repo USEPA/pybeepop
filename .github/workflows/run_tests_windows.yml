@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build:
+    name: Run tests (Win)
     runs-on: windows-latest
     strategy:
       matrix:
