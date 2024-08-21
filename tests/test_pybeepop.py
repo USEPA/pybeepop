@@ -27,8 +27,22 @@ def test_set_weather():
     beepop.load_weather(test_weather)
 
 
+def test_invalid_parameter():
+    beepop = PyBeePop()
+    invalid_parameters = {"Invalid_parameter": 1234}
+    with pytest.raises(ValueError):
+        beepop.set_parameters(invalid_parameters)
+
+
+def test_invalid_parameter_in_file():
+    beepop = PyBeePop()
+    parameter_file = os.path.join(PROJECT_DIR, "test_data/test_parameters_invalid.txt")
+    with pytest.raises(ValueError):
+        beepop.load_parameter_file(parameter_file)
+
+
 def test_run_model():
-    beepop = PyBeePop(verbose=True)
+    beepop = PyBeePop()
 
     # Define inputs and file paths
     START_DATE = "06/16/2014"
