@@ -44,7 +44,8 @@ Developed by: Jeffrey Minucci
 
         # define a dictionary of BeePop+ parameters (parameter_name: value)
         params = {"ICWorkerAdults": 10000, "ICWorkerBrood": 8000, 
-            "SimStart": "04/13/2015", "SimEnd": "09/15/2015"}
+            "SimStart": "04/13/2015", "SimEnd": "09/15/2015",
+            "AIAdultLD50: 0.04"}
         beepop.set_parameters(params)
         
         # load your weather file by giving its path
@@ -96,7 +97,7 @@ Developed by: Jeffrey Minucci
 
     In Python:
 
-        parameter_file = 'home/example/defaults_dinote2.txt'
+        parameter_file = 'home/example/my_parameters.txt'
         my_parameters = beepop.load_input_file()
         print(my_parameters)
 
