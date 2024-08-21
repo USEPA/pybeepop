@@ -64,7 +64,10 @@ class PyBeePop:
                 raise NotImplementedError("BeePop+ only supports Windows and Linux.")
         if not os.path.isfile(lib_file):
             raise FileNotFoundError(
-                "BeePop+ shared object library does not exist at path: {}!".format(lib_file)
+                """
+                BeePop+ shared object library does not exist or is not compatible with your operating system. 
+                You may need to compile BeePop+ from source (see the README for more info.)
+                """
             )
         self.lib_file = lib_file
         self.beepop = BeePopModel(self.lib_file, verbose=self.verbose)
@@ -92,6 +95,7 @@ class PyBeePop:
 
         Raises:
             TypeError: If parameters is not a dict.
+            ValueError: If the parameter is not a valid BeePop+ parameter listed in the docs.
         """
         if (parameters is not None) and (not isinstance(parameters, dict)):
             raise TypeError("parameters must be a named dictionary of BeePop+ parameters")
@@ -127,6 +131,8 @@ class PyBeePop:
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.
+            ValueError: If a listed parameter is not a valid BeePop+ parameter specified in the docs.
+
         """
         if not os.path.isfile(parameter_file):
             raise FileNotFoundError(
@@ -137,8 +143,9 @@ class PyBeePop:
 
     def load_residue_file(self, residue_file):
         """Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar.
-            Each row should specify Date(MM/DD/YY), Concentration in nectar (g A.I. / g),
-            Concentration in pollen (g A.I. / g).
+            Each row should specify Date(MM/DD/YYYY), Concentration in nectar (g A.I. / g),
+            Concentration in pollen (g A.I. / g). Values can be specified in scientific
+            notation, e.g. "9.00E-08".
 
         Args:
             residue_file (_type_): Path to the residue .csv or .txt file.

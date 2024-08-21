@@ -38,19 +38,19 @@ colnames = [  # DataFrame column names for the BeePop+ output
     "Mites Dying",
     "Proportion Mites Dying",
     "Colony Pollen (g)",
-    "Pollen Pesticide Concentration",
-    "Colony Nectar",
-    "Nectar Pesticide Concentration",
+    "Pollen Pesticide Concentration (ug/g)",
+    "Colony Nectar (g)",
+    "Nectar Pesticide Concentration (ug/g)",
     "Dead Drone Larvae",
     "Dead Worker Larvae",
     "Dead Drone Adults",
     "Dead Worker Adults",
     "Dead Foragers",
     "Queen Strength",
-    "Average Temperature (celsius)",
-    "Rain",
-    "Min Temp",
-    "Max Temp",
+    "Average Temperature (C)",
+    "Rain (mm)",
+    "Min Temp (C)",
+    "Max Temp (C)",
     "Daylight hours",
     "Forage Inc",
     "Forage Day",
@@ -99,6 +99,9 @@ class BeePopModel:
         else:
             raise RuntimeError("BeePop+ could not be initialized.")
         self.clear_buffers()
+        self.send_pars_to_beepop(
+            ["NecPolFileEnable=false"], silent=True
+        )  # disable residue input until given
 
     def clear_buffers(self):
         """Clear C++ buffers in BeePop+"""
@@ -142,18 +145,18 @@ class BeePopModel:
         self.send_pars_to_beepop(inputlist)
         return self.parameters
 
-    def send_pars_to_beepop(self, parameter_list, refresh=False):
+    def send_pars_to_beepop(self, parameter_list, silent=False):
         """Call the BeePop+ interface function to set parameters from a list of
         parameter=value strings"""
         for par in parameter_list:  # check for invalid parameters
             par_name = par.split("=")[0].lower()
             if par_name not in [x.lower() for x in self.valid_parameters]:
-                print("Warning: {} is not a valid parameter and will be ignored.".format(par_name))
+                raise ValueError("{} is not a valid parameter.".format(par_name))
         CPA = (ctypes.c_char_p * len(parameter_list))()
         inputlist_bytes = StringList2CPA(parameter_list)
         CPA[:] = inputlist_bytes
         if self.lib.SetICVariablesCPA(CPA, len(parameter_list)):
-            if self.verbose and not refresh:
+            if self.verbose and not silent:
                 print("Updated parameters")
         else:
             raise RuntimeError("Error setting parameters")
@@ -200,6 +203,7 @@ class BeePopModel:
                 print("Loaded residue file")
         else:
             raise RuntimeError("Error loading residue file")
+        self.send_pars_to_beepop(["NecPolFileEnable=true"], silent=True)  # enable residue files
 
     def set_latitude(self, latitude):
         """Set the latitude for calculation of day length using the library interface."""
@@ -236,7 +240,7 @@ class BeePopModel:
                 out_lines.append(p_Results[j].decode("utf-8", errors="replace"))
             out_str = io.StringIO("\n".join(out_lines))
             out_df = pd.read_csv(
-                out_str, delim_whitespace=True, skiprows=3, names=colnames, dtype={"Date": str}
+                out_str, sep="\\s+", skiprows=3, names=colnames, dtype={"Date": str}
             )
             self.results = out_df
         else:
