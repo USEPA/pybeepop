@@ -22,5 +22,5 @@ jobs:
           pip install -r requirements.txt
       - name: Test with pytest
         run: |
-          pytest  -v -s
+          coverage run -m pytest  -v -s 
       
