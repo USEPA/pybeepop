@@ -151,7 +151,7 @@ class BeePopModel:
         for par in parameter_list:  # check for invalid parameters
             par_name = par.split("=")[0].lower()
             if par_name not in [x.lower() for x in self.valid_parameters]:
-                print("Warning: {} is not a valid parameter and will be ignored.".format(par_name))
+                raise ValueError("{} is not a valid parameter.".format(par_name))
         CPA = (ctypes.c_char_p * len(parameter_list))()
         inputlist_bytes = StringList2CPA(parameter_list)
         CPA[:] = inputlist_bytes
@@ -240,7 +240,7 @@ class BeePopModel:
                 out_lines.append(p_Results[j].decode("utf-8", errors="replace"))
             out_str = io.StringIO("\n".join(out_lines))
             out_df = pd.read_csv(
-                out_str, delim_whitespace=True, skiprows=3, names=colnames, dtype={"Date": str}
+                out_str, sep="\\s+", skiprows=3, names=colnames, dtype={"Date": str}
             )
             self.results = out_df
         else:
