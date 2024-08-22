@@ -9,7 +9,9 @@ Developed by: Jeffrey Minucci
 
 - [Requirements](#requirements)
 - [Quick Start Guide](#quick-start-guide)
+- [API Documentation](#api-documentation)
 - [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
+- [Contributing to pybeepop](#contributing-to-pybeepop)
 
 ## Requirements
 
@@ -108,6 +110,11 @@ Developed by: Jeffrey Minucci
         print(my_parameters)
 
 
+## API Documentation
+
+Documentation of the pybeepop API can be found at: https://usepa.github.io/pybeepop/.
+
+
 ## Compiling BeePop+ on Linux
 
 
@@ -137,4 +144,12 @@ Developed by: Jeffrey Minucci
         # pass the path to your previously compiled shared library file
         lib_file = '/home/example/liblibvpop.so'
         beepop = PyBeePop(lib_file)
-         
+
+
+## Contributing to pybeepop
+
+For those in the user community wishing to contribute to this project:
+
+- Code updates or enhancements can be made by forking and submitting pull requests that will be reviewed by repository admins.
+- Software, code, or algorithm related bugs and issues can be submitted directly as issues on the GitHub repository.
+- Support can be requested through GitHub issues.
