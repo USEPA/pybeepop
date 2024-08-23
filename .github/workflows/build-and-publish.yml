@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout pybeepop code
         uses: actions/checkout@v4
+        with:
+          ref: build-wheel
       - name: Checkout BeePop+ code
         uses: actions/checkout@v4
         with:
