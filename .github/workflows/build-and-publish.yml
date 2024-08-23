@@ -1,0 +1,61 @@
+name: Build and publish
+
+on:
+  push:
+    branches:
+      - main
+
+# security: restrict permissions for CI jobs.
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    name: Build and publish pybeepop package
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pybeepop-plus
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout pybeepop code
+        uses: actions/checkout@v4
+      - name: Checkout BeePop+ code
+        uses: actions/checkout@v4
+        with:
+          repository: usepa/vpoplib
+          path: vpoplib
+      - name: Build BeePop+
+        uses: threeal/cmake-action@v2.0.0
+        working-directory: $GITHUB_WORKSPACE/vpoplib
+        with:
+          build-dir: build
+          cxx-flags: |
+            DCMAKE_POSITION_INDEPENDENT_CODE=ON 
+            -DCMAKE_BUILD_TYPE=Release
+      - name: Copy BeePop+ library
+        run: cp build/liblibvpop.so $GITHUB_WORKSPACE/pybeepop/lib/beepop.so
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python - -y
+
+      - name: Update PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Update Poetry configuration
+        run: poetry config virtualenvs.create false
+      
+      - name: Install dependencies
+        run: poetry install --sync --no-interaction
+
+      - name: Package project
+        run: poetry build
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+

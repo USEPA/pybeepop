@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "pybeepop"
+name = "pybeepop-plus"
 version = "0.1.0"
 description = ""
 authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
 readme = "README.md"
 documentation = "https://usepa.github.io/pybeepop/"
-include = ["lib/beepop_win_x64.dll"]
+include = ["lib/*.dll", "lib/*.so"]
 classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
@@ -15,8 +15,6 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.9.0"
 pandas = "^2.0.0"
-
-
 
 [build-system]
 requires = ["poetry-core"]
