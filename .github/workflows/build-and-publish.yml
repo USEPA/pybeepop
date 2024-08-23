@@ -3,6 +3,7 @@ name: Build and publish
 on:
   push:
     branches:
+      - build-wheel
       - main
 
 # security: restrict permissions for CI jobs.
