@@ -25,7 +25,7 @@ jobs:
           repository: quanted/vpoplib
           path: vpoplib
       - name: Build BeePop+
-        working-directory: $GITHUB_WORKSPACE/vpoplib
+        working-directory: /home/runner/work/vpoplib
         run: |
           mkdir build
           cd build
@@ -48,9 +48,11 @@ jobs:
         run: poetry config virtualenvs.create false
       
       - name: Install dependencies
+        working-directory: /home/runner/work/pybeepop
         run: poetry install --sync --no-interaction
 
       - name: Package project
+        working-directory: /home/runner/work/pybeepop
         run: poetry build
 
 #      - name: Publish package distributions to PyPI
