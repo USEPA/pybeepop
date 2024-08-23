@@ -32,7 +32,7 @@ jobs:
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
           cmake --build . --config Release
       - name: Copy BeePop+ library
-        run: cp /home/runner/work/pybeepop/pybeepop/vpoplib/build/libvpop.so /home/runner/work/pybeepop/pybeepop/lib/beepop.so
+        run: cp /home/runner/work/pybeepop/pybeepop/vpoplib/build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/lib
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
