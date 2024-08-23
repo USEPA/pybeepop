@@ -5,6 +5,9 @@ description = ""
 authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
 readme = "README.md"
 documentation = "https://usepa.github.io/pybeepop/"
+packages = [
+    { include = "pybeepop", from ="." },
+]
 include = ["lib/*.dll", "lib/*.so"]
 classifiers = [
     "Operating System :: Microsoft :: Windows",
