@@ -21,9 +21,9 @@ jobs:
       id-token: write
     steps:
       - name: Checkout pybeepop code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - name: Checkout BeePop+ code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           repository: usepa/vpoplib
           path: vpoplib
