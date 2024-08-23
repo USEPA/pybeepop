@@ -22,7 +22,7 @@ jobs:
       - name: Checkout BeePop+ code
         uses: actions/checkout@v4
         with:
-          repository: usepa/vpoplib
+          repository: quanted/vpoplib
           path: vpoplib
       - name: Build BeePop+
         working-directory: $GITHUB_WORKSPACE/vpoplib
