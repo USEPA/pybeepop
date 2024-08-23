@@ -27,15 +27,14 @@ jobs:
           repository: usepa/vpoplib
           path: vpoplib
       - name: Build BeePop+
-        uses: threeal/cmake-action@v2.0.0
         working-directory: $GITHUB_WORKSPACE/vpoplib
-        with:
-          build-dir: build
-          cxx-flags: |
-            DCMAKE_POSITION_INDEPENDENT_CODE=ON 
-            -DCMAKE_BUILD_TYPE=Release
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
+          make --build . --config Release
       - name: Copy BeePop+ library
-        run: cp build/liblibvpop.so $GITHUB_WORKSPACE/pybeepop/lib/beepop.so
+        run: cp $GITHUB_WORKSPACE/vpoplib/build/liblibvpop.so $GITHUB_WORKSPACE/pybeepop/lib/beepop.so
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
