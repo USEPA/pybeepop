@@ -50,11 +50,11 @@ jobs:
         run: poetry config virtualenvs.create false
       
       - name: Install dependencies
-        working-directory: /home/runner/work/pybeepop
+        working-directory: /home/runner/work/pybeepop/pybeepop
         run: poetry install --sync --no-interaction
 
       - name: Package project
-        working-directory: /home/runner/work/pybeepop
+        working-directory: /home/runner/work/pybeepop/pybeepop
         run: poetry build
 
 #      - name: Publish package distributions to PyPI
