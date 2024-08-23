@@ -1,10 +1,6 @@
 name: Build and publish
 
-on:
-  push:
-    branches:
-      - build-wheel
-      - main
+on: [push]
 
 # security: restrict permissions for CI jobs.
 #permissions:
@@ -14,19 +10,17 @@ jobs:
   build-and-publish:
     name: Build and publish pybeepop package
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/project/pybeepop-plus
-    permissions:
-      id-token: write
-      contents: read
+#    environment:
+#      name: pypi
+#      url: https://pypi.org/project/pybeepop-plus
+#    permissions:
+#      id-token: write
+#      contents: read
     steps:
       - name: Checkout pybeepop code
-        uses: actions/checkout@v4
-        with:
-          ref: build-wheel
+        uses: actions/checkout@v3
       - name: Checkout BeePop+ code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           repository: usepa/vpoplib
           path: vpoplib
