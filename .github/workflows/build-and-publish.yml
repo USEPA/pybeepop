@@ -19,6 +19,7 @@ jobs:
       url: https://pypi.org/project/pybeepop-plus
     permissions:
       id-token: write
+      contents: read
     steps:
       - name: Checkout pybeepop code
         uses: actions/checkout@v3
@@ -33,7 +34,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
-          make --build . --config Release
+          cmake --build . --config Release
       - name: Copy BeePop+ library
         run: cp $GITHUB_WORKSPACE/vpoplib/build/liblibvpop.so $GITHUB_WORKSPACE/pybeepop/lib/beepop.so
       - name: Set up Python 3.10
