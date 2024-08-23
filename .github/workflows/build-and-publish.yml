@@ -7,8 +7,8 @@ on:
       - main
 
 # security: restrict permissions for CI jobs.
-permissions:
-  contents: read
+#permissions:
+ # contents: read
 
 jobs:
   build-and-publish:
