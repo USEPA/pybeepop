@@ -23,16 +23,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: quanted/vpoplib
-          path: /home/runner/work/vpoplib
+          path: vpoplib
       - name: Build BeePop+
-        working-directory: /home/runner/work/vpoplib
+        working-directory: /home/runner/work/pybeepop/pybeepop/vpoplib
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
           cmake --build . --config Release
       - name: Copy BeePop+ library
-        run: cp $GITHUB_WORKSPACE/vpoplib/build/liblibvpop.so $GITHUB_WORKSPACE/pybeepop/lib/beepop.so
+        run: cp /home/runner/work/pybeepop/pybeepop/vpoplib/build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/lib/beepop.so
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
