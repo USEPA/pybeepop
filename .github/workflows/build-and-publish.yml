@@ -60,7 +60,7 @@ jobs:
       - name: Rename BeePop+ libs
         run: |
           mv ./pybeepop/lib/liblibvpop.so ./pybeepop/lib/beepop_ubuntu.so
-          mv ./pybeepop/lib/libvpop.dll ./pybeepop/lib/beepop_win64.dll
+          mv ./pybeepop/lib/Release/libvpop.dll ./pybeepop/lib/beepop_win64.dll
 
       - name: Install Poetry
         run: |
