@@ -1,4 +1,4 @@
-# pybeepop :honeybee:
+# pybeepop+ :honeybee:
 Python-based wrapper for the USDA/EPA's honey bee colony model **BeePop+**.
 
 For more information about **BeePop+** see [Garber *et al.* 2022](https://doi.org/10.3390/ecologies3030022).
@@ -11,7 +11,7 @@ Developed by: Jeffrey Minucci
 - [Quick Start Guide](#quick-start-guide)
 - [API Documentation](#api-documentation)
 - [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
-- [Contributing to pybeepop](#contributing-to-pybeepop)
+- [Contributing to pybeepop+](#contributing-to-pybeepop+)
 
 ## Requirements
 
@@ -112,7 +112,7 @@ Developed by: Jeffrey Minucci
 
 ## API Documentation
 
-Documentation of the pybeepop API can be found at: https://usepa.github.io/pybeepop/.
+Documentation of the pybeepop+ API can be found at: https://usepa.github.io/pybeepop/.
 
 
 ## Compiling BeePop+ on Linux
@@ -146,7 +146,7 @@ Documentation of the pybeepop API can be found at: https://usepa.github.io/pybee
         beepop = PyBeePop(lib_file)
 
 
-## Contributing to pybeepop
+## Contributing to pybeepop+
 
 For those in the user community wishing to contribute to this project:
 
