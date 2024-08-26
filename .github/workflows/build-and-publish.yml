@@ -27,14 +27,13 @@ jobs:
           cd build
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
           cmake --build . --config Release
-          mkdir binary
       - name: Upload compiled library artifact
         uses: actions/upload-artifact@v4
         with:
           name: compiled-${{ matrix.os }}
           path: |
             build/*.so
-            build/*.dll
+            build/Release/*.dll
 
   build-wheels:
     name: Build pybeepop wheels
@@ -54,7 +53,7 @@ jobs:
       - name: Download pre-compiled BeePop+ 
         uses: actions/download-artifact@v4
         with:
-          name: compiled-*
+          pattern: compiled-*
           path: ./pybeepop/lib
           merge-multiple: true
       
