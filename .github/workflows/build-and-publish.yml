@@ -8,9 +8,12 @@ on: [push]
  # contents: read
 
 jobs:
-  build-vpoplib:
-    name: Build and publish pybeepop+ package
-    runs-on: ubuntu-latest
+  build-beepop:
+    name: Build BeePop+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout BeePop+ code
         uses: actions/checkout@v4
@@ -24,16 +27,20 @@ jobs:
           cd build
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
           cmake --build . --config Release
-          mv ./liblibvpop.so ./beepop_ubuntu.so
+          mkdir binary
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            mv ./liblibvpop.so binary/beepop_${{ matrix.os }}.so
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            mv ./liblibvpop.dll binary/beepop_${{ matrix.os }}.dll
       - name: Upload compiled library artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-ubuntu
-          path: /home/runner/work/pybeepop/pybeepop/vpoplib/build/*.so
+          name: compiled-${{ matrix.os }}
+          path: /home/runner/work/pybeepop/pybeepop/vpoplib/build/binary/*
 
   build-wheels:
     name: Build pybeepop wheels
-    needs: build-vpoplib
+    needs: build-beepop
     runs-on: ubuntu-latest
     steps:
       - name: Checkout pybeepop code
@@ -46,10 +53,16 @@ jobs:
         with:
           python-version: "3.10"
       
-      - name: Download pre-compiled BeePop+
+      - name: Download pre-compiled BeePop+ (Ubuntu)
         uses: actions/download-artifact@v4
         with:
-          name: compiled-ubuntu
+          name: compiled-ubuntu-latest
+          path: /home/runner/work/pybeepop/pybeepop/lib
+
+      - name: Download pre-compiled BeePop+ (Win))
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-windows-latest
           path: /home/runner/work/pybeepop/pybeepop/lib
 
       - name: Install Poetry
@@ -73,7 +86,7 @@ jobs:
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-ubuntu
+          name: pybeepop-wheel
           path: /home/runner/work/pybeepop/pybeepop/dist/*.whl
 
 #      - name: Publish package distributions to PyPI
