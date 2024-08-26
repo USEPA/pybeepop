@@ -21,7 +21,7 @@ jobs:
           repository: quanted/vpoplib
           path: vpoplib
       - name: Build BeePop+
-        working-directory: /home/runner/work/pybeepop/pybeepop/vpoplib
+        #working-directory: /home/runner/work/pybeepop/pybeepop/vpoplib
         run: |
           mkdir build
           cd build
@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: compiled-${{ matrix.os }}
-          path: /home/runner/work/pybeepop/pybeepop/vpoplib/build/binary/*
+          path: build/binary/*
 
   build-wheels:
     name: Build pybeepop wheels
