@@ -8,6 +8,7 @@ import os
 import io
 import ctypes
 import pandas as pd
+from . import DATADIR
 
 colnames = [  # DataFrame column names for the BeePop+ output
     "Date",
@@ -82,9 +83,9 @@ class BeePopModel:
             RuntimeError: If BeePop+ passes an error code on initialization.
         """
         self.parameters = dict()
-        self.valid_parameters = pd.read_csv("data/BeePop_exposed_parameters.csv", skiprows=1)[
-            "Exposed Variable Name"
-        ].tolist()
+        self.valid_parameters = pd.read_csv(
+            os.path.join(DATADIR, "BeePop_exposed_parameters.csv"), skiprows=1
+        )["Exposed Variable Name"].tolist()
         self.weather_file = None
         self.contam_file = None
         self.verbose = verbose
