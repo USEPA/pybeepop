@@ -19,7 +19,7 @@ Developed by: Jeffrey Minucci
     * Windows 64-bit (x64)
     * Linux
 * For **Windows**: [Microsoft Visual C++ Redistributable 2015-2022](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
-* For **Linux**, the bundled BeePop+ library was compiled on **Red Hat Enterprise Linux 8 (RHEL8)**. If you encounter errors loading the library, you can try compiling BeePop+ yourself from source. Instructions for compiling BeePop+ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
+* For **Linux**, the bundled BeePop+ library was compiled on **Ubuntu**. If you encounter errors loading the library, you can try compiling BeePop+ yourself from source. Instructions for compiling BeePop+ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
 * Python version 3.6 or above.
 * pandas installed in your Python environment.
 

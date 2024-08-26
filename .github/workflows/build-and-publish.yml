@@ -26,11 +26,10 @@ jobs:
 #          pattern: compiled-*
 #          path: ./pybeepop/lib
 #          merge-multiple: true
-      
-      - name: Rename BeePop+ libs
-        run: |
-          mv -f ./pybeepop/lib/liblibvpop.so ./pybeepop/lib/beepop_ubuntu.so
-          mv -f ./pybeepop/lib/Release/libvpop.dll ./pybeepop/lib/beepop_win64.dll
+#      - name: Rename BeePop+ libs
+#        run: |
+#          mv -f ./pybeepop/lib/liblibvpop.so ./pybeepop/lib/beepop_ubuntu.so
+#          mv -f ./pybeepop/lib/Release/libvpop.dll ./pybeepop/lib/beepop_win64.dll
 
       - name: Install Poetry
         run: |
