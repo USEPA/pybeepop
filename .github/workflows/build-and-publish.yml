@@ -28,10 +28,12 @@ jobs:
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
           cmake --build . --config Release
           mkdir binary
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            mv ./liblibvpop.so binary/beepop_${{ matrix.os }}.so
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            mv ./liblibvpop.dll binary/beepop_${{ matrix.os }}.dll
+      - name: Rename and move library (Win)
+        if: runner.os == 'Windows'
+        run: mv ./liblibvpop.dll binary/beepop_${{ matrix.os }}.dll
+      - name: Rename and move library (Linux)
+        if: runner.os == 'Linux'
+        run: mv ./liblibvpop.so binary/beepop_${{ matrix.os }}.so
       - name: Upload compiled library artifact
         uses: actions/upload-artifact@v4
         with:
