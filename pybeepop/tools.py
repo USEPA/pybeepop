@@ -82,7 +82,7 @@ class BeePopModel:
             RuntimeError: If BeePop+ passes an error code on initialization.
         """
         self.parameters = dict()
-        self.valid_parameters = pd.read_csv("docs/BeePop_exposed_parameters.csv", skiprows=1)[
+        self.valid_parameters = pd.read_csv("data/BeePop_exposed_parameters.csv", skiprows=1)[
             "Exposed Variable Name"
         ].tolist()
         self.weather_file = None
@@ -92,7 +92,6 @@ class BeePopModel:
         self.lib = ctypes.CDLL(library_file)
         self.parent_dir = os.path.dirname(os.path.abspath(__file__))
         self.lib_status = None
-        weather_dir = os.path.join(self.parent_dir, "files/weather")
         if self.lib.InitializeModel():  # Initialize model
             if self.verbose:
                 print("Model initialized.")
