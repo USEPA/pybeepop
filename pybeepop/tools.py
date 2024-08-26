@@ -8,7 +8,6 @@ import os
 import io
 import ctypes
 import pandas as pd
-from . import DATADIR
 
 colnames = [  # DataFrame column names for the BeePop+ output
     "Date",
