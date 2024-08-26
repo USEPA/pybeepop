@@ -1,26 +1,17 @@
-name: Build and publish
+name: Build and publish on Ubuntu
 
 on: [push]
+
 
 # security: restrict permissions for CI jobs.
 #permissions:
  # contents: read
 
 jobs:
-  build-and-publish:
-    name: Build and publish pybeepop package
+  build-vpoplib:
+    name: Build and publish pybeepop+ package
     runs-on: ubuntu-latest
-#    environment:
-#      name: pypi
-#      url: https://pypi.org/project/pybeepop-plus
-#    permissions:
-#      id-token: write
-#      contents: read
     steps:
-      - name: Checkout pybeepop code
-        uses: actions/checkout@v4
-        with:
-          ref: build-wheel
       - name: Checkout BeePop+ code
         uses: actions/checkout@v4
         with:
@@ -33,12 +24,33 @@ jobs:
           cd build
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
           cmake --build . --config Release
-      - name: Copy BeePop+ library
-        run: cp /home/runner/work/pybeepop/pybeepop/vpoplib/build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/lib
+      - name: Upload compiled library artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-ubuntu
+          path: /home/runner/work/pybeepop/pybeepop/lib/beepop_ubuntu.so
+
+  build-wheels:
+    name: Build pybeepop wheels
+    needs: build-vpoplib
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pybeepop code
+        uses: actions/checkout@v4
+        with:
+          ref: build-wheel
+
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+      
+      - name: Download pre-compiled BeePop+
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-ubuntu
+          path: /home/runner/work/pybeepop/pybeepop/lib
+
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python - -y
@@ -57,6 +69,11 @@ jobs:
         working-directory: /home/runner/work/pybeepop/pybeepop
         run: poetry build
 
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-ubuntu
+          path: /home/runner/work/pybeepop/pybeepop/dist/*.whl
+
 #      - name: Publish package distributions to PyPI
 #        uses: pypa/gh-action-pypi-publish@release/v1
-
