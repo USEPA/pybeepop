@@ -2,8 +2,8 @@ name: Build pybeepop wheel
 
 on: 
   push:
-    tags:        
-      - '*.*.*'
+#    tags:        
+#      - '*.*.*'
 
 jobs:
   build-wheel:
