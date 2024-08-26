@@ -83,8 +83,9 @@ class BeePopModel:
             RuntimeError: If BeePop+ passes an error code on initialization.
         """
         self.parameters = dict()
+        self.parent = os.path.dirname(os.path.abspath(__file__))
         self.valid_parameters = pd.read_csv(
-            os.path.join(DATADIR, "BeePop_exposed_parameters.csv"), skiprows=1
+            os.path.join(self.parent, "data/BeePop_exposed_parameters.csv"), skiprows=1
         )["Exposed Variable Name"].tolist()
         self.weather_file = None
         self.contam_file = None
