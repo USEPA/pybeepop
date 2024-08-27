@@ -22,7 +22,7 @@ def test_set_parameters():
 
 
 def test_set_weather():
-    test_weather = os.path.join(PROJECT_DIR, "test_data/cedar_grove_NC_weather.txt")
+    test_weather = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
     beepop = PyBeePop()
     beepop.load_weather(test_weather)
 
@@ -36,7 +36,7 @@ def test_invalid_parameter():
 
 def test_invalid_parameter_in_file():
     beepop = PyBeePop()
-    parameter_file = os.path.join(PROJECT_DIR, "test_data/test_parameters_invalid.txt")
+    parameter_file = os.path.join(PROJECT_DIR, "example_data/test_parameters_invalid.txt")
     with pytest.raises(ValueError):
         beepop.load_parameter_file(parameter_file)
 
@@ -56,9 +56,9 @@ def test_run_model():
         "INectarTrips": 17,
         "AIAdultLD50": 0.05,  # ug/bee
     }
-    weather = os.path.join(PROJECT_DIR, "test_data/cedar_grove_NC_weather.txt")
-    parameter_file = os.path.join(PROJECT_DIR, "test_data/example_parameters.txt")
-    residue_file = os.path.join(PROJECT_DIR, "test_data/example_residue_file.txt")
+    weather = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
+    parameter_file = os.path.join(PROJECT_DIR, "example_data/example_parameters.txt")
+    residue_file = os.path.join(PROJECT_DIR, "example_data/example_residue_file.txt")
 
     # Load inputs into BeePop+
     beepop.load_weather(weather)

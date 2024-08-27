@@ -1,5 +1,5 @@
 ---
-title: 'pybeepop: A Python wrapper for the BeePop+ honey bee colony model'
+title: 'pybeepop+: A Python wrapper for the BeePop+ honey bee colony model'
 tags:
   - honey bees
   - pesticides
@@ -20,8 +20,8 @@ bibliography: paper.bib
 # Summary
 
 Honey bees (*Apis mellifera* L.) provide critical pollination services
-for both natural and agricultural systems, with billions of dollars of crops
-completely dependent on pollination. However, honey bees are facing a wide 
+for both natural and agricultural systems, with $50 billion USD of crops
+completely dependent on pollination in the United Statates alone [@reilly:2020]. However, honey bees are facing a wide 
 range of stressors resulting in elevated colony failure rates including
 climate change [@zapata:2024], pathogens [@evans:2011], habitat loss and 
 decreased food availability [@donkersley:2014; @goulson:2015], and exposure to 
@@ -32,9 +32,9 @@ honey production and overwintering success across a variety of scenarios.
 Agent-based models can also produce emergent behavior that is typical of complex
 systems such as eusocial bee colonies. These models can also be used to predict 
 colony-level pesticide impacts based on toxicological information gathered from 
-laboratory tests on single bees. The `pybeepop` package provides a convenient 
+laboratory tests on single bees. The `pybeepop+` package for Python provides a convenient 
 and modern interface for running `BeePop+` that facilitates greater adoption and
-application by the scientific, academic and conservation community.
+application by the scientific, academic, conservation, and industry community.
 
 
 # Statement of need
@@ -51,31 +51,30 @@ set by the user via a daily residue file. Interactions with parasitic *Varroa de
 can also be simulated simultaneously. A sensitivity analysis of `BeePop+` input parameters
 is available in @kuan:2018.
 
-The `pybeepop` Python package wraps the C++-based `BeePop+` model in an
-easy to use interface. Previously, the `BeePop+` model was only accessible via
+The `pybeepop+` Python package wraps the C++-based `BeePop+` model in an
+easy to use application programing interface (API). Previously, the `BeePop+` model was only accessible via
 build-in C++ interface functions [@curry:2022], or a web-based 
 graphical user interface [@usda:2023].
-The `pybeepop` package is designed to provide a fast and user-friendly method
+The `pybeepop+` package is designed to provide a fast and user-friendly method
 for running BeePop+ in Python, a programing language which is widely used in 
 scientific settings. It also allows for rapid modification of BeePop+ parameter values and input files,
 which enables automated, high-throughput analyses that require many hundreds 
 or thousands of model runs. Model results are output as `pandas` [@pandas:2020] `DataFrame`
 objects (or `JSON` strings), which facilitates downstream analysis and plotting.
 
-An early version of the `pybeepop` package was used to fit `BeePop+` to empirical
+An early version of the `pybeepop+` package was used to fit `BeePop+` to empirical
 data from a honey bee colony feeding study using Bayesian inference [@minucci:2021].
-The Python-native interface of `pybeepop` allowed for integration with the `pyABC`
+The Python-native interface of `pybeepop+` allowed for integration with the `pyABC`
 package [@klinger:2018] for sampling and `dask` [@dask] for parallelization of over 10
-million individual model runs. The `pybeepop` package is currently being used by
-the US EPA to fit `BeePop+` to a range of colony feeding study datasets across several
-neonitocinoid pesticides to explore the generalizability of the model. 
+million individual model runs. The `pybeepop+` package is currently being used by
+the US EPA to fit `BeePop+` to a range of colony feeding study datasets across several pesticides to explore the generalizability of the model. 
 
-The `pybeepop` package includes pre-compiled binary verisons of `BeePop+` for Windows
-(64-bit) and Linux (Red Het Enterprise Linux 8). The package will try to detect your
+The `pybeepop+` package includes pre-compiled binary verisons of `BeePop+` for Windows
+(64-bit) and Linux (Ubuntu). The package will try to detect your
 platform and architecture and use the correct library binary. For Linux verisions
-other than Red Hat Enterprise Linux 8 (RHEL8), `pybeepop` will attempt to use the 
-RHEL8 binary, but compatibility issues may occur. Alternately, `BeePop+` can be built
-from source on any Linux system and `pybeepop` can connect to an alternate shared
+other than Ubuntu, `pybeepop+` will attempt to use the 
+Ubuntu binary, but compatibility issues may occur. Alternately, `BeePop+` can be built
+from source on any Linux system and `pybeepop+` can connect to an alternate shared
 library binary specified by the user.
 
 # Acknowledgements

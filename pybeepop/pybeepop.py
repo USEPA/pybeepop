@@ -49,13 +49,13 @@ class PyBeePop:
                         "Windows x86 (32 bit) is not supported by BeePop+. Please run on an x64 platform."
                     )
                 else:
-                    lib_file = os.path.join(self.parent, "lib/beepop_win_x64.dll")
+                    lib_file = os.path.join(self.parent, "lib/beepop_win64.dll")
             elif self.platform == "Linux":
-                lib_file = os.path.join(self.parent, "lib/beepop_rhel8.so")  # try RHEL8 version
+                lib_file = os.path.join(self.parent, "lib/beepop_ubuntu.so")  # try ubuntu
                 if self.verbose:
                     print(
                         """
-                        Running in Linux mode. Trying RHEL8 pre-compiled BeePop+.
+                        Running in Linux mode. Trying Ubuntu pre-compiled BeePop+.
                         You may need to compile your own version of BeePop+ from source and pass the path to your .so file with the lib_file option.
                         See the pybeepop README for instructions.
                         """
@@ -66,7 +66,7 @@ class PyBeePop:
             raise FileNotFoundError(
                 """
                 BeePop+ shared object library does not exist or is not compatible with your operating system. 
-                You may need to compile BeePop+ from source (see the README for more info.)
+                You may need to compile BeePop+ from source (see https://github.com/USEPA/pybeepop/blob/main/README.md for more info.)
                 """
             )
         self.lib_file = lib_file

@@ -1,0 +1,28 @@
+name: Build BeePop+
+on: workflow_dispatch
+
+jobs:
+  build-beepop:
+    name: Build BeePop+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout BeePop+ code
+        uses: actions/checkout@v4
+        with:
+          repository: quanted/vpoplib
+      - name: Build BeePop+
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
+          cmake --build . --config Release
+      - name: Upload compiled library artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-${{ matrix.os }}
+          path: |
+            build/*.so
+            build/Release/*.dll

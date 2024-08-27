@@ -1,0 +1,59 @@
+name: Build pybeepop wheel
+
+on: 
+  push:
+#    tags:        
+#      - '*.*.*'
+
+jobs:
+  build-wheel:
+    name: Build pybeepop wheels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pybeepop code
+        uses: actions/checkout@v4
+        with:
+          ref: build-wheel
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+#      - name: Download pre-compiled BeePop+ 
+#        uses: actions/download-artifact@v4
+#        with:
+#          pattern: compiled-*
+#          path: ./pybeepop/lib
+#          merge-multiple: true
+#      - name: Rename BeePop+ libs
+#        run: |
+#          mv -f ./pybeepop/lib/liblibvpop.so ./pybeepop/lib/beepop_ubuntu.so
+#          mv -f ./pybeepop/lib/Release/libvpop.dll ./pybeepop/lib/beepop_win64.dll
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python - -y
+
+      - name: Update PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Update Poetry configuration
+        run: poetry config virtualenvs.create false
+      
+      - name: Install dependencies
+        working-directory: /home/runner/work/pybeepop/pybeepop
+        run: poetry install --sync --no-interaction
+
+      - name: Package project
+        working-directory: /home/runner/work/pybeepop/pybeepop
+        run: poetry build
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pybeepop-wheel
+          path: /home/runner/work/pybeepop/pybeepop/dist/*.whl
+
+#      - name: Publish package distributions to PyPI
+#        uses: pypa/gh-action-pypi-publish@release/v1

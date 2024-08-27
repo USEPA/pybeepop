@@ -1,0 +1,113 @@
+﻿"Note: All values in the input file are text strings.  The ""Type"" column below indicates the internal type the string is converted to using standard C++ conversion rules.  Ex: 2.677 in an integer field is converted to 2.",,,,,,
+Exposed Variable Name,Internal Associated Variable,Type,Min,Max,Description,Interpretation
+WeatherFileName,,String,N/A,N/A,Absolute file path,Location of weather file
+SimStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,Sets the start date of the simulation.  Must be within dates contained in weather file
+SimEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,Sets the end date of the simulation.  Must be within dates contained in weather file
+ICDroneAdults,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of drone adults
+ICWorkerAdults,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of worker adults
+ICDroneBrood,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of drone brood
+ICWorkerBrood,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of worker brood
+ICDroneLarvae,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of drone larvae
+ICWorkerLarvae,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of worker larvae
+ICDroneEggs,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of drone eggs
+ICWorkerEggs,,Integer,0,,Max value only constrained by data type,Initial Conditions for simuation - # of worker eggs
+ICQueenStrength,,Float,1,5,,"Initial Conditions for simuation - initial queen strenth. 1=weak, 5= string"
+ICForagerLifespan,,Integer,4,16,,Initial Conditions for simuation - forager lifespan in days
+ICDroneAdultInfest,,Float,0,100,,Initial Conditions for simuation - % adult drones infested with varroa
+ICDroneBroodInfest,,Float,0,100,,Initial Conditions for simuation - % drone brood infested  with varroa
+ICDroneMiteOffspring,,Float,0,,,Initial Conditions for simuation - number of mite offspring per infesting mite
+ICDroneMiteSurvivorship,,Float,0,100,,Initial Conditions for simuation - % of mites surviving and emerging from capped drone brood
+ICWorkerAdultInfest,,Float,0,100,,Initial Conditions for simuation - % adult workers invested with varroa
+ICWorkerBroodInfest,,Float,0,100,,Initial Conditions for simuation - % worker brood infested with varroa
+ICWorkerMiteOffspring,,Float,0,100,,Initial Conditions for simuation - % of mites surviving and emerging from capped worker brood
+ICWorkerMiteSurvivorship,,Float,0,100,,Initial Conditions for simuation - % of mites surviving and emerging from capped drone brood
+ImmType,,String,N/A,N/A,"Valid strings are: None, Sine, Cosine, Tangent, Exponential, Logarithmic, Polynomial",Profile of immigration.  Total mites over timespan follow one of these curves
+TotalImmMites,,Integer,0,,Max value only constrained by data type,Total # mites immigrating into colony
+PctImmMitesResistant,,Float,0,100,,% immigrating mites which are resistant to ?
+ImmStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,Start Immigration
+ImmEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,End Immigration
+ImmEnabled,,Boolean,N/A,N/A,"true, false",Enables or disables immigration
+RQEggLayDelay,,Integer,0,,Max value only constrained by data type,Delay in days after a requeening
+RQWkrDrnRatio,,Float,N/A,N/A,Unused,N/A
+RQReQueenDate,,Date,1/1/100,12/31/9999,Commonly used date strings.,Sets the date of requeening
+RQEnableReQueen,,Boolean,N/A,N/A,"true, false",Enables or disables requeening
+RQScheduled,,Boolean,N/A,N/A,"true, false",Either establishes Schedule (true) or Automatic (false) requeening
+RQQueenStrength,,Float,1,5,,Sets the strength of the requeened queen
+RQOnce,,Boolean,N/A,N/A,"true, false",Either establishes a single requeening (true) or requeening every year on this date(false)
+VTTreatmentDuration,,Integer,1,,Max value only constrained by data type,
+VTMortality,,Float,0,100,,
+VTEnable,,Boolean,N/A,N/A,"true, false",
+VTTreatmentStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+InitMitePctResistant,,Float,0,100,,
+AIAdultSlope,,Float,1,9,,
+AIAdultLD50,,Float,0,100,,"Oral median lethal dose for Adults,in ug/bee"
+AIAdultSlopeContact,,Float,1,9,,
+AIAdultLD50Contact,,Float,0,100,,"Contact median lethal dose for Adults,in ug/bee"
+AILarvaSlope,,Float,1,9,,
+AILarvaLD50,,Float,0,100,,"Oral median lethal dose for Larvae,in ug/bee"
+AIKOW,,Float,0.1,1000000,,
+AIKOC,,Float,1,10000,,
+AIHalfLife,,Float,0.1,35,,
+AIContactFactor,,Float,,,Min/Max value only constrained by data type,
+CL4Pollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by age 4 Larvae (mg/day)
+CL4Nectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by age 4 Larvae (mg/day)
+CL5Pollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by age 5 Larvae (mg/day)
+CL5Nectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by age 5 Larvae (mg/day)
+CLDPollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by Drone Larvae (mg/day)
+CLDNectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by Drone Larvae (mg/day)
+CA13Pollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by age 1-3 Adult Workers (mg/day)
+CA13Nectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by age 1-3 Adult Workers (mg/day)
+CA410Pollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by age 4-10 Adult Workers (mg/day)
+CA410Nectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by age 4-10 Adult Workers (mg/day)
+CA1120Pollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by age 11-20 Adult Workers (mg/day)
+CA1120Nectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by age 11-20 Adult Workers (mg/day)
+CADPollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by Drone Adults (mg/day)
+CADNectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by Drone Adults (mg/day)
+CForagerPollen,,Float,0,,Max value only constrained by data type,Daily Pollen Consumption by Foragers (mg/day)
+CForagerNectar,,Float,0,,Max value only constrained by data type,Daily Nectar Consumption by Foragers (mg/day)
+IPollenTrips,,Integer,0,,Max value only constrained by data type,Daily Pollen trips per Forager
+INectarTrips,,Integer,0,,Max value only constrained by data type,Daily Nectar trips per Forager
+IPercentNectarForagers,,Float,0,100,,Percent of all Foragers collecting Nectar
+IPollenLoad,,Float,0,,Max value only constrained by data type,mg Pollen per forage trip per bee
+INectarLoad,,Float,0,,Max value only constrained by data type,mg Nectar per forager trip per bee
+FoliarEnabled,,Boolean,N/A,N/A,"true, false","If true, enables foliar spray contamination mechanism"
+SoilEnabled,,Boolean,N/A,N/A,"true, false","If true, enables soil contamination mechanism"
+SeedEnabled,,Boolean,N/A,N/A,"true, false","If true, enables seed contamination mechanism"
+EAppRate,,Float,0,,Max value only constrained by data type,
+ESoilTheta,,Float,0,,Max value only constrained by data type,
+ESoilP,,Float,1.4,1.8,,
+ESoilFoc,,Float,0.1,0.5,,
+ESoilConcentration,,Float,0,,Max value only constrained by data type,
+ESeedConcentration,,Float,0,,Max value only constrained by data type,
+FoliarAppDate,,Date,1/1/100,12/31/9999,Commonly used date strings.,Foliar application date.
+FoliarForageBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+FoliarForageEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+SoilForageBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+SoilForageEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+SeedForageBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+SeedForageEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,
+NecPolFileEnable,,Boolean,N/A,N/A,"true, false","If true, enables the Nectar/Pollen Contamination file."
+NecPolFileName,,String,N/A,N/A,Absolute file path,Name of the Nectar/Pollen Contamination file
+InitColNectar,,Float,0,,Max value only constrained by data type,Mass (grams) of colony Nectar resources at start of simulation
+InitColPollen,,Float,0,,Max value only constrained by data type,Mass (grams) of colony Pollen resources at start of simulation
+MaxColNectar,,Float,0,,Max value only constrained by data type,Maximum mass (grams) of Nectar resources contained in colony during simulation
+MaxColPollen,,Float,0,,Max value only constrained by data type,Maximum mass (grams) of Pollen resources contained in colony during simulation
+SupPollenEnable,,Boolean,N/A,N/A,"true, false","If true, enables supplemental pollen feeding"
+SupPollenAmount,,Float,0,,Max value only constrained by data type,Amount (grams) of pollen supplemental feed
+SupPollenBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,Start date of pollen supplemental feeding
+SupPollenEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,End date of pollen suppemental feeding
+SupNectarEnable,,Boolean,N/A,N/A,"true, false","If true, enables supplemental nectar feeding"
+SupNectarAmount,,Float,0,,Max value only constrained by data type,Amount (grams) of nectar supplemental feed
+SupNectarBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,Start date of nectar supplemental feeding
+SupNectarEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,End date of nectar suppemental feeding
+ForagerMaxProp,,Float,0,1,,Max proportion of total adult worker population that can be active foragers
+NeedResourcesToLive,,Boolean,N/A,N/A,"true, false","If true, colony dies when pollen or nectar mass reaches 0"
+Latitude,,Float,-65,65,,Latitude in decimal degrees for calculating day length
+EtoLXitionEn,,Boolean,N/A,N/A,"true, false",Enable Eggs to Larvae transition survival rate variable?
+LtoBXitionEn,,Boolean,N/A,N/A,"true, false",Enable Larave to Pupae transition survival rate variable?
+BtoAXitionEn,,Boolean,N/A,N/A,"true, false",Enable Pupae to Adult transition survival rate variable?
+AtoFXitionEn,,Boolean,N/A,N/A,"true, false",Enable Adult to Forager transition survival rate variable?
+EtoLXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Eggs to Larvae Transition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
+LtoBXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Larvae to Pupae Transition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
+BtoAXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Pupae to AdultTransition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
+AtoFXition,,String,N/A,N/A,"In the format StartDate, EndDate, float","Sets the survival rate for the Adult to Forager Transition for the period between StartDate and EndDate. Example: ""07/05/2016, 04/13/2017, 75.0"""
