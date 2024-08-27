@@ -9,6 +9,7 @@ Developed by: Jeffrey Minucci
 
 - [Requirements](#requirements)
 - [Quick Start Guide](#quick-start-guide)
+- [Example Notebook](#example-notebook)
 - [API Documentation](#api-documentation)
 - [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
 - [Contributing to pybeepop+](#contributing-to-pybeepop+)
@@ -19,23 +20,21 @@ Developed by: Jeffrey Minucci
     * Windows 64-bit (x64)
     * Linux
 * For **Windows**: [Microsoft Visual C++ Redistributable 2015-2022](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
-* For **Linux**, the bundled BeePop+ library was compiled on **Ubuntu**. If you encounter errors loading the library, you can try compiling BeePop+ yourself from source. Instructions for compiling BeePop+ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib]).
+* For **Linux**, the bundled BeePop+ library was compiled on **Ubuntu**. If you encounter errors loading the library, you can try compiling BeePop+ yourself from source. Instructions for compiling BeePop+ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib).
 * Python version 3.6 or above.
 * pandas installed in your Python environment.
 
 
 ## Quick Start Guide
 
-1. **Clone this repo**, ideally into the directory where your python code or project will be.
+1. **Install the package** into your Python environment using pip:
 
-        git clone https://github.com/USEPA/pybeepop.git
+        pip install git+https://github.com/usepa/pybeepop.git
         
 2.  **Import the PyBeePop class** in your python code, e.g.:
     
         from pybeepop import PyBeePop
-    
-    (if pybeepop is cloned to the same directory that your python script is in.)
-  
+      
   
 3. **Create a BeePop+ object**:
 
@@ -62,8 +61,11 @@ Developed by: Jeffrey Minucci
     
     For a list of exposed BeePop+ parameters, see [docs/BeePop_exposed_parameters.csv](https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv).
     
-    For an explanation of the required weather file formet, see docs/weather_readme.txt.
-    
+    For an explanation of the **weather file format**, see [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt).
+
+    For an explanation of the **residue file format**, see [docs/residue_file_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/residue_file_readme.txt).
+
+    **Example files** to run the model can be found at [example_files/](https://github.com/USEPA/pybeepop/tree/main/example_data).
     
 5. **Run the Model** and get the results as a pandas DataFrame
     ```
@@ -108,6 +110,10 @@ Developed by: Jeffrey Minucci
 
         my_parameters = beepop.get_parameters()
         print(my_parameters)
+
+## Example notebook
+
+A Jupyter notebook with a working example of using `pybeepop+` is available [here](https://github.com/USEPA/pybeepop/blob/main/pybeepop_example.ipynb).
 
 
 ## API Documentation
