@@ -25,10 +25,9 @@ jobs:
 
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: pip install pdoc3 pandas
-      - run: rm -rf /pybeepop/lib # remove beepop+ libs to avoid pdoc errors
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
-      - run: pdoc --html -o docs/ pybeepop
+      - run: pdoc --html --skip-errors -o docs/ pybeepop
 
       - uses: actions/upload-pages-artifact@v3
         with:
