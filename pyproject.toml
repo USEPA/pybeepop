@@ -8,7 +8,7 @@ documentation = "https://usepa.github.io/pybeepop/"
 packages = [
     { include = "pybeepop", from ="." },
 ]
-include = ["lib/*.dll", "lib/*.so", "data/*]
+include = ["lib/*.dll", "lib/*.so", "data/*"]
 classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",

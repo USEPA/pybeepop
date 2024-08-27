@@ -1,9 +1,13 @@
 name: Build pybeepop wheel
 
-on: 
+on:
   push:
-#    tags:        
+    branches:
+      - main
+    #    tags:        
 #      - '*.*.*'
+  pull_request:
+
 
 jobs:
   build-wheel:
@@ -12,8 +16,6 @@ jobs:
     steps:
       - name: Checkout pybeepop code
         uses: actions/checkout@v4
-        with:
-          ref: build-wheel
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
