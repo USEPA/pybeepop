@@ -1,10 +1,13 @@
-name: Generate Documentation Website
+name: Generate Docs Website
 
 # build the documentation whenever there are new commits on main
 on:
   push:
     branches:
       - main
+    paths:
+      - pybeepop/**
+      - .github/workflows/generate-docs-site.yml
     # Alternative: only build for tags.
     # tags:
     #   - '*'

@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - pybeepop/**
+      - .github/workflows/build-and-publish.yml
+      - pyproject.toml
     #    tags:        
 #      - '*.*.*'
   pull_request:
