@@ -53,7 +53,7 @@ is available in @kuan:2018.
 
 The `pybeepop+` Python package wraps the C++-based `BeePop+` model in an
 easy to use application programing interface (API). Previously, the `BeePop+` model was only accessible via
-build-in C++ interface functions [@curry:2022], or a web-based 
+built-in C++ interface functions [@curry:2022], or a web-based 
 graphical user interface [@usda:2023].
 The `pybeepop+` package is designed to provide a fast and user-friendly method
 for running BeePop+ in Python, a programing language which is widely used in 
