@@ -9,7 +9,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(TEST_DIR, os.pardir))
 
 
 def test_set_parameters():
-    beepop = PyBeePop()
+    beepop = PyBeePop(verbose=True)
+    print(beepop.lib_file)
     test_parameters = {"ICWorkerAdults": 9999, "SimStart": "01/01/2020", "SimEnd": "10/31/2020"}
     beepop.set_parameters(test_parameters)
     params = beepop.get_parameters()
@@ -64,7 +65,7 @@ def test_run_model():
     beepop.load_weather(weather)
     beepop.load_parameter_file(parameter_file)
     beepop.set_parameters(run_parameters)
-    beepop.load_residue_file(residue_file)
+    #beepop.load_residue_file(residue_file)
 
     # run model
     results = beepop.run_model()
