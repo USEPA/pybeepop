@@ -43,7 +43,8 @@ def test_invalid_parameter_in_file():
 
 
 def test_run_model():
-    beepop = PyBeePop()
+    beepop = PyBeePop(verbose=True)
+    print(beepop.lib_file)
 
     # Define inputs and file paths
     START_DATE = "06/16/2014"
