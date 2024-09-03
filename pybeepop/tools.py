@@ -237,7 +237,7 @@ class BeePopModel:
             self.lib.ClearResultsBuffer()
             out_lines = []
             for j in range(0, n_result_lines - 1):
-                out_lines.append(p_Results[j].decode("utf-8", errors="replace"))
+                out_lines.append(p_Results[j].decode("utf-8", errors="strict"))
             out_str = io.StringIO("\n".join(out_lines))
             out_df = pd.read_csv(
                 out_str, sep="\\s+", skiprows=3, names=colnames, dtype={"Date": str}
