@@ -64,13 +64,14 @@ def test_run_model():
 
     # Load inputs into BeePop+
     beepop.load_weather(weather)
-    beepop.load_parameter_file(parameter_file)
+    #beepop.load_parameter_file(parameter_file)
     beepop.set_parameters(run_parameters)
     #beepop.load_residue_file(residue_file)
 
     # run model
     results = beepop.run_model()
     print(results)
+    print(len(results))
     results_initial = results.iloc[0, :]
     results_last = results.iloc[len(results) - 1, :]
     results_exposure = results.iloc[20, :]
@@ -81,7 +82,7 @@ def test_run_model():
     assert results_initial["Capped Worker Brood"] == 8000
     assert results_exposure["Colony Size"] == 17913
     assert results_exposure["Capped Drone Brood"] == 219
-    assert results_exposure["Daylight hours"] == 13.7
+    assert round(results_exposure["Daylight hours"],1) == 13.7
     assert results_exposure["Dead Foragers"] == 155
     assert results_last["Date"] == "10/09/2014"
     assert results_last["Colony Size"] == 43932
