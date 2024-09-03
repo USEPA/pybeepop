@@ -68,6 +68,7 @@ def test_run_model():
 
     # run model
     results = beepop.run_model()
+    print(results)
     results_initial = results.iloc[0, :]
     results_last = results.iloc[len(results) - 1, :]
     results_exposure = results.iloc[20, :]
@@ -80,7 +81,7 @@ def test_run_model():
     assert results_exposure["Capped Drone Brood"] == 219
     assert results_exposure["Daylight hours"] == 13.7
     assert results_exposure["Dead Foragers"] == 155
-    assert results_last["Date"] == "10/9/2014"
+    assert results_last["Date"] == "10/09/2014"
     assert results_last["Colony Size"] == 43932
     assert results_last["Adult Drones"] == 512
     assert results_last["Average Temperature (C)"] == 16.66
