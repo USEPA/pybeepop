@@ -64,9 +64,9 @@ def test_run_model():
 
     # Load inputs into BeePop+
     beepop.load_weather(weather)
-    #beepop.load_parameter_file(parameter_file)
+    beepop.load_parameter_file(parameter_file)
     beepop.set_parameters(run_parameters)
-    #beepop.load_residue_file(residue_file)
+    beepop.load_residue_file(residue_file)
 
     # run model
     results = beepop.run_model()
