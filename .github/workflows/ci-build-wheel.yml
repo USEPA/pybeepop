@@ -23,15 +23,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Checkout BeePop+ code
+        uses: actions/checkout@v4
+        with:
+            repository: quanted/vpoplib
+            ref: dev
+            path: 'beepop'
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
-        # env:
-        #   CIBW_SOME_OPTION: value
+        env:
+          CIBW_ARCHS: auto64
+          CIBW_BUILD: cp39-*
         #    ...
-        # with:
+        with:
         #   package-dir: .
         #   output-dir: wheelhouse
-        #   config-file: "{package}/pyproject.toml"
+          config-file: "pyproject_cibw.toml"
 
       - uses: actions/upload-artifact@v4
         with:
