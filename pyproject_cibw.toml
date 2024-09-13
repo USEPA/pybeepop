@@ -24,23 +24,23 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.cibuildwheel]
-before-all-linux = sudo yum -y install cmake 
+before-all-linux = "sudo yum -y install cmake" 
 before-build-linux = [
-    cd beepop
-    mkdir build
-    cd build
-    cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
-    cmake --build . --config Release
-    cp build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib
-    mv -f /home/runner/work/pybeepop/pybeepop/pybeepop/lib/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_ubuntu_test.so 
+    "cd beepop"
+    "mkdir build"
+    "cd build"
+    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON .."	
+    "cmake --build . --config Release"
+    "cp build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib"
+    "mv -f /home/runner/work/pybeepop/pybeepop/pybeepop/lib/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_ubuntu_test.so"
 ]
 before-build-windows = [
-    cd beepop
-    mkdir build
-    cd build
-    cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
-    cmake --build . --config Release
-    copy build/Release/libvpop.dll/home/runner/work/pybeepop/pybeepop/pybeepop/lib
-    move /y /home/runner/work/pybeepop/pybeepop/pybeepop/lib/libvpop.dll /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_win64_test.dll
+    "cd beepop"
+    "mkdir build"
+    "cd build"
+    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON .."  	
+    "cmake --build . --config Release"
+    "copy build/Release/libvpop.dll/home/runner/work/pybeepop/pybeepop/pybeepop/lib"
+    "move /y /home/runner/work/pybeepop/pybeepop/pybeepop/lib/libvpop.dll /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_win64_test.dll"
 ]
 
