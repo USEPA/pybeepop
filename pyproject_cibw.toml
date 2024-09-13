@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "pybeepop-plus"
+version = "0.1.0"
+description = "EPA's Python wrapper for the EPA/USDA honey bee colony model BeePop+"
+authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
+readme = "README.md"
+documentation = "https://usepa.github.io/pybeepop/"
+packages = [
+    { include = "pybeepop", from ="." },
+]
+include = ["lib/*.dll", "lib/*.so", "data/*"]
+classifiers = [
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9.0"
+pandas = "^2.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.cibuildwheel]
+before-all-linux = sudo yum -y install cmake 
+before-build-linux = [
+    cd beepop
+    mkdir build
+    cd build
+    cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
+    cmake --build . --config Release
+    cp build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib
+    mv -f /home/runner/work/pybeepop/pybeepop/pybeepop/lib/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_ubuntu_test.so 
+]
+before-build-windows = [
+    cd beepop
+    mkdir build
+    cd build
+    cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
+    cmake --build . --config Release
+    copy build/Release/libvpop.dll/home/runner/work/pybeepop/pybeepop/pybeepop/lib
+    move /y /home/runner/work/pybeepop/pybeepop/pybeepop/lib/libvpop.dll /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_win64_test.dll
+]
+
