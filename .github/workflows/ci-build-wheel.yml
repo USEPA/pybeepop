@@ -28,7 +28,7 @@ jobs:
         with:
             repository: quanted/vpoplib
             ref: dev
-            path: 'beepop'
+            path: beepop
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
