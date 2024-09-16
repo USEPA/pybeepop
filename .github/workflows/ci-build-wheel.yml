@@ -7,7 +7,7 @@ on:
         paths:
         - pybeepop/**
         - .github/workflows/ci-build-wheel.yml
-        - pyproject.toml
+        - pyproject_cibw.toml
       #    tags:        
   #      - '*.*.*'
     pull_request:
