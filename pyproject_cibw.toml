@@ -23,9 +23,9 @@ pandas = "^2.0.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.cibuildwheel]
-before-all-linux = "sudo yum -y install cmake" 
-before-build-linux = [
+[tool.cibuildwheel.linux]
+before-all = "yum -y install cmake" 
+before-build = [
     "cd beepop",
     "mkdir build",
     "cd build",
@@ -34,7 +34,9 @@ before-build-linux = [
     "cp build/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib",
     "mv -f /home/runner/work/pybeepop/pybeepop/pybeepop/lib/liblibvpop.so /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_ubuntu_test.so",
 ]
-before-build-windows = [
+
+[tool.cibuildwheel.windows]
+before-build = [
     "cd beepop",
     "mkdir build",
     "cd build",
