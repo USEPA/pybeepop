@@ -52,4 +52,13 @@ before-all = [
 
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
-before-all = "apk add cmake"
+before-all = ["apk add cmake",
+    "cd beepop",
+    "mkdir build",
+    "cd build",
+    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
+    "cmake --build . --config Release",
+    "pwd",
+    "cp liblibvpop.so ../../pybeepop/lib",
+    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
+]
