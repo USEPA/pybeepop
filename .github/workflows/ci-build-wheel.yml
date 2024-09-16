@@ -36,6 +36,7 @@ jobs:
         env:
           CIBW_ARCHS: auto64
           CIBW_BUILD: cp39-*
+          CIBW_BUILD_VERBOSITY: 1
         #    ...
         with:
         #   package-dir: .
