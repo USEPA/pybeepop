@@ -49,8 +49,8 @@ before-build = [
     "cd build",
     "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
     "cmake --build . --config Release",
-    "copy Release\libvpop.dll ..\..\pybeepop\lib",
-    "move /y ..\..\pybeepop\lib\libvpop.dll ..\..\pybeepop\lib\beepop_win64.dll",
+    "copy Release\\libvpop.dll ..\\..\\pybeepop\\lib",
+    "move /y ..\\..\\pybeepop\\lib\\libvpop.dll ..\\..\\pybeepop\\lib\\beepop_win64.dll",
 ]
 
 [[tool.cibuildwheel.overrides]]
