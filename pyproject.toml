@@ -37,7 +37,9 @@ before-build = [
     "cmake --build . --config Release",
     "pwd",
     "cp liblibvpop.so ../../pybeepop/lib",
-    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux_test.so",
+    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
+    "rm -f ../../pybeepop/lib/beepop_rhel8.so",
+    "rm -f ../../pybeepop/lib/beepop_ubuntu.so",
 ]
 
 [tool.cibuildwheel.windows]
@@ -47,8 +49,8 @@ before-build = [
     "cd build",
     "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
     "cmake --build . --config Release",
-    "copy Release/libvpop.dll /home/runner/work/pybeepop/pybeepop/pybeepop/lib",
-    "move /y /home/runner/work/pybeepop/pybeepop/pybeepop/lib/libvpop.dll /home/runner/work/pybeepop/pybeepop/pybeepop/lib/beepop_win64_test.dll",
+    "copy Release\libvpop.dll ..\..\pybeepop\lib",
+    "move /y ..\..\pybeepop\lib\libvpop.dll ..\..\pybeepop\lib\beepop_win64.dll",
 ]
 
 [[tool.cibuildwheel.overrides]]
