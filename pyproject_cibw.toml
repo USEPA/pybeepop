@@ -31,8 +31,9 @@ before-build = [
     "cd build",
     "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
     "cmake --build . --config Release",
-    "cp liblibvpop.so /home/runner/work/pybeepop/pybeepop/lib",
-    "mv -f /home/runner/work/pybeepop/pybeepop/lib/liblibvpop.so /home/runner/work/pybeepop/pybeepop/lib/beepop_linux_test.so",
+    "pwd",
+    "cp liblibvpop.so ../../pybeepop/lib",
+    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux_test.so",
 ]
 
 [tool.cibuildwheel.windows]
