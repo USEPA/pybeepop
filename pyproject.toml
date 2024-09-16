@@ -38,8 +38,6 @@ before-build = [
     "pwd",
     "cp liblibvpop.so ../../pybeepop/lib",
     "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
-    "rm -f ../../pybeepop/lib/beepop_rhel8.so",
-    "rm -f ../../pybeepop/lib/beepop_ubuntu.so",
 ]
 
 [tool.cibuildwheel.windows]
