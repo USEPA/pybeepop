@@ -20,9 +20,11 @@ python = "^3.8.0"
 pandas = "^2.0.0"
 
 [build-system]
-script = "build.py"
 requires = ["poetry-core", "setuptools"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.build]
+script = "build.py"
 generate-setup-file = true
 
 [tool.cibuildwheel.linux]
