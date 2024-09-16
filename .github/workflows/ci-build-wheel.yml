@@ -8,6 +8,7 @@ on:
         - pybeepop/**
         - .github/workflows/ci-build-wheel.yml
         - pyproject_cibw.toml
+        - build.py
       #    tags:        
   #      - '*.*.*'
     pull_request:
