@@ -1,16 +1,17 @@
 name: Build pybeepop wheel
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - pybeepop/**
-      - .github/workflows/build-and-publish.yml
-      - pyproject.toml
-    #    tags:        
-#      - '*.*.*'
-  pull_request:
+on: workflow_dispatch
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - pybeepop/**
+#       - .github/workflows/build-and-publish.yml
+#       - pyproject.toml
+#     #    tags:        
+# #      - '*.*.*'
+#   pull_request:
 
 
 jobs:
