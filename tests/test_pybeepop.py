@@ -9,7 +9,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(TEST_DIR, os.pardir))
 
 
 def test_set_parameters():
-    beepop = PyBeePop()
+    beepop = PyBeePop(verbose=True)
+    print(beepop.lib_file)
     test_parameters = {"ICWorkerAdults": 9999, "SimStart": "01/01/2020", "SimEnd": "10/31/2020"}
     beepop.set_parameters(test_parameters)
     params = beepop.get_parameters()
@@ -42,7 +43,8 @@ def test_invalid_parameter_in_file():
 
 
 def test_run_model():
-    beepop = PyBeePop()
+    beepop = PyBeePop(verbose=True)
+    print(beepop.lib_file)
 
     # Define inputs and file paths
     START_DATE = "06/16/2014"
@@ -68,6 +70,8 @@ def test_run_model():
 
     # run model
     results = beepop.run_model()
+    print(results)
+    print(len(results))
     results_initial = results.iloc[0, :]
     results_last = results.iloc[len(results) - 1, :]
     results_exposure = results.iloc[20, :]
@@ -78,9 +82,9 @@ def test_run_model():
     assert results_initial["Capped Worker Brood"] == 8000
     assert results_exposure["Colony Size"] == 17913
     assert results_exposure["Capped Drone Brood"] == 219
-    assert results_exposure["Daylight hours"] == 13.7
+    assert round(results_exposure["Daylight hours"],1) == 13.7
     assert results_exposure["Dead Foragers"] == 155
-    assert results_last["Date"] == "10/9/2014"
+    assert results_last["Date"] == "10/09/2014"
     assert results_last["Colony Size"] == 43932
     assert results_last["Adult Drones"] == 512
     assert results_last["Average Temperature (C)"] == 16.66

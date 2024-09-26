@@ -21,7 +21,7 @@ bibliography: paper.bib
 
 Honey bees (*Apis mellifera* L.) provide critical pollination services
 for both natural and agricultural systems, with $50 billion USD of crops
-completely dependent on pollination in the United Statates alone [@reilly:2020]. However, honey bees are facing a wide 
+completely dependent on pollination in the United States alone [@reilly:2020]. However, honey bees are facing a wide 
 range of stressors resulting in elevated colony failure rates including
 climate change [@zapata:2024], pathogens [@evans:2011], habitat loss and 
 decreased food availability [@donkersley:2014; @goulson:2015], and exposure to 

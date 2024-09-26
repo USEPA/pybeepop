@@ -16,9 +16,49 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9.0"
+python = "^3.8.0"
 pandas = "^2.0.0"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core", "setuptools"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.build]
+script = "build.py"
+generate-setup-file = true
+
+[tool.cibuildwheel.linux]
+before-all = ["yum -y install cmake",
+    "cd beepop",
+    "mkdir build",
+    "cd build",
+    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
+    "cmake --build . --config Release",
+    "pwd",
+    "cp liblibvpop.so ../../pybeepop/lib",
+    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
+]
+
+[tool.cibuildwheel.windows]
+before-all = [
+    "cd beepop",
+    "mkdir build",
+    "cd build",
+    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
+    "cmake --build . --config Release",
+    "copy Release\\libvpop.dll ..\\..\\pybeepop\\lib",
+    "move /y ..\\..\\pybeepop\\lib\\libvpop.dll ..\\..\\pybeepop\\lib\\beepop_win64.dll",
+]
+
+[[tool.cibuildwheel.overrides]]
+select = "*-musllinux*"
+before-all = ["apk add cmake",
+    "cd beepop",
+    "mkdir build",
+    "cd build",
+    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
+    "cmake --build . --config Release",
+    "pwd",
+    "cp liblibvpop.so ../../pybeepop/lib",
+    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
+]
