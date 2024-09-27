@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "pybeepop-plus"
-version = "0.1.0"
+version = "0.1.1"
 description = "EPA's Python wrapper for the EPA/USDA honey bee colony model BeePop+"
 authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
+maintainers = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
+license = "MIT"
 readme = "README.md"
+repository = "https://github.com/USEPA/pybeepop"
 documentation = "https://usepa.github.io/pybeepop/"
 packages = [
     { include = "pybeepop", from ="." },
@@ -13,6 +16,7 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
+    "Intended Audience :: Science/Research",
 ]
 
 [tool.poetry.dependencies]

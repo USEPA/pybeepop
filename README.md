@@ -29,7 +29,7 @@ Developed by: Jeffrey Minucci
 
 1. **Install the package** into your Python environment using pip:
 
-        pip install git+https://github.com/usepa/pybeepop.git
+        pip install pybeepop-plus
         
 2.  **Import the PyBeePop class** in your python code, e.g.:
     
