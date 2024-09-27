@@ -13,7 +13,7 @@ authors:
 affiliations:
  - name: U.S. EPA, Office of Research and Development, Center for Public Health and Environmental Assessment, USA
    index: 1
-date: 7 August 2024
+date: 27 September 2024
 bibliography: paper.bib
 ---
 
@@ -69,11 +69,10 @@ package [@klinger:2018] for sampling and `dask` [@dask] for parallelization of o
 million individual model runs. The `pybeepop+` package is currently being used by
 the US EPA to fit `BeePop+` to a range of colony feeding study datasets across several pesticides to explore the generalizability of the model. 
 
-The `pybeepop+` package includes pre-compiled binary verisons of `BeePop+` for Windows
-(64-bit) and Linux (Ubuntu). The package will try to detect your
-platform and architecture and use the correct library binary. For Linux verisions
-other than Ubuntu, `pybeepop+` will attempt to use the 
-Ubuntu binary, but compatibility issues may occur. Alternately, `BeePop+` can be built
+The `pybeepop+` package includes pre-compiled binary versions of `BeePop+` for Windows
+(64-bit) and Linux (64-bit). The package will try to detect your
+platform and architecture and use the correct library binary. For Linux, a wide range of distributions
+are supported with the 'manylinux' and 'musllinux' standards. Alternately, `BeePop+` can be built
 from source on any Linux system and `pybeepop+` can connect to an alternate shared
 library binary specified by the user.
 
