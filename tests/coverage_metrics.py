@@ -16,9 +16,9 @@ def count_tests():
     lines = result.stdout.strip().split("\n")
     test_count = 0
     for line in lines:
-        if "selected" in line:
-            # Format: "X tests selected"
-            test_count = int(line.split()[0])
+        if "collected" in line:
+            # Format: "collected X items"
+            test_count = int(line.split()[1])
             break
 
     return test_count
@@ -55,7 +55,8 @@ def main():
         print("Coverage data not available")
 
     # Count test files
-    test_files = list(Path(".").glob("test_*.py"))  # Current directory
+    test_dir = Path(__file__).parent  # This will always be the /tests folder
+    test_files = list(test_dir.glob("test_*.py"))
     print(f"Number of test files: {len(test_files)}")
 
 

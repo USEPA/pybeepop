@@ -23,12 +23,4 @@ jobs:
           pip install -r requirements.txt
       - name: Test with pytest and generate coverage report
         run: |
-          coverage run -m pytest tests -v
-          coverage report -m
-          coverage xml
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-          flags: windows
-          name: codecov-windows
+          pytest --cov=pybeepop --cov-report=term tests -v
