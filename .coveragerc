@@ -1,0 +1,22 @@
+[run]
+source = pybeepop
+omit = 
+    */tests/*
+    */__init__.py
+    pybeepop/plots.py
+    */setup.py
+    */build.py
+    */__pycache__/* 
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if self.verbose:
+    if verbose:
+    
+[html]
+directory = htmlcov

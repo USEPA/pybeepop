@@ -1,4 +1,10 @@
 # pybeepop+ :honeybee:
+
+[![codecov](https://codecov.io/gh/USEPA/pybeepop/branch/main/graph/badge.svg)](https://codecov.io/gh/USEPA/pybeepop)
+[![Tests (Windows)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml)
+[![Tests (Linux)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml)
+[![PyPI version](https://badge.fury.io/py/pybeepop-plus.svg)](https://badge.fury.io/py/pybeepop-plus)
+
 Python-based interface for the USDA/EPA's honey bee colony model **BeePop+**.
 
 For more information about **BeePop+** see [Garber *et al.* 2022](https://doi.org/10.3390/ecologies3030022).
