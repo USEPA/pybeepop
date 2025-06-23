@@ -40,6 +40,7 @@ jobs:
         with:
           name: coverage-report
           path: docs/pybeepop/coverage
+        continue-on-error: true
 
       # Create an index page that links to both docs and coverage
       - name: Create index page
