@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - pybeepop/**
+      - tests/**
       - .github/workflows/generate-docs-site.yml
   workflow_run:
     workflows: ["Run PyTests on Ubuntu"]
@@ -28,19 +29,29 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Install dependencies for docs
-      - run: pip install pdoc3 pandas matplotlib
+      # Install dependencies for docs and testing
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov
+          pip install pdoc3 pandas matplotlib
+          pip install -r requirements.txt
+
+      # Run tests and generate coverage report
+      - name: Run tests and generate coverage report
+        run: |
+          pytest --cov=pybeepop --cov-report=term tests -v || true
+          coverage report -m || true
+          coverage html || true
 
       # Generate API documentation
       - run: pdoc --html --skip-errors -o docs/ pybeepop
 
-      # Download coverage report from Ubuntu test workflow
-      - name: Download coverage report
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report
-          path: docs/pybeepop/coverage
-        continue-on-error: true
+      # Move coverage report into docs
+      - name: Move coverage report into docs
+        run: |
+          mkdir -p docs/pybeepop/coverage
+          cp -r htmlcov/* docs/pybeepop/coverage/
 
       # Create an index page that links to both docs and coverage
       - name: Create index page

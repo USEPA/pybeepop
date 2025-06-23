@@ -25,9 +25,3 @@ jobs:
         run: |
           pytest --cov=pybeepop --cov-report=term tests -v
           coverage report -m
-          coverage html
-      - name: Upload coverage HTML report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: htmlcov/
