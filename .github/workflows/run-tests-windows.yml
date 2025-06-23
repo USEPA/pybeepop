@@ -24,3 +24,4 @@ jobs:
       - name: Test with pytest and generate coverage report
         run: |
           pytest --cov=pybeepop --cov-report=term tests -v
+          coverage report -m

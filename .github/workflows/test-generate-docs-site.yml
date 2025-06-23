@@ -1,25 +1,23 @@
-name: Generate Docs Website
+name: Test Generate Docs Website
 
-# build the documentation whenever there are new commits on main
 on:
   push:
     branches:
-      - main
+      - jors-revision
     paths:
       - pybeepop/**
-      - .github/workflows/generate-docs-site.yml
+      - .github/workflows/test-generate-docs-site.yml
   workflow_run:
     workflows: ["Run PyTests on Ubuntu"]
     types:
       - completed
     branches:
-      - main
+      - jors-revision
 
 permissions:
   contents: read
 
 jobs:
-  # Build the documentation and upload the static HTML files as an artifact.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -28,20 +26,16 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Install dependencies for docs
       - run: pip install pdoc3 pandas matplotlib
 
-      # Generate API documentation
       - run: pdoc --html --skip-errors -o docs/ pybeepop
 
-      # Download coverage report from Ubuntu test workflow
       - name: Download coverage report
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
           path: docs/pybeepop/coverage
 
-      # Create an index page that links to both docs and coverage
       - name: Create index page
         run: |
           cat > docs/pybeepop/index.html << 'EOF'
@@ -91,20 +85,8 @@ jobs:
           </html>
           EOF
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload docs as artifact
+        uses: actions/upload-artifact@v4
         with:
+          name: test-docs-site
           path: docs/pybeepop/
-
-  # Deploy the artifact to GitHub pages.
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
