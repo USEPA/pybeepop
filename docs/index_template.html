@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>pybeepop+ Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e3e8ee 100%);
+        }
+        .header {
+            background: #fec44f;
+            color: #222;
+            padding: 32px 0 18px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(60, 72, 88, 0.08);
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 3.2rem;
+            letter-spacing: 1px;
+            color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+        }
+        .header h1 .bee {
+            font-size: 2.2rem;
+            margin-right: 0.3em;
+        }
+        .header p {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            color: #222;
+        }
+        .badges {
+            margin: 10px 0 0 0;
+        }
+        .badges img {
+            margin: 0 6px 0 0;
+            vertical-align: middle;
+            height: 24px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 32px auto 0 auto;
+            padding: 32px 24px 24px 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 32px rgba(60, 72, 88, 0.10), 0 1.5px 6px rgba(60, 72, 88, 0.08);
+        }
+        h1 {
+            color: #1a202c;
+            font-size: 2.5rem;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #222;
+            font-size: 1.4rem;
+        }
+        .box {
+            border: 1px solid #e2e8f0;
+            padding: 28px 24px;
+            margin: 28px 0;
+            border-radius: 8px;
+            background: #f9fafb;
+            box-shadow: 0 2px 8px rgba(60, 72, 88, 0.06);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .box:hover {
+            box-shadow: 0 8px 32px rgba(60, 72, 88, 0.18), 0 2px 8px rgba(60, 72, 88, 0.10);
+            transform: translateY(-2px) scale(1.01);
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #1d4ed8;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 12px 2vw;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .header p {
+                font-size: 0.95rem;
+            }
+            .box {
+                padding: 16px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span class="bee">🐝</span>pybeepop+</h1>
+        <p>Python-based interface for the USDA/EPA's honey bee colony model <b>BeePop+</b>.</p>
+        <p>For more information about <b>BeePop+</b> see <a href="https://doi.org/10.3390/ecologies3030022" style="color:#222;text-decoration:underline;">Garber <i>et al.</i> 2022, Ecologies</a>.</p>
+        <p>For more information about <b>pybeepop+</b> see <a href="" style="color:#222;text-decoration:underline;">Minucci 2025, Journal of Open Research Software</a>.</p>
+        <div class="badges">
+            <img src="https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml/badge.svg" alt="Tests (Windows)">
+            <img src="https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml/badge.svg" alt="Tests (Linux)">
+            <img src="https://badge.fury.io/py/pybeepop-plus.svg" alt="PyPI version">
+        </div>
+    </div>
+    <div class="container">
+        <h1>pybeepop+ Documentation</h1>
+        
+        <div class="box">
+            <h2>📚 API Documentation</h2>
+            <p>Detailed documentation of all pybeepop+ classes and functions.</p>
+            <p><a href="pybeepop.html">View API Documentation →</a></p>
+        </div>
+        
+        <div class="box">
+            <h2>📊 Code Coverage Report</h2>
+            <p>Test coverage analysis showing which parts of the code are tested.</p>
+            <p><a href="coverage/index.html">View Coverage Report →</a></p>
+        </div>
+        
+        <div class="box">
+            <h2>🔗 Quick Links</h2>
+            <ul>
+                <li><a href="https://github.com/USEPA/pybeepop">GitHub Repository</a></li>
+                <li><a href="https://pypi.org/project/pybeepop-plus/">PyPI Package</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
