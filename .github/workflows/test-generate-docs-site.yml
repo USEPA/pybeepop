@@ -8,12 +8,6 @@ on:
       - pybeepop/**
       - tests/**
       - .github/workflows/test-generate-docs-site.yml
-  workflow_run:
-    workflows: ["Run PyTests on Ubuntu"]
-    types:
-      - completed
-    branches:
-      - jors-revision
 
 permissions:
   contents: read
