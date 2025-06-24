@@ -49,52 +49,7 @@ jobs:
 
       - name: Create index page
         run: |
-          cat > docs/pybeepop/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <title>pybeepop+ Documentation</title>
-              <style>
-                  body { font-family: Arial, sans-serif; margin: 40px; }
-                  h1 { color: #333; }
-                  .container { max-width: 800px; margin: 0 auto; }
-                  .box { 
-                      border: 1px solid #ddd; 
-                      padding: 20px; 
-                      margin: 20px 0;
-                      border-radius: 5px;
-                  }
-                  a { color: #0066cc; text-decoration: none; }
-                  a:hover { text-decoration: underline; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <h1>pybeepop+ Documentation</h1>
-                  
-                  <div class="box">
-                      <h2>📚 API Documentation</h2>
-                      <p>Detailed documentation of all pybeepop+ classes and functions.</p>
-                      <p><a href="pybeepop.html">View API Documentation →</a></p>
-                  </div>
-                  
-                  <div class="box">
-                      <h2>📊 Code Coverage Report</h2>
-                      <p>Test coverage analysis showing which parts of the code are tested.</p>
-                      <p><a href="coverage/index.html">View Coverage Report →</a></p>
-                  </div>
-                  
-                  <div class="box">
-                      <h2>🔗 Quick Links</h2>
-                      <ul>
-                          <li><a href="https://github.com/USEPA/pybeepop">GitHub Repository</a></li>
-                          <li><a href="https://pypi.org/project/pybeepop-plus/">PyPI Package</a></li>
-                      </ul>
-                  </div>
-              </div>
-          </body>
-          </html>
-          EOF
+          cp docs/index_template.html docs/pybeepop/index.html
 
       - name: Upload docs as artifact
         uses: actions/upload-artifact@v4
