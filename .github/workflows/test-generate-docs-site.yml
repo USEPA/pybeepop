@@ -54,7 +54,7 @@ jobs:
       # Convert README.md to introduction.html
       - name: Convert README.md to introduction.html
         run: |
-          pandoc README.md -f markdown -t html -s -o docs/pybeepop/introduction.html
+          pandoc README.md -f markdown -t html -s --template=docs/introduction_template.html -o docs/pybeepop/introduction.html
 
       # Create an index page that links to both docs and coverage
       - name: Create index page
