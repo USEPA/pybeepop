@@ -74,7 +74,7 @@ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [
     
     <br>Parameters that are not set by the user will take on the BeePop+ default values. For more information see [the BeePop+ publication](https://doi.org/10.3390/ecologies3030022).
     
-    For a list of exposed BeePop+ parameters, see [docs/BeePop_exposed_parameters.csv](https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv).
+    For a list of exposed BeePop+ parameters, see [the documentation page](https://usepa.github.io/pybeepop/pybeepop.html).
     
     For an explanation of the **weather file format**, see [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt).
 
