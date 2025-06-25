@@ -15,7 +15,7 @@ class PyBeePop:
     Python interface for the BeePop+ honey bee colony simulation model.
 
     BeePop+ is a mechanistic model for simulating honey bee colony dynamics, designed for ecological risk assessment and research applications.
-    This interface enables programmatic access to BeePop+ from Python, supporting batch simulations, parameter sweeps, and integration with
+    This interface enables programmatic access to BeePop+ from Python, supporting batch simulations, sensitivity analysis, and integration with
     data analysis workflows.
 
     For scientific background, model structure, and example applications, see:
@@ -43,9 +43,12 @@ class PyBeePop:
 
         Args:
             lib_file (str, optional): Path to the BeePop+ shared library (.dll or .so). If None, attempts to auto-detect based on OS and architecture.
-            parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). See manuscript and documentation for valid parameters.
-            weather_file (str, optional): Path to a .csv or comma-separated .txt file containing weather data. See docs/weather_readme.txt and manuscript for format details.
-            residue_file (str, optional): Path to a .csv or comma-separated .txt file containing pesticide residue data. See docs/residue_file_readme.txt and manuscript for format details.
+            parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). See https://doi.org/10.3390/ecologies3030022
+                or the documentation for valid parameters.
+            weather_file (str, optional): Path to a .csv or comma-separated .txt file containing weather data, where each row denotes:
+                Date (MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
+            residue_file (str, optional): Path to a .csv or comma-separated .txt file containing pesticide residue data. Each row should specify Date (MM/DD/YYYY),
+                Concentration in nectar (g A.I. / g), Concentration in pollen (g A.I. / g). Values can be in scientific notation (e.g., "9.00E-08").
             verbose (bool, optional): If True, print additional debugging statements. Defaults to False.
 
         Raises:
@@ -110,7 +113,7 @@ class PyBeePop:
         Set BeePop+ parameters based on a dictionary {parameter: value}.
 
         Args:
-            parameters (dict): Dictionary of BeePop+ parameters {parameter: value}. Valid parameters are listed in the documentation and manuscript.
+            parameters (dict): Dictionary of BeePop+ parameters {parameter: value}. See https://doi.org/10.3390/ecologies3030022 or the documentation for valid parameters.
 
         Raises:
             TypeError: If parameters is not a dict.
@@ -154,7 +157,7 @@ class PyBeePop:
         Load a .txt file of parameter values to set. Each row of the file is a string with the format 'parameter=value'.
 
         Args:
-            parameter_file (str): Path to a txt file of BeePop+ parameters. See documentation and manuscript for valid parameters.
+            parameter_file (str): Path to a txt file of BeePop+ parameters. See https://doi.org/10.3390/ecologies3030022 or the documentation for valid parameters.
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.
@@ -193,8 +196,7 @@ class PyBeePop:
             RuntimeError: If the weather file has not yet been set.
 
         Returns:
-            pandas.DataFrame: DataFrame of daily time series results for the BeePop+ run, including colony size, adult workers, brood, eggs, and other
-            metrics as described in the manuscript.
+            pandas.DataFrame: DataFrame of daily time series results for the BeePop+ run, including colony size, adult workers, brood, eggs, and other metrics.
         """
         # check to see if parameters have been supplied
         if (self.parameter_file is None) and (self.parameters is None):
@@ -241,7 +243,7 @@ class PyBeePop:
         Plot the output as a time series.
 
         Args:
-            columns (list, optional): List of column names to plot (as strings). Defaults to key colony metrics used in risk assessment and research, as described in the manuscript.
+            columns (list, optional): List of column names to plot (as strings). Defaults to key colony metrics.
 
         Raises:
             RuntimeError: If there is no output because run_model has not yet been called.
@@ -266,7 +268,7 @@ class PyBeePop:
 
     def get_error_log(self):
         """
-        Return the BeePop+ session error log as a string for debugging. Useful for troubleshooting and reproducibility, as recommended in scientific workflows.
+        Return the BeePop+ session error log as a string for debugging. Useful for troubleshooting.
 
         Returns:
             str: Error log from the BeePop+ session.
@@ -275,7 +277,7 @@ class PyBeePop:
 
     def get_info_log(self):
         """
-        Return the BeePop+ session info log as a string for debugging. Includes information about model execution and file loading.
+        Return the BeePop+ session info log as a string for debugging..
 
         Returns:
             str: Info log from the BeePop+ session.
