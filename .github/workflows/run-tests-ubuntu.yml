@@ -1,7 +1,6 @@
 name: Run PyTests on Ubuntu
 
-#on: [push, pull_request]
-on: workflow_dispatch
+on: [push, pull_request]
 
 jobs:
   build:
@@ -22,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-cov
           pip install -r requirements.txt
-      - name: Test with pytest
+      - name: Test with pytest and generate coverage report
         run: |
-          coverage run -m pytest tests -v
-      
+          pytest --cov=pybeepop --cov-report=term tests -v
+          coverage report -m

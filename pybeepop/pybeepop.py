@@ -11,7 +11,24 @@ import json
 
 
 class PyBeePop:
-    """Python interface for the BeePop+ honey bee colony simulation model"""
+    """
+    Python interface for the BeePop+ honey bee colony simulation model.
+
+    BeePop+ is a mechanistic model for simulating honey bee colony dynamics, designed for ecological risk assessment and research applications.
+    This interface enables programmatic access to BeePop+ from Python, supporting batch simulations, sensitivity analysis, and integration with
+    data analysis workflows.
+
+    For scientific background, model structure, and example applications, see:
+    Garber et al. (2022), "Simulating the Effects of Pesticides on Honey Bee (Apis mellifera L.) Colonies with BeePop+", Ecologies.
+    Minucci et al. (2025), "pybeepop: A Python interface for the BeePop+ honey bee colony model," Journal of Open Research Software.
+
+    Example usage:
+        >>> from pybeepop.pybeepop import PyBeePop
+        >>> model = PyBeePop(parameter_file='params.txt', weather_file='weather.csv', residue_file='residues.csv')
+        >>> model.run_model()
+        >>> results = model.get_output()
+        >>> model.plot_output()
+    """
 
     def __init__(
         self,
@@ -21,17 +38,18 @@ class PyBeePop:
         residue_file=None,
         verbose=False,
     ):
-        """Create a PyBeePop object connected to a BeePop+ shared library.
+        """
+        Initialize a PyBeePop object connected to a BeePop+ shared library.
 
         Args:
-            lib_file (str, optional): Path to the BeePop+ shared library (.dll or .so).
-            parameters_file (str, optional): Path to a txt file of BeePop+ parameters where each line specifies
-                parameter=value. Defaults to None.
-            weather_file (str, optional): Path to a .csv or comma separated .txt file containing weather data.
-                For formatting info see docs/weather_readme.txt. Defaults to None.
-            residue_file (str, optional): Path to a .csv or comma separated .txt file containing pesticide residue data.
-                Defaults to None.
-            verbose (bool, optional): Print additional debugging statements? Defaults to False.
+            lib_file (str, optional): Path to the BeePop+ shared library (.dll or .so). If None, attempts to auto-detect based on OS and architecture.
+            parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). See https://doi.org/10.3390/ecologies3030022
+                or the documentation for valid parameters.
+            weather_file (str, optional): Path to a .csv or comma-separated .txt file containing weather data, where each row denotes:
+                Date (MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
+            residue_file (str, optional): Path to a .csv or comma-separated .txt file containing pesticide residue data. Each row should specify Date (MM/DD/YYYY),
+                Concentration in nectar (g A.I. / g), Concentration in pollen (g A.I. / g). Values can be in scientific notation (e.g., "9.00E-08").
+            verbose (bool, optional): If True, print additional debugging statements. Defaults to False.
 
         Raises:
             FileNotFoundError: If a provided file does not exist at the specified path.
@@ -41,7 +59,9 @@ class PyBeePop:
         self.parent = os.path.dirname(os.path.abspath(__file__))
         self.platform = platform.system()
         self.verbose = verbose
-        if lib_file is None:  # detect OS and architecture and use pre-compiled BeePop+ if possible
+        if (
+            lib_file is None
+        ):  # detect OS and architecture and use pre-compiled BeePop+ if possible
             if self.platform == "Windows":
                 if platform.architecture()[0] == "32bit":
                     raise NotImplementedError(
@@ -89,51 +109,59 @@ class PyBeePop:
         self.output = None
 
     def set_parameters(self, parameters):
-        """Set BeePop+ parameters based on a dictionary {parameter: value}.
+        """
+        Set BeePop+ parameters based on a dictionary {parameter: value}.
 
         Args:
-            parameters (dict): dictionary of parameteres {parameter: value}.
+            parameters (dict): Dictionary of BeePop+ parameters {parameter: value}. See https://doi.org/10.3390/ecologies3030022 or the documentation for valid parameters.
 
         Raises:
             TypeError: If parameters is not a dict.
-            ValueError: If the parameter is not a valid BeePop+ parameter listed in the docs.
+            ValueError: If a parameter is not a valid BeePop+ parameter.
         """
         if (parameters is not None) and (not isinstance(parameters, dict)):
-            raise TypeError("parameters must be a named dictionary of BeePop+ parameters")
+            raise TypeError(
+                "parameters must be a named dictionary of BeePop+ parameters"
+            )
         self.parameters = self.beepop.set_parameters(parameters)
 
     def get_parameters(self):
-        """Return all parameters that have been set by the user."""
+        """
+        Return all parameters that have been set by the user.
+
+        Returns:
+            dict: Dictionary of current BeePop+ parameters.
+        """
         return self.beepop.get_parameters()
 
     def load_weather(self, weather_file):
-        """Load a weather  file. This should be a csv or comma delimited txt file where each row denotes:
-        Date(MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm),
-        Hours of daylight (optional).
+        """
+        Load a weather file. The file should be a .csv or comma-delimited .txt file where each row denotes:
+        Date (MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
 
         Args:
-            weather_file (_type_): Path to the weather file (csv or txt).
+            weather_file (str): Path to the weather file (csv or txt). See docs/weather_readme.txt and manuscript for format details.
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.
         """
         if not os.path.isfile(weather_file):
-            raise FileNotFoundError("Weather file does not exist at path: {}!".format(weather_file))
+            raise FileNotFoundError(
+                "Weather file does not exist at path: {}!".format(weather_file)
+            )
         self.weather_file = weather_file
         self.beepop.load_weather(self.weather_file)
 
     def load_parameter_file(self, parameter_file):
-        """Load a .txt file of parameter values to set. Each row of the file is a string with the
-        format 'paramter=value'.
+        """
+        Load a .txt file of parameter values to set. Each row of the file is a string with the format 'parameter=value'.
 
         Args:
-            parameter_file (_type_): Path to a txt file of BeePop+ parameters.
-
+            parameter_file (str): Path to a txt file of BeePop+ parameters. See https://doi.org/10.3390/ecologies3030022 or the documentation for valid parameters.
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.
-            ValueError: If a listed parameter is not a valid BeePop+ parameter specified in the docs.
-
+            ValueError: If a listed parameter is not a valid BeePop+ parameter.
         """
         if not os.path.isfile(parameter_file):
             raise FileNotFoundError(
@@ -143,30 +171,32 @@ class PyBeePop:
         self.beepop.load_input_file(self.parameter_file)
 
     def load_residue_file(self, residue_file):
-        """Load a .csv or comma delimited .txt file of pesticide residues in pollen/nectar.
-            Each row should specify Date(MM/DD/YYYY), Concentration in nectar (g A.I. / g),
-            Concentration in pollen (g A.I. / g). Values can be specified in scientific
-            notation, e.g. "9.00E-08".
+        """
+        Load a .csv or comma-delimited .txt file of pesticide residues in pollen/nectar. Each row should specify Date (MM/DD/YYYY),
+        Concentration in nectar (g A.I. / g), Concentration in pollen (g A.I. / g). Values can be in scientific notation (e.g., "9.00E-08").
 
         Args:
-            residue_file (_type_): Path to the residue .csv or .txt file.
+            residue_file (str): Path to the residue .csv or .txt file. See docs/residue_file_readme.txt and manuscript for format details.
 
         Raises:
             FileNotFoundError: If the provided file does not exist at the specified path.
         """
         if not os.path.isfile(residue_file):
-            raise FileNotFoundError("Residue file does not exist at path: {}!".format(residue_file))
+            raise FileNotFoundError(
+                "Residue file does not exist at path: {}!".format(residue_file)
+            )
         self.residue_file = residue_file
         self.beepop.load_contam_file(self.residue_file)
 
     def run_model(self):
-        """_summary_
+        """
+        Run the BeePop+ model simulation.
 
         Raises:
             RuntimeError: If the weather file has not yet been set.
 
         Returns:
-            DataFrame: A DataFrame of the model results for the BeePop+ run.
+            pandas.DataFrame: DataFrame of daily time series results for the BeePop+ run, including colony size, adult workers, brood, eggs, and other metrics.
         """
         # check to see if parameters have been supplied
         if (self.parameter_file is None) and (self.parameters is None):
@@ -177,20 +207,22 @@ class PyBeePop:
         return self.output
 
     def get_output(self, format="DataFrame"):
-        """Get the output from the last BeePop+ run.
+        """
+        Get the output from the last BeePop+ run.
 
         Args:
-            format (str, optional): Return results as DataFrame ('DataFrame') or
-                JSON string ('json')? Defaults to "DataFrame".
+            format (str, optional): Return results as DataFrame ('DataFrame') or JSON string ('json'). Defaults to 'DataFrame'.
 
         Raises:
             RuntimeError: If there is no output because run_model has not yet been called.
 
         Returns:
-            DataFrame or json str: A DataFrame or JSON string of the model results for the BeePop+ run.
+            pandas.DataFrame or str: DataFrame or JSON string of the model results. JSON output is a dictionary of lists keyed by column name.
         """
         if self.output is None:
-            raise RuntimeError("There are no results to plot. Please run the model first.")
+            raise RuntimeError(
+                "There are no results to plot. Please run the model first."
+            )
         if format == "json":
             result = json.dumps(self.output.to_dict(orient="list"))
         else:
@@ -207,19 +239,23 @@ class PyBeePop:
             "Worker Eggs",
         ],
     ):
-        """Plot the output as a time series.
+        """
+        Plot the output as a time series.
 
         Args:
-            columns (list, optional): List of column names to plot (as strings). Defaults to ["Colony Size", "Adult Workers", "Capped Worker Brood", "Worker Larvae", "Worker Eggs"].
+            columns (list, optional): List of column names to plot (as strings). Defaults to key colony metrics.
 
         Raises:
             RuntimeError: If there is no output because run_model has not yet been called.
+            IndexError: If any column name is not a valid output column.
 
         Returns:
-            Matplotlib Axes: A Matploitlib Axes object for further customization.
+            matplotlib.axes.Axes: Matplotlib Axes object for further customization.
         """
         if self.output is None:
-            raise RuntimeError("There are no results to plot. Please run the model first.")
+            raise RuntimeError(
+                "There are no results to plot. Please run the model first."
+            )
         invalid_cols = [col not in self.output.columns for col in columns]
         if any(invalid_cols):
             raise IndexError(
@@ -231,20 +267,37 @@ class PyBeePop:
         return plot
 
     def get_error_log(self):
-        """Return the BeePop+ session error log as a string for debugging."""
+        """
+        Return the BeePop+ session error log as a string for debugging. Useful for troubleshooting.
+
+        Returns:
+            str: Error log from the BeePop+ session.
+        """
         return self.beepop.get_errors()
 
     def get_info_log(self):
-        """Return the BeePop+ session info log as a string for debugging."""
+        """
+        Return the BeePop+ session info log as a string for debugging..
+
+        Returns:
+            str: Info log from the BeePop+ session.
+        """
         return self.beepop.get_info()
 
     def version(self):
-        """Return the BeePop+ version as a string."""
+        """
+        Return the BeePop+ version as a string.
+
+        Returns:
+            str: BeePop+ version string.
+        """
         version = self.beepop.get_version()
         return version
 
     def exit(self):
-        """Close the connection to the BeePop+ shared library."""
+        """
+        Close the connection to the BeePop+ shared library and clean up resources.
+        """
         self.beepop.close_library()
         del self.beepop
         return
