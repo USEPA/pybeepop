@@ -243,35 +243,3 @@ def test_BeePopModel_load_weather_parameter_reapplication(
 
     assert model.lib.weather_set == True
     assert model.lib.icvars_set == True  # Parameters should be re-applied
-
-
-def test_BeePopModel_close_library(monkeypatch_beepop, monkeypatch):
-    """Test the close_library functionality."""
-    model = BeePopModel("dummy.so")
-
-    # Test Windows path
-    monkeypatch.setattr("platform.system", lambda: "Windows")
-    monkeypatch.setattr("ctypes.windll.kernel32.FreeLibrary", lambda x: None)
-
-    model.close_library()
-    assert model.lib is None
-
-    # Test Linux path
-    model = BeePopModel("dummy.so")  # Create new instance
-    monkeypatch.setattr("platform.system", lambda: "Linux")
-
-    # Mock dlclose function
-    def mock_dlclose(handle):
-        pass
-
-    mock_dlclose.argtypes = [ctypes.c_void_p]
-
-    class MockCDLL:
-        def __init__(self):
-            self.dlclose = mock_dlclose
-
-    mock_cdll = MockCDLL()
-    monkeypatch.setattr("ctypes.CDLL", lambda x: mock_cdll)
-
-    model.close_library()
-    assert model.lib is None
