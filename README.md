@@ -69,7 +69,7 @@ for Linux are [below](#compiling-beepop-on-linux). Source code is available on [
     
     # load your pesticide residue file by giving its path (optional)
     pesticide_file = '/home/example/pesticide_residues.txt'
-    beepop.load_contamination_file(pesticide_file)
+    beepop.load_residue_file(pesticide_file)
     ```
     
     <br>Parameters that are not set by the user will take on the BeePop+ default values. For more information see [the BeePop+ publication](https://doi.org/10.3390/ecologies3030022).
