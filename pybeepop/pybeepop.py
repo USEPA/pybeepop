@@ -36,6 +36,7 @@ class PyBeePop:
         parameter_file=None,
         weather_file=None,
         residue_file=None,
+        latitude=30.0,
         verbose=False,
     ):
         """
@@ -49,11 +50,13 @@ class PyBeePop:
                 Date (MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
             residue_file (str, optional): Path to a .csv or comma-separated .txt file containing pesticide residue data. Each row should specify Date (MM/DD/YYYY),
                 Concentration in nectar (g A.I. / g), Concentration in pollen (g A.I. / g). Values can be in scientific notation (e.g., "9.00E-08").
+            latitude (float, optional): Latitude in decimal degrees for daylight hour calculations (-90 to 90). Defaults to 30.0.
             verbose (bool, optional): If True, print additional debugging statements. Defaults to False.
 
         Raises:
             FileNotFoundError: If a provided file does not exist at the specified path.
             NotImplementedError: If run on a platform that is not 64-bit Windows or Linux.
+            ValueError: If latitude is outside the valid range.
         """
 
         self.parent = os.path.dirname(os.path.abspath(__file__))
@@ -92,6 +95,12 @@ class PyBeePop:
             )
         self.lib_file = lib_file
         self.beepop = BeePopModel(self.lib_file, verbose=self.verbose)
+        # Reset latitude to avoid inheritance from previous instances
+        # Validate and set the provided latitude
+        if not -90 <= latitude <= 90:
+            raise ValueError("Latitude must be between -90 and 90 degrees")
+        self.current_latitude = latitude
+        self.beepop.set_latitude(self.current_latitude)
         self.parameters = None
         if parameter_file is not None:
             self.load_parameter_file(self.parameter_file)
@@ -134,10 +143,53 @@ class PyBeePop:
         """
         return self.beepop.get_parameters()
 
+    def set_latitude(self, latitude):
+        """
+        Set the latitude for daylight hour calculations.
+
+        Args:
+            latitude (float): Latitude in decimal degrees (-90 to 90). Positive values are North, negative are South.
+
+        Raises:
+            ValueError: If latitude is outside the valid range.
+        """
+        if not -90 <= latitude <= 90:
+            raise ValueError("Latitude must be between -90 and 90 degrees")
+        self.current_latitude = latitude
+        self.beepop.set_latitude(latitude)
+
+    def get_latitude(self):
+        """
+        Get the currently set latitude.
+
+        Returns:
+            float: Current latitude in decimal degrees.
+        """
+        return self.current_latitude
+
+    def set_simulation_dates(self, start_date, end_date):
+        """
+        Convenience method to set simulation start and end dates. The dates can
+        also be set directly as SimStart/SimEnd using the set_parameters() or
+        load_parameters() methods.
+
+        Args:
+            start_date (str): Simulation start date in MM/DD/YYYY format.
+            end_date (str): Simulation end date in MM/DD/YYYY format.
+        """
+        date_params = {"SimStart": start_date, "SimEnd": end_date}
+        self.set_parameters(date_params)
+
+        if self.verbose:
+            print(f"Set simulation dates: {start_date} to {end_date}")
+
     def load_weather(self, weather_file):
         """
         Load a weather file. The file should be a .csv or comma-delimited .txt file where each row denotes:
-        Date (MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
+        Date (MM/DD/YYYY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
+
+        Note: Loading weather may reset simulation dates (SimStart/SimEnd) to the weather file's date range.
+        Any previously set parameters will be automatically re-applied after weather loading.
 
         Args:
             weather_file (str): Path to the weather file (csv or txt). See docs/weather_readme.txt and manuscript for format details.
@@ -150,6 +202,9 @@ class PyBeePop:
                 "Weather file does not exist at path: {}!".format(weather_file)
             )
         self.weather_file = weather_file
+
+        # Load weather - the underlying BeePopModel.load_weather() will automatically
+        # re-apply any previously set parameters after loading
         self.beepop.load_weather(self.weather_file)
 
     def load_parameter_file(self, parameter_file):
@@ -298,6 +353,16 @@ class PyBeePop:
         """
         Close the connection to the BeePop+ shared library and clean up resources.
         """
-        self.beepop.close_library()
-        del self.beepop
-        return
+        if hasattr(self, "beepop") and self.beepop is not None:
+            if hasattr(self.beepop, "lib") and self.beepop.lib is not None:
+                # Clear any remaining buffers
+                try:
+                    self.beepop.clear_buffers()
+                    self.beepop.close_library()
+                except:
+                    pass  # Ignore errors during cleanup
+            self.beepop = None
+
+    def __del__(self):
+        """Destructor to ensure cleanup when object is garbage collected."""
+        self.exit()

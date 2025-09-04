@@ -6,6 +6,7 @@ import os
 import io
 import ctypes
 import pandas as pd
+import platform
 
 colnames = [  # DataFrame column names for the BeePop+ output
     "Date",
@@ -179,6 +180,12 @@ class BeePopModel:
             if self.lib.SetWeatherCPA(CPA, len(weatherlines)):
                 if self.verbose:
                     print("Loaded Weather")
+                # Re-apply parameters after weather loading to restore any date parameters
+                # that may have been overwritten by the weather file
+                if len(self.parameters) > 0:
+                    if self.verbose:
+                        print("Re-applying parameters after weather loading...")
+                    self.set_parameters()
             else:
                 raise RuntimeError("Error Loading Weather")
         else:
@@ -201,7 +208,9 @@ class BeePopModel:
                 print("Loaded residue file")
         else:
             raise RuntimeError("Error loading residue file")
-        self.send_pars_to_beepop(["NecPolFileEnable=true"], silent=True)  # enable residue files
+        self.send_pars_to_beepop(
+            ["NecPolFileEnable=true"], silent=True
+        )  # enable residue files
 
     def set_latitude(self, latitude):
         """Set the latitude for calculation of day length using the library interface."""
@@ -234,7 +243,7 @@ class BeePopModel:
             n_result_lines = int(theCount.value)
             self.lib.ClearResultsBuffer()
             out_lines = []
-            for j in range(0, n_result_lines - 1):
+            for j in range(0, n_result_lines):
                 out_lines.append(p_Results[j].decode("utf-8", errors="strict"))
             out_str = io.StringIO("\n".join(out_lines))
             out_df = pd.read_csv(
@@ -250,7 +259,9 @@ class BeePopModel:
         """Write previously generated BeePop+ outputs to a csv file."""
         results_file = file_path
         if self.results is None:
-            raise RuntimeError("There are no results to write. Please run the model first")
+            raise RuntimeError(
+                "There are no results to write. Please run the model first"
+            )
         self.results.to_csv(results_file, index=False)
         if self.verbose():
             print("Wrote results to file")
@@ -290,9 +301,21 @@ class BeePopModel:
             raise RuntimeError("Failed to get library version")
 
     def close_library(self):
-        """Close connection to the library using CTypes."""
-        dlclose_func = ctypes.CDLL(None).dlclose
-        dlclose_func.argtypes = [ctypes.c_void_p]
-        handle = self.lib._handle
-        self.lib = None
-        del self.lib
+        """Close connection to the library using ctypes."""
+        if hasattr(self, "lib") and self.lib is not None:
+            try:
+                if platform.system() == "Linux":
+                    # Linux/Unix systems
+                    dlclose_func = ctypes.CDLL(None).dlclose
+                    dlclose_func.argtypes = [ctypes.c_void_p]
+                    dlclose_func(self.lib._handle)
+                elif platform.system() == "Windows":
+                    # Windows systems
+                    kernel32 = ctypes.windll.kernel32
+                    kernel32.FreeLibrary.argtypes = [ctypes.wintypes.HMODULE]
+                    kernel32.FreeLibrary(self.lib._handle)
+            except Exception as e:
+                if self.verbose:
+                    print(f"Warning: Could not properly close library: {e}")
+
+            self.lib = None

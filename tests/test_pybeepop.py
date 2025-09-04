@@ -76,6 +76,7 @@ def test_regression_run_model():
     residue_file = os.path.join(PROJECT_DIR, "example_data/example_residue_file.txt")
 
     # Load inputs into BeePop+
+    beepop.set_latitude(30.0)
     beepop.load_weather(weather)
     beepop.load_parameter_file(parameter_file)
     beepop.set_parameters(run_parameters)
@@ -99,10 +100,10 @@ def test_regression_run_model():
         round(results_exposure["Daylight hours"], 1) == 13.7
     )  # linux daylight hour issue
     assert results_exposure["Dead Foragers"] == 155
-    assert results_last["Date"] == "10/09/2014"
-    assert results_last["Colony Size"] in [43932, 44087]  # linux daylight hour issue
-    assert results_last["Adult Drones"] == 512
-    assert results_last["Average Temperature (C)"] == 16.66
+    assert results_last["Date"] == "10/10/2014"
+    assert results_last["Colony Size"] in [43442, 43614]  # linux daylight hour issue
+    assert results_last["Adult Drones"] in [500, 507]  # linux daylight hour issue
+    assert results_last["Average Temperature (C)"] == 18.93
     assert results_last["Rain (mm)"] == 0.0
 
 
@@ -114,13 +115,19 @@ def test_init_default_lib(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {"icworkeradults": 1000}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def load_weather(self, f):
             pass
@@ -159,13 +166,19 @@ def test_set_parameters_type_error(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
     monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
@@ -179,13 +192,19 @@ def test_set_parameters_and_get(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {"icworkeradults": 123}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
     monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
@@ -201,13 +220,19 @@ def test_load_weather_file_not_found(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def load_weather(self, f):
             pass
@@ -224,13 +249,19 @@ def test_load_parameter_file_not_found(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def load_input_file(self, f):
             pass
@@ -247,13 +278,19 @@ def test_load_residue_file_not_found(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def load_contam_file(self, f):
             pass
@@ -270,13 +307,19 @@ def test_run_model_no_weather(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def run_beepop(self):
             return None
@@ -294,13 +337,19 @@ def test_get_output_json(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def run_beepop(self):
             return pd.DataFrame({"Colony Size": [1], "Date": ["Initial"]})
@@ -319,13 +368,19 @@ def test_get_output_no_output(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
     monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
@@ -340,13 +395,19 @@ def test_plot_output_invalid_column(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
 
         def set_parameters(self, p):
             return p
 
         def get_parameters(self):
             return {}
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
     def dummy_plot_timeseries(output, columns):
         return None
@@ -365,7 +426,13 @@ def test_get_error_and_info_log(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def get_errors(self):
             return "error log"
@@ -385,7 +452,13 @@ def test_version_and_exit(monkeypatch):
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
-            pass
+            self.latitude = 30.0
+
+        def set_latitude(self, lat):
+            self.latitude = lat
+
+        def get_latitude(self):
+            return self.latitude
 
         def get_version(self):
             return "2.1"
@@ -398,3 +471,173 @@ def test_version_and_exit(monkeypatch):
     beepop = PyBeePop()
     assert beepop.version() == "2.1"
     beepop.exit()
+
+
+def test_set_latitude():
+    """Test setting and getting latitude with real model."""
+    beepop = PyBeePop(verbose=False)
+
+    # Test default latitude
+    default_lat = beepop.get_latitude()
+    assert isinstance(default_lat, (int, float))
+    assert default_lat == 30.0  # Default latitude set in __init__
+
+    # Test setting different latitudes
+    test_latitudes = [0, 30, 45, 60, 90]
+    for lat in test_latitudes:
+        beepop.set_latitude(lat)
+        retrieved_lat = beepop.get_latitude()
+        assert retrieved_lat == lat, f"Expected {lat}, got {retrieved_lat}"
+
+
+def test_latitude_effects_on_daylight():
+    """Test that different latitudes produce different daylight hour patterns."""
+    weather_file = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
+
+    # Test parameters for a short simulation
+    test_params = {
+        "ICWorkerAdults": 10000,
+        "SimStart": "06/16/2014",
+        "SimEnd": "08/16/2014",
+    }
+
+    # Test two different latitudes
+    latitudes = [0, 60]  # Equator vs high latitude
+    daylight_results = {}
+
+    for lat in latitudes:
+        beepop = PyBeePop(verbose=False)
+        beepop.set_latitude(lat)
+        beepop.load_weather(weather_file)
+        beepop.set_parameters(test_params)
+
+        results = beepop.run_model()
+        daylight_hours = results["Daylight hours"].tolist()[1:]  # Skip 'Initial' row
+        daylight_results[lat] = daylight_hours
+
+    # Different latitudes should produce different daylight patterns
+    equator_daylight = daylight_results[0]
+    high_lat_daylight = daylight_results[60]
+
+    # At least some values should be different
+    assert (
+        equator_daylight != high_lat_daylight
+    ), "Different latitudes should produce different daylight patterns"
+
+    # Equator should have less variation (closer to 12 hours year-round)
+    equator_range = max(equator_daylight) - min(equator_daylight)
+    high_lat_range = max(high_lat_daylight) - min(high_lat_daylight)
+
+    # High latitude should have more variation in summer
+    assert (
+        high_lat_range > equator_range
+    ), "High latitude should have more daylight variation"
+
+
+def test_latitude_inheritance_reset():
+    """Test that new PyBeePop instances reset latitude to default."""
+    # Create first instance and set latitude
+    beepop1 = PyBeePop(verbose=False)
+    beepop1.set_latitude(65)
+    assert beepop1.get_latitude() == 65
+
+    # Create second instance - should have default latitude, not inherit
+    beepop2 = PyBeePop(verbose=False)
+    default_lat = beepop2.get_latitude()
+    assert (
+        default_lat == 30.0
+    ), f"New instance should have default latitude 30.0, got {default_lat}"
+
+
+def test_set_simulation_dates():
+    """Test the new set_simulation_dates convenience method."""
+    beepop = PyBeePop(verbose=False)
+
+    start_date = "01/01/2020"
+    end_date = "12/31/2020"
+
+    beepop.set_simulation_dates(start_date, end_date)
+    params = beepop.get_parameters()
+
+    assert "simstart" in params
+    assert "simend" in params
+    assert params["simstart"] == start_date
+    assert params["simend"] == end_date
+
+
+def test_load_weather_preserves_simulation_dates():
+    """Test that loading weather doesn't overwrite previously set simulation dates."""
+    weather_file = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
+    beepop = PyBeePop(verbose=False)
+
+    # Set specific simulation dates
+    custom_start = "07/01/2014"
+    custom_end = "08/31/2014"
+    beepop.set_simulation_dates(custom_start, custom_end)
+
+    # Verify dates are set
+    params_before = beepop.get_parameters()
+    assert params_before["simstart"] == custom_start
+    assert params_before["simend"] == custom_end
+
+    # Load weather (this previously overwrote dates)
+    beepop.load_weather(weather_file)
+
+    # Verify dates are preserved
+    params_after = beepop.get_parameters()
+    assert (
+        params_after["simstart"] == custom_start
+    ), f"SimStart changed from {custom_start} to {params_after.get('simstart')}"
+    assert (
+        params_after["simend"] == custom_end
+    ), f"SimEnd changed from {custom_end} to {params_after.get('simend')}"
+
+
+def test_latitude_edge_cases():
+    """Test latitude setting with edge cases and invalid values."""
+    beepop = PyBeePop(verbose=False)
+
+    # Test extreme but valid latitudes
+    valid_latitudes = [-90, -45, 0, 45, 90]
+    for lat in valid_latitudes:
+        beepop.set_latitude(lat)
+        assert beepop.get_latitude() == lat
+
+    with pytest.raises(ValueError):
+        beepop.set_latitude(180)  # Invalid
+
+
+def test_comprehensive_latitude_workflow():
+    """Test a complete workflow with latitude changes and model runs."""
+    weather_file = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
+
+    beepop = PyBeePop(verbose=False)
+
+    # Set latitude before loading anything
+    beepop.set_latitude(55)
+    assert beepop.get_latitude() == 55
+
+    # Load weather and parameters
+    beepop.load_weather(weather_file)
+    beepop.set_parameters(
+        {"ICWorkerAdults": 12000, "SimStart": "06/16/2014", "SimEnd": "07/16/2014"}
+    )
+
+    # Latitude should still be set
+    assert beepop.get_latitude() == 55
+
+    # Run model
+    results = beepop.run_model()
+    assert len(results) > 1
+    assert "Daylight hours" in results.columns
+
+    # Change latitude and run again
+    beepop.set_latitude(25)
+    results2 = beepop.run_model()
+
+    # Results should be different due to latitude change
+    daylight1 = results["Daylight hours"].tolist()[1:]  # Skip 'Initial'
+    daylight2 = results2["Daylight hours"].tolist()[1:]
+
+    # At least some daylight values should be different
+    assert daylight1 != daylight2, "Changing latitude should affect daylight hours"

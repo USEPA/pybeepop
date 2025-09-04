@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pybeepop-plus"
-version = "0.1.3"
+version = "0.1.4"
 description = "EPA's Python interface for the EPA/USDA honey bee colony model BeePop+"
 authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
 maintainers = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
