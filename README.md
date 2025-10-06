@@ -26,7 +26,7 @@
 >
 > Garber, K., et al. (2022). "Simulating the Effects of Pesticides on Honey Bee (Apis mellifera L.) Colonies with BeePop+." *Ecologies*, 3(3), 22. [https://doi.org/10.3390/ecologies3030022](https://doi.org/10.3390/ecologies3030022)
 
-**Developed by**: Jeffrey Minucci, U.S. Environmental Protection Agency 
+**Package author**: Jeffrey Minucci, U.S. Environmental Protection Agency 
 
 ## Table of Contents
 
