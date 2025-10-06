@@ -8,9 +8,10 @@ TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(TEST_DIR, os.pardir))
 
 
-def test_integration_set_parameters():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_integration_set_parameters(engine_type):
     """Test setting parameters in the BeePop+ model."""
-    beepop = PyBeePop(verbose=True)
+    beepop = PyBeePop(engine=engine_type, verbose=True)
     print(beepop.lib_file)
     test_parameters = {
         "ICWorkerAdults": 9999,
@@ -27,24 +28,27 @@ def test_integration_set_parameters():
     assert params["simend"] == "10/31/2020"
 
 
-def test_integration_set_weather():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_integration_set_weather(engine_type):
     """Test loading weather data into the BeePop+ model."""
     test_weather = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
-    beepop = PyBeePop()
+    beepop = PyBeePop(engine=engine_type)
     beepop.load_weather(test_weather)
 
 
-def test_integration_invalid_parameter():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_integration_invalid_parameter(engine_type):
     """Test setting an invalid parameter in the BeePop+ model."""
-    beepop = PyBeePop()
+    beepop = PyBeePop(engine=engine_type)
     invalid_parameters = {"Invalid_parameter": 1234}
     with pytest.raises(ValueError):
         beepop.set_parameters(invalid_parameters)
 
 
-def test_integration_invalid_parameter_in_file():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_integration_invalid_parameter_in_file(engine_type):
     """Test loading an invalid parameter from a file into the BeePop+ model."""
-    beepop = PyBeePop()
+    beepop = PyBeePop(engine=engine_type)
     parameter_file = os.path.join(
         PROJECT_DIR, "example_data/test_parameters_invalid.txt"
     )
@@ -52,11 +56,12 @@ def test_integration_invalid_parameter_in_file():
         beepop.load_parameter_file(parameter_file)
 
 
-def test_regression_run_model():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_regression_run_model(engine_type):
     """Run a regression test on the BeePop+ model with example data.
     This test checks if the model runs correctly with a set of predefined parameters and files.
     """
-    beepop = PyBeePop(verbose=True)
+    beepop = PyBeePop(engine=engine_type, verbose=True)
     print(beepop.lib_file)
 
     # Define inputs and file paths
@@ -488,9 +493,10 @@ def test_version_and_exit(monkeypatch):
     beepop.exit()
 
 
-def test_set_latitude():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_set_latitude(engine_type):
     """Test setting and getting latitude with real model."""
-    beepop = PyBeePop(verbose=False)
+    beepop = PyBeePop(engine=engine_type, verbose=False)
 
     # Test default latitude
     default_lat = beepop.get_latitude()
@@ -505,7 +511,8 @@ def test_set_latitude():
         assert retrieved_lat == lat, f"Expected {lat}, got {retrieved_lat}"
 
 
-def test_latitude_effects_on_daylight():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_latitude_effects_on_daylight(engine_type):
     """Test that different latitudes produce different daylight hour patterns."""
     weather_file = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
 
@@ -521,7 +528,7 @@ def test_latitude_effects_on_daylight():
     daylight_results = {}
 
     for lat in latitudes:
-        beepop = PyBeePop(verbose=False)
+        beepop = PyBeePop(engine=engine_type, verbose=False)
         beepop.set_latitude(lat)
         beepop.load_weather(weather_file)
         beepop.set_parameters(test_params)
@@ -549,24 +556,26 @@ def test_latitude_effects_on_daylight():
     ), "High latitude should have more daylight variation"
 
 
-def test_latitude_inheritance_reset():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_latitude_inheritance_reset(engine_type):
     """Test that new PyBeePop instances reset latitude to default."""
     # Create first instance and set latitude
-    beepop1 = PyBeePop(verbose=False)
+    beepop1 = PyBeePop(engine=engine_type, verbose=False)
     beepop1.set_latitude(65)
     assert beepop1.get_latitude() == 65
 
     # Create second instance - should have default latitude, not inherit
-    beepop2 = PyBeePop(verbose=False)
+    beepop2 = PyBeePop(engine=engine_type, verbose=False)
     default_lat = beepop2.get_latitude()
     assert (
         default_lat == 30.0
     ), f"New instance should have default latitude 30.0, got {default_lat}"
 
 
-def test_set_simulation_dates():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_set_simulation_dates(engine_type):
     """Test the new set_simulation_dates convenience method."""
-    beepop = PyBeePop(verbose=False)
+    beepop = PyBeePop(engine=engine_type, verbose=False)
 
     start_date = "01/01/2020"
     end_date = "12/31/2020"
@@ -580,10 +589,11 @@ def test_set_simulation_dates():
     assert params["simend"] == end_date
 
 
-def test_load_weather_preserves_simulation_dates():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_load_weather_preserves_simulation_dates(engine_type):
     """Test that loading weather doesn't overwrite previously set simulation dates."""
     weather_file = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
-    beepop = PyBeePop(verbose=False)
+    beepop = PyBeePop(engine=engine_type, verbose=False)
 
     # Set specific simulation dates
     custom_start = "07/01/2014"
@@ -608,9 +618,10 @@ def test_load_weather_preserves_simulation_dates():
     ), f"SimEnd changed from {custom_end} to {params_after.get('simend')}"
 
 
-def test_latitude_edge_cases():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_latitude_edge_cases(engine_type):
     """Test latitude setting with edge cases and invalid values."""
-    beepop = PyBeePop(verbose=False)
+    beepop = PyBeePop(engine=engine_type, verbose=False)
 
     # Test extreme but valid latitudes
     valid_latitudes = [-90, -45, 0, 45, 90]
@@ -622,11 +633,12 @@ def test_latitude_edge_cases():
         beepop.set_latitude(180)  # Invalid
 
 
-def test_comprehensive_latitude_workflow():
+@pytest.mark.parametrize("engine_type", ["auto", "python"])
+def test_comprehensive_latitude_workflow(engine_type):
     """Test a complete workflow with latitude changes and model runs."""
     weather_file = os.path.join(PROJECT_DIR, "example_data/cedar_grove_NC_weather.txt")
 
-    beepop = PyBeePop(verbose=False)
+    beepop = PyBeePop(engine=engine_type, verbose=False)
 
     # Set latitude before loading anything
     beepop.set_latitude(55)

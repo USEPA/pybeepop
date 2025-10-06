@@ -278,8 +278,8 @@ class PythonEngineAdapter:
             self._raise_with_log(BeepopRuntimeError, f"Error setting parameters: {e}")
 
     def get_parameters(self) -> Dict[str, str]:
-        """Get currently set parameters."""
-        return self._parameters.copy()
+        """Get currently set parameters with lowercase keys."""
+        return {k.lower(): v for k, v in self._parameters.items()}
 
     def load_parameter_file(self, file_path: str) -> bool:
         """

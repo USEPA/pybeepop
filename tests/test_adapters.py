@@ -91,7 +91,7 @@ def test_python_adapter_has_all_methods():
 
 
 def test_python_adapter_parameter_format_conversion():
-    """Test Python adapter converts dict to list format."""
+    """Test Python adapter converts dict to list format and returns lowercase keys."""
     from pybeepop.adapters import PythonEngineAdapter
 
     adapter = PythonEngineAdapter()  # Initialization happens in __init__
@@ -100,7 +100,9 @@ def test_python_adapter_parameter_format_conversion():
     result = adapter.set_parameters(params)
 
     assert result == params  # Should return what was set
-    assert adapter.get_parameters() == params
+
+    expected_lowercase = {"icworkeradults": "10000", "simstart": "04/01/2023"}
+    assert adapter.get_parameters() == expected_lowercase
 
 
 def test_python_adapter_error_log_format_conversion():
