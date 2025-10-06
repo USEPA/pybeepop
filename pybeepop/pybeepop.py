@@ -5,8 +5,10 @@ pybeepop - BeePop+ interface for Python
 import os
 import platform
 import pandas as pd
+from typing import Optional
 from .tools import BeePopModel
 from .plots import plot_timeseries
+from .engine_interface import BeepopEngineInterface
 import json
 
 
@@ -32,6 +34,7 @@ class PyBeePop:
 
     def __init__(
         self,
+        engine="auto",
         lib_file=None,
         parameter_file=None,
         weather_file=None,
@@ -40,10 +43,19 @@ class PyBeePop:
         verbose=False,
     ):
         """
-        Initialize a PyBeePop object connected to a BeePop+ shared library.
+        Initialize a PyBeePop object with choice of simulation engine.
 
         Args:
-            lib_file (str, optional): Path to the BeePop+ shared library (.dll or .so). If None, attempts to auto-detect based on OS and architecture.
+            engine (str, optional): Simulation engine to use. Options:
+                - 'auto' (default): Automatically select engine. Tries C++ first,
+                  falls back to Python if C++ unavailable or initialization fails.
+                - 'cpp': Force C++ engine. Raises error if unavailable.
+                - 'python': Force pure Python engine.
+
+            lib_file (str, optional): Path to BeePop+ shared library (.dll or .so).
+                Only relevant when engine='cpp' or engine='auto'. If None, attempts
+                to auto-detect based on OS and architecture.
+
             parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). See https://doi.org/10.3390/ecologies3030022
                 or the documentation for valid parameters.
             weather_file (str, optional): Path to a .csv or comma-separated .txt file containing weather data, where each row denotes:
@@ -56,66 +68,148 @@ class PyBeePop:
         Raises:
             FileNotFoundError: If a provided file does not exist at the specified path.
             NotImplementedError: If run on a platform that is not 64-bit Windows or Linux.
-            ValueError: If latitude is outside the valid range.
-        """
+            ValueError: If engine parameter is invalid or latitude is outside the valid range.
 
-        self.parent = os.path.dirname(os.path.abspath(__file__))
-        self.platform = platform.system()
+        Examples:
+            >>> # Auto-select engine (backward compatible)
+            >>> model = PyBeePop(weather_file='weather.csv')
+            >>> results = model.run_model()
+
+            >>> # Force Python engine
+            >>> model = PyBeePop(engine='python')
+            >>> model.load_weather('weather.csv')
+            >>> results = model.run_model()
+
+            >>> # Force C++ engine with custom library
+            >>> model = PyBeePop(engine='cpp', lib_file='/path/to/custom_beepop.so')
+            >>> model.load_weather('weather.csv')
+            >>> results = model.run_model()
+        """
         self.verbose = verbose
-        if (
-            lib_file is None
-        ):  # detect OS and architecture and use pre-compiled BeePop+ if possible
-            if self.platform == "Windows":
-                if platform.architecture()[0] == "32bit":
-                    raise NotImplementedError(
-                        "Windows x86 (32-bit) is not supported by BeePop+. Please run on an x64 platform."
-                    )
-                else:
-                    lib_file = os.path.join(self.parent, "lib/beepop_win64.dll")
-            elif self.platform == "Linux":
-                lib_file = os.path.join(self.parent, "lib/beepop_linux.so")
-                if self.verbose:
-                    print(
-                        """
-                        Running in Linux mode. Trying manylinux/musllinux version.
-                        If you encounter errors, you may need to compile your own version of BeePop+ from source and pass the path to your
-                        .so file with the lib_file option. Currently, only 64-bit architecture is supported.
-                        See the pybeepop README for instructions.
-                        """
-                    )
-            else:
-                raise NotImplementedError("BeePop+ only supports Windows and Linux.")
-        if not os.path.isfile(lib_file):
-            raise FileNotFoundError(
-                """
-                BeePop+ shared object library does not exist or is not compatible with your operating system. 
-                You may need to compile BeePop+ from source (see https://github.com/USEPA/pybeepop/blob/main/README.md for more info.)
-                Currently, only 64-bit architecture is supported.
-                """
+        self.engine_type: Optional[str] = None
+        self.engine: Optional[BeepopEngineInterface] = None
+        self.lib_file: Optional[str] = None  # For backward compatibility
+
+        # Engine selection logic
+        if engine == "python":
+            self.engine = self._initialize_python_engine()
+            self.engine_type = "python"
+        elif engine == "cpp":
+            self.engine = self._initialize_cpp_engine(lib_file)
+            self.engine_type = "cpp"
+            # Store lib_file for backward compatibility
+            if hasattr(self.engine, "lib_file"):
+                self.lib_file = self.engine.lib_file
+        elif engine == "auto":
+            # Try C++ first (backward compatible), fall back to Python
+            try:
+                self.engine = self._initialize_cpp_engine(lib_file)
+                self.engine_type = "cpp"
+                # Store lib_file for backward compatibility
+                if hasattr(self.engine, "lib_file"):
+                    self.lib_file = self.engine.lib_file
+                if verbose:
+                    print("Using C++ engine")
+            except Exception as e:
+                if verbose:
+                    print(f"C++ engine initialization failed: {e}")
+                    print("Falling back to Python engine...")
+                self.engine = self._initialize_python_engine()
+                self.engine_type = "python"
+                if verbose:
+                    print("Using Python engine")
+        else:
+            raise ValueError(
+                f"Invalid engine type: '{engine}'. "
+                f"Must be 'auto', 'cpp', or 'python'."
             )
-        self.lib_file = lib_file
-        self.beepop = BeePopModel(self.lib_file, verbose=self.verbose)
-        # Reset latitude to avoid inheritance from previous instances
-        # Validate and set the provided latitude
+
+        # Validate and set latitude
         if not -90 <= latitude <= 90:
             raise ValueError("Latitude must be between -90 and 90 degrees")
         self.current_latitude = latitude
-        self.beepop.set_latitude(self.current_latitude)
-        self.parameters = None
+        self.engine.set_latitude(self.current_latitude)
+
+        # Initialize file paths and parameters
+        self.parameter_file = None
+        self.weather_file = None
+        self.residue_file = None
+        self.parameters = {}
+        self.output = None
+
+        # Add backward compatibility alias
+        self.beepop = self.engine
+
+        # Load files if provided
         if parameter_file is not None:
-            self.load_parameter_file(self.parameter_file)
-        else:
-            self.parameter_file = None
+            self.load_parameter_file(parameter_file)
+
         if weather_file is not None:
             self.load_weather(weather_file)
-        else:
-            self.weather_file = None
+
         if residue_file is not None:
-            self.load_residue_file(self.residue_file)
-        else:
-            self.residue_file = None
-        # self.new_features = new_features # not being used?
-        self.output = None
+            self.load_residue_file(residue_file)
+
+    def _initialize_cpp_engine(self, lib_file) -> BeepopEngineInterface:
+        """
+        Initialize C++ engine.
+
+        Args:
+            lib_file: Path to shared library, or None for auto-detection
+
+        Returns:
+            CppEngineAdapter: Initialized C++ engine adapter
+
+        Raises:
+            FileNotFoundError: If library file not found
+            RuntimeError: If initialization fails
+        """
+        from .adapters import (
+            CppEngineAdapter,
+        )  # Auto-detect lib_file if not provided (existing logic)
+
+        if lib_file is None:
+            parent = os.path.dirname(os.path.abspath(__file__))
+            platform_name = platform.system()
+
+            if platform_name == "Windows":
+                if platform.architecture()[0] == "32bit":
+                    raise NotImplementedError(
+                        "Windows x86 (32-bit) is not supported by BeePop+. "
+                        "Please run on an x64 platform."
+                    )
+                lib_file = os.path.join(parent, "lib/beepop_win64.dll")
+            elif platform_name == "Linux":
+                lib_file = os.path.join(parent, "lib/beepop_linux.so")
+                if self.verbose:
+                    print(
+                        "Running in Linux mode. Trying manylinux/musllinux version.\\n"
+                        "If you encounter errors, you may need to compile your own version of BeePop+ from source and pass the path to your\\n"
+                        ".so file with the lib_file option. Currently, only 64-bit architecture is supported.\\n"
+                        "See the pybeepop README for instructions."
+                    )
+            else:
+                raise NotImplementedError("BeePop+ only supports Windows and Linux.")
+
+        if not os.path.isfile(lib_file):
+            raise FileNotFoundError(
+                f"BeePop+ shared library not found at: {lib_file}\\n"
+                f"You may need to compile BeePop+ from source or use engine='python'\\n"
+                f"See https://github.com/USEPA/pybeepop/blob/main/README.md for more info."
+            )
+
+        return CppEngineAdapter(lib_file, verbose=self.verbose)
+
+    def _initialize_python_engine(self) -> BeepopEngineInterface:
+        """
+        Initialize Python engine.
+
+        Returns:
+            PythonEngineAdapter: Initialized Python engine adapter
+        """
+        from .adapters import PythonEngineAdapter
+
+        return PythonEngineAdapter(verbose=self.verbose)
 
     def set_parameters(self, parameters):
         """
@@ -132,7 +226,7 @@ class PyBeePop:
             raise TypeError(
                 "parameters must be a named dictionary of BeePop+ parameters"
             )
-        self.parameters = self.beepop.set_parameters(parameters)
+        self.parameters = self.engine.set_parameters(parameters)
 
     def get_parameters(self):
         """
@@ -141,7 +235,7 @@ class PyBeePop:
         Returns:
             dict: Dictionary of current BeePop+ parameters.
         """
-        return self.beepop.get_parameters()
+        return self.engine.get_parameters()
 
     def set_latitude(self, latitude):
         """
@@ -156,7 +250,7 @@ class PyBeePop:
         if not -90 <= latitude <= 90:
             raise ValueError("Latitude must be between -90 and 90 degrees")
         self.current_latitude = latitude
-        self.beepop.set_latitude(latitude)
+        self.engine.set_latitude(latitude)
 
     def get_latitude(self):
         """
@@ -195,17 +289,23 @@ class PyBeePop:
             weather_file (str): Path to the weather file (csv or txt). See docs/weather_readme.txt and manuscript for format details.
 
         Raises:
+            TypeError: If weather_file is None.
             FileNotFoundError: If the provided file does not exist at the specified path.
+            OSError: If the file cannot be opened or read.
+            RuntimeError: If weather file cannot be loaded.
         """
+        if weather_file is None:
+            raise TypeError("Cannot set weather file to None")
         if not os.path.isfile(weather_file):
             raise FileNotFoundError(
                 "Weather file does not exist at path: {}!".format(weather_file)
             )
         self.weather_file = weather_file
 
-        # Load weather - the underlying BeePopModel.load_weather() will automatically
-        # re-apply any previously set parameters after loading
-        self.beepop.load_weather(self.weather_file)
+        # Load weather via adapter
+        success = self.engine.load_weather_file(self.weather_file)
+        if not success:
+            raise RuntimeError("Failed to load weather file")
 
     def load_parameter_file(self, parameter_file):
         """
@@ -223,7 +323,12 @@ class PyBeePop:
                 "Paramter file does not exist at path: {}!".format(parameter_file)
             )
         self.parameter_file = parameter_file
-        self.beepop.load_input_file(self.parameter_file)
+
+        # Load parameter file via adapter
+        # Note: adapter will raise ValueError for invalid parameters
+        success = self.engine.load_parameter_file(self.parameter_file)
+        if not success:
+            raise RuntimeError("Failed to load parameter file")
 
     def load_residue_file(self, residue_file):
         """
@@ -241,7 +346,11 @@ class PyBeePop:
                 "Residue file does not exist at path: {}!".format(residue_file)
             )
         self.residue_file = residue_file
-        self.beepop.load_contam_file(self.residue_file)
+
+        # Load residue file via adapter
+        success = self.engine.load_residue_file(self.residue_file)
+        if not success:
+            raise RuntimeError("Failed to load residue file")
 
     def run_model(self):
         """
@@ -254,11 +363,17 @@ class PyBeePop:
             pandas.DataFrame: DataFrame of daily time series results for the BeePop+ run, including colony size, adult workers, brood, eggs, and other metrics.
         """
         # check to see if parameters have been supplied
-        if (self.parameter_file is None) and (self.parameters is None):
-            print("No parameters have been set. Running with defualt settings.")
+        if (self.parameter_file is None) and (not self.parameters):
+            print("No parameters have been set. Running with default settings.")
         if self.weather_file is None:
             raise RuntimeError("Weather must be set before running BeePop+!")
-        self.output = self.beepop.run_beepop()
+
+        # Run via adapter
+        self.output = self.engine.run_simulation()
+
+        if self.output is None:
+            raise RuntimeError("Simulation failed to produce results")
+
         return self.output
 
     def get_output(self, format="DataFrame"):
@@ -328,7 +443,7 @@ class PyBeePop:
         Returns:
             str: Error log from the BeePop+ session.
         """
-        return self.beepop.get_errors()
+        return self.engine.get_error_log()
 
     def get_info_log(self):
         """
@@ -337,7 +452,7 @@ class PyBeePop:
         Returns:
             str: Info log from the BeePop+ session.
         """
-        return self.beepop.get_info()
+        return self.engine.get_info_log()
 
     def version(self):
         """
@@ -346,22 +461,19 @@ class PyBeePop:
         Returns:
             str: BeePop+ version string.
         """
-        version = self.beepop.get_version()
-        return version
+        return self.engine.get_version()
 
     def exit(self):
         """
-        Close the connection to the BeePop+ shared library and clean up resources.
+        Close the connection to the BeePop+ simulation engine and clean up resources.
         """
-        if hasattr(self, "beepop") and self.beepop is not None:
-            if hasattr(self.beepop, "lib") and self.beepop.lib is not None:
-                # Clear any remaining buffers
-                try:
-                    self.beepop.clear_buffers()
-                    self.beepop.close_library()
-                except:
-                    pass  # Ignore errors during cleanup
-            self.beepop = None
+        if hasattr(self, "engine") and self.engine is not None:
+            try:
+                self.engine.cleanup()
+            except Exception as e:
+                if self.verbose:
+                    print(f"Warning during cleanup: {e}")
+            self.engine = None
 
     def __del__(self):
         """Destructor to ensure cleanup when object is garbage collected."""

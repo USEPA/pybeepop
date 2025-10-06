@@ -112,6 +112,7 @@ def test_init_default_lib(monkeypatch):
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
     # Patch BeePopModel to a dummy class to avoid loading actual library
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -155,7 +156,7 @@ def test_init_default_lib(monkeypatch):
         def close_library(self):
             pass
 
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     assert hasattr(beepop, "beepop")
     assert beepop.lib_file.endswith(".dll") or beepop.lib_file.endswith(".so")
@@ -163,6 +164,8 @@ def test_init_default_lib(monkeypatch):
 
 def test_set_parameters_type_error(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -181,7 +184,7 @@ def test_set_parameters_type_error(monkeypatch):
             return self.latitude
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     with pytest.raises(TypeError):
         beepop.set_parameters(["not", "a", "dict"])
@@ -189,6 +192,7 @@ def test_set_parameters_type_error(monkeypatch):
 
 def test_set_parameters_and_get(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -207,7 +211,7 @@ def test_set_parameters_and_get(monkeypatch):
             return self.latitude
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     beepop.set_parameters({"ICWorkerAdults": 123})
     params = beepop.get_parameters()
@@ -217,6 +221,7 @@ def test_set_parameters_and_get(monkeypatch):
 
 def test_load_weather_file_not_found(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -239,13 +244,14 @@ def test_load_weather_file_not_found(monkeypatch):
 
     beepop = PyBeePop()
     monkeypatch.setattr(os.path, "isfile", lambda x: False)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     with pytest.raises(FileNotFoundError):
         beepop.load_weather("nonexistent_file.txt")
 
 
 def test_load_parameter_file_not_found(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -268,13 +274,14 @@ def test_load_parameter_file_not_found(monkeypatch):
 
     beepop = PyBeePop()
     monkeypatch.setattr(os.path, "isfile", lambda x: False)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     with pytest.raises(FileNotFoundError):
         beepop.load_parameter_file("nonexistent_param.txt")
 
 
 def test_load_residue_file_not_found(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -297,13 +304,14 @@ def test_load_residue_file_not_found(monkeypatch):
 
     beepop = PyBeePop()
     monkeypatch.setattr(os.path, "isfile", lambda x: False)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     with pytest.raises(FileNotFoundError):
         beepop.load_residue_file("nonexistent_residue.txt")
 
 
 def test_run_model_no_weather(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -325,7 +333,7 @@ def test_run_model_no_weather(monkeypatch):
             return None
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     beepop.weather_file = None
     with pytest.raises(RuntimeError):
@@ -334,6 +342,7 @@ def test_run_model_no_weather(monkeypatch):
 
 def test_get_output_json(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -355,7 +364,7 @@ def test_get_output_json(monkeypatch):
             return pd.DataFrame({"Colony Size": [1], "Date": ["Initial"]})
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     beepop.output = pd.DataFrame({"Colony Size": [1], "Date": ["Initial"]})
     result = beepop.get_output(format="json")
@@ -365,6 +374,7 @@ def test_get_output_json(monkeypatch):
 
 def test_get_output_no_output(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -383,7 +393,7 @@ def test_get_output_no_output(monkeypatch):
             return self.latitude
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     beepop.output = None
     with pytest.raises(RuntimeError):
@@ -392,6 +402,7 @@ def test_get_output_no_output(monkeypatch):
 
 def test_plot_output_invalid_column(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -413,7 +424,7 @@ def test_plot_output_invalid_column(monkeypatch):
         return None
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     monkeypatch.setattr(pbp, "plot_timeseries", dummy_plot_timeseries)
     beepop = PyBeePop()
     beepop.output = pd.DataFrame({"Colony Size": [1], "Date": ["Initial"]})
@@ -423,6 +434,8 @@ def test_plot_output_invalid_column(monkeypatch):
 
 def test_get_error_and_info_log(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -441,7 +454,7 @@ def test_get_error_and_info_log(monkeypatch):
             return "info log"
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     assert beepop.get_error_log() == "error log"
     assert beepop.get_info_log() == "info log"
@@ -449,6 +462,8 @@ def test_get_error_and_info_log(monkeypatch):
 
 def test_version_and_exit(monkeypatch):
     import pybeepop.pybeepop as pbp
+    import pybeepop.tools as tools
+    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -467,7 +482,7 @@ def test_version_and_exit(monkeypatch):
             self.closed = True
 
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
-    monkeypatch.setattr(pbp, "BeePopModel", DummyBeePopModel)
+    monkeypatch.setattr(tools, "BeePopModel", DummyBeePopModel)
     beepop = PyBeePop()
     assert beepop.version() == "2.1"
     beepop.exit()
