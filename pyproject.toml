@@ -67,6 +67,8 @@ before-all = [
     "cmake --build . --config Release",
     "cp liblibvpop.dylib ../../pybeepop/lib/beepop_macos.dylib",
 ]
+test-command = "python -c \"from pybeepop import PyBeePop; bee = PyBeePop(engine='cpp', verbose=True); print('✓ C++ engine loaded successfully on macOS')\""
+test-requires = ["pandas>=2.0.0", "matplotlib>=3.1.0"]
 
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"

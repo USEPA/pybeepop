@@ -188,8 +188,17 @@ class PyBeePop:
                         ".so file with the lib_file option. Currently, only 64-bit architecture is supported.\\n"
                         "See the pybeepop README for instructions."
                     )
+            elif platform_name == "Darwin":
+                lib_file = os.path.join(parent, "lib/beepop_macos.dylib")
+                if self.verbose:
+                    print(
+                        "Running in macOS mode. Using universal binary (Intel + Apple Silicon).\\n"
+                        "If you encounter errors, you may need to compile your own version of BeePop+ from source and pass the path to your\\n"
+                        ".dylib file with the lib_file option.\\n"
+                        "See the pybeepop README for instructions."
+                    )
             else:
-                raise NotImplementedError("BeePop+ only supports Windows and Linux.")
+                raise NotImplementedError("BeePop+ only supports Windows, Linux, and macOS.")
 
         if not os.path.isfile(lib_file):
             raise FileNotFoundError(
