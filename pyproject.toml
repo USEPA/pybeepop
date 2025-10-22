@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pybeepop-plus"
-version = "0.1.4"
+version = "0.2.0"
 description = "EPA's Python interface for the EPA/USDA honey bee colony model BeePop+"
 authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
 maintainers = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
@@ -11,10 +11,11 @@ documentation = "https://usepa.github.io/pybeepop/"
 packages = [
     { include = "pybeepop", from ="." },
 ]
-include = ["lib/*.dll", "lib/*.so", "data/*"]
+include = ["lib/*.dll", "lib/*.so", "lib/*.dylib", "data/*"]
 classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
     "Programming Language :: Python",
     "Intended Audience :: Science/Research",
 ]
@@ -53,6 +54,18 @@ before-all = [
     "cmake --build . --config Release",
     "copy Release\\libvpop.dll ..\\..\\pybeepop\\lib",
     "move /y ..\\..\\pybeepop\\lib\\libvpop.dll ..\\..\\pybeepop\\lib\\beepop_win64.dll",
+]
+
+[tool.cibuildwheel.macos]
+archs = ["universal2"]
+before-all = [
+    "brew install cmake || true",
+    "cd beepop",
+    "mkdir -p build",
+    "cd build",
+    "cmake -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64' -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
+    "cmake --build . --config Release",
+    "cp liblibvpop.dylib ../../pybeepop/lib/beepop_macos.dylib",
 ]
 
 [[tool.cibuildwheel.overrides]]
