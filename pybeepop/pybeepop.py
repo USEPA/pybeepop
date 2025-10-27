@@ -47,10 +47,11 @@ class PyBeePop:
 
         Args:
             engine (str, optional): Simulation engine to use. Options:
-                - 'auto' (default): Automatically select engine. Tries C++ first,
-                  falls back to Python if C++ unavailable or initialization fails.
-                - 'cpp': Force C++ engine. Raises error if unavailable.
-                - 'python': Force pure Python engine.
+                - 'auto' (default): Automatically select engine. Tries C++ first on
+                  Windows/Linux, uses Python on macOS. Falls back to Python if C++
+                  unavailable or initialization fails.
+                - 'cpp': Force C++ engine. Raises error if unavailable. Not supported on macOS.
+                - 'python': Force pure Python engine (available on all platforms).
 
             lib_file (str, optional): Path to BeePop+ shared library (.dll or .so).
                 Only relevant when engine='cpp' or engine='auto'. If None, attempts
@@ -91,6 +92,22 @@ class PyBeePop:
         self.lib_file: Optional[str] = None  # For backward compatibility
 
         # Engine selection logic
+        current_platform = platform.system()
+
+        # macOS only supports Python engine
+        if current_platform == "Darwin":
+            if engine == "cpp":
+                raise NotImplementedError(
+                    "The C++ engine is not supported on macOS due to architecture compatibility issues. "
+                    "Please use engine='python' instead."
+                )
+            elif engine == "auto":
+                if verbose:
+                    print(
+                        "macOS detected: using Python engine (C++ engine not supported on macOS)"
+                    )
+                engine = "python"
+
         if engine == "python":
             self.engine = self._initialize_python_engine()
             self.engine_type = "python"
@@ -188,18 +205,10 @@ class PyBeePop:
                         ".so file with the lib_file option. Currently, only 64-bit architecture is supported.\\n"
                         "See the pybeepop README for instructions."
                     )
-            elif platform_name == "Darwin":
-                lib_file = os.path.join(parent, "lib/beepop_macos.dylib")
-                if self.verbose:
-                    print(
-                        "Running in macOS mode. Using universal binary (Intel + Apple Silicon).\\n"
-                        "If you encounter errors, you may need to compile your own version of BeePop+ from source and pass the path to your\\n"
-                        ".dylib file with the lib_file option.\\n"
-                        "See the pybeepop README for instructions."
-                    )
             else:
                 raise NotImplementedError(
-                    "BeePop+ only supports Windows, Linux, and macOS."
+                    "BeePop+ C++ engine only supports Windows and Linux. "
+                    "For macOS, use engine='python'."
                 )
 
         if not os.path.isfile(lib_file):

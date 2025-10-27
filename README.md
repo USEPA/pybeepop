@@ -56,6 +56,7 @@
 #### Supported Platforms
 - Windows 64-bit
 - Linux 64-bit
+- macOS (Python engine only)
 
 #### Platform-Specific Dependencies
 
@@ -67,14 +68,19 @@
 - If you encounter loading errors, see [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
 - Source code: [github.com/quanted/vpoplib](https://github.com/quanted/vpoplib)
 
+**macOS**
+- Only the Python engine is supported (C++ engine unavailable due to architecture compatibility issues)
+
 
 ## Choosing a Simulation Engine
 
 **pybeepop+** supports two simulation engines:
-- **C++ engine** (default): The original published C++ implementation, requires compiled binaries (Linux, Windows only)
-- **Python engine**: A pure Python port for improved portability and easier code inspection, with no binary dependencies
+- **C++ engine** (default on Windows/Linux): The original published C++ implementation, requires compiled binaries
+- **Python engine** (default on macOS): A pure Python port for improved portability and easier code inspection, with no binary dependencies
 
 Both engines produce nearly identical results, with only negligible differences in some floating-point calculations.
+
+> **Note**: On macOS, only the Python engine is available. The C++ engine is not supported due to architecture-specific compatibility issues.
 
 ### Selecting an Engine
 

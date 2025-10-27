@@ -59,25 +59,9 @@ before-all = [
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
 environment = { ARCHFLAGS="-arch x86_64 -arch arm64", MACOSX_DEPLOYMENT_TARGET="10.13" }
-test-skip = ["*-macosx_universal2:x86_64"]
-before-all = [
-    "brew install cmake || true",
-    "cd beepop",
-    "mkdir -p build",
-    "cd build",
-    "cmake -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=non-pod-varargs -Wno-error=format-security\" ..",
-    "cmake --build . --config Release",
-    "cp liblibvpop.dylib ../../pybeepop/lib/beepop_macos.dylib",
-    "echo '=== System Architecture ==='",
-    "uname -m",
-    "echo '=== Dylib file info ==='",
-    "file ../../pybeepop/lib/beepop_macos.dylib",
-    "echo '=== Dylib dependencies ==='",
-    "otool -L ../../pybeepop/lib/beepop_macos.dylib",
-    "echo '=== Dylib architectures ==='",
-    "lipo -info ../../pybeepop/lib/beepop_macos.dylib",
-]
-test-command = "python -c \"import sys; print('=== Test Environment ==='); print('Python version:', sys.version); import platform; print('Platform:', platform.machine()); print('\\n=== Testing PyBeePop Import ==='); from pybeepop import PyBeePop; print('✓ Import successful'); print('\\n=== Testing C++ Engine ==='); bee = PyBeePop(engine='cpp', verbose=True); print('\\n✓✓✓ C++ engine loaded successfully on macOS! ✓✓✓')\""
+# Note: macOS wheels use Python engine only (no C++ library)
+# C++ engine is not supported on macOS due to architecture compatibility issues
+test-command = "python -c \"from pybeepop import PyBeePop; bee = PyBeePop(engine='python'); print('✓ Python engine working on macOS')\""
 test-requires = ["pandas>=2.0.0", "matplotlib>=3.1.0"]
 
 [[tool.cibuildwheel.overrides]]
