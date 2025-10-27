@@ -59,7 +59,7 @@ before-all = [
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
 environment = { ARCHFLAGS="-arch x86_64 -arch arm64", MACOSX_DEPLOYMENT_TARGET="10.13" }
-test-skip = ["*_x86_64"]
+test-skip = ["*-universal2:x86_64"]
 before-all = [
     "brew install cmake || true",
     "cd beepop",
