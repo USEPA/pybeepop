@@ -198,7 +198,9 @@ class PyBeePop:
                         "See the pybeepop README for instructions."
                     )
             else:
-                raise NotImplementedError("BeePop+ only supports Windows, Linux, and macOS.")
+                raise NotImplementedError(
+                    "BeePop+ only supports Windows, Linux, and macOS."
+                )
 
         if not os.path.isfile(lib_file):
             raise FileNotFoundError(
