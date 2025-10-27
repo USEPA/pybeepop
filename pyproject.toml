@@ -58,12 +58,13 @@ before-all = [
 
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
+environment = { ARCHFLAGS="-arch x86_64 -arch arm64" }
 before-all = [
     "brew install cmake || true",
     "cd beepop",
     "mkdir -p build",
     "cd build",
-    "cmake -DCMAKE_OSX_ARCHITECTURES='x86_64;arm64' -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_CXX_FLAGS='-Wno-error=non-pod-varargs -Wno-error=format-security' ..",
+    "cmake -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_CXX_FLAGS=\"-Wno-error=non-pod-varargs -Wno-error=format-security\" ..",
     "cmake --build . --config Release",
     "cp liblibvpop.dylib ../../pybeepop/lib/beepop_macos.dylib",
     "echo '=== System Architecture ==='",
