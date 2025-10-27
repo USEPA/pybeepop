@@ -57,10 +57,9 @@ before-all = [
 ]
 
 [tool.cibuildwheel.macos]
-archs = ["universal2"]
-environment = { ARCHFLAGS="-arch x86_64 -arch arm64", MACOSX_DEPLOYMENT_TARGET="10.13" }
 # Note: macOS wheels use Python engine only (no C++ library)
-# C++ engine is not supported on macOS due to architecture compatibility issues
+# Pure Python wheels work on all architectures, no need for universal2
+environment = { MACOSX_DEPLOYMENT_TARGET="10.13" }
 test-command = "python -c \"from pybeepop import PyBeePop; bee = PyBeePop(engine='python'); print('✓ Python engine working on macOS')\""
 test-requires = ["pandas>=2.0.0", "matplotlib>=3.1.0"]
 

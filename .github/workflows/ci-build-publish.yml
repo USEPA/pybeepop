@@ -33,14 +33,13 @@ jobs:
             repository: quanted/vpoplib
             ref: dev
             path: beepop
+        # Note: macOS builds don't use C++ code (Python engine only)
+        if: matrix.os != 'macos-latest'
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
         env:
           CIBW_ARCHS: auto64
-          CIBW_ARCHS_MACOS: universal2
-          # CIBW_ARCHS_LINUX: auto64
-          # CIBW_ARCHS_WINDOWS: auto64
           CIBW_BUILD_VERBOSITY: 1
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
         with:
