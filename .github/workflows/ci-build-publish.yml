@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 
     steps:
       - uses: actions/checkout@v4
@@ -34,13 +34,12 @@ jobs:
             ref: dev
             path: beepop
         # Note: macOS builds don't use C++ code (Python engine only)
-        if: matrix.os != 'macos-latest'
+        if: matrix.os != 'macos-13' && matrix.os != 'macos-14'
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0
         env:
           CIBW_ARCHS: auto64
-          CIBW_ARCHS_MACOS: universal2
           CIBW_BUILD_VERBOSITY: 1
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
         with:
