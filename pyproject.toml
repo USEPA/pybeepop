@@ -58,8 +58,9 @@ before-all = [
 
 [tool.cibuildwheel.macos]
 # Note: macOS wheels use Python engine only (no C++ library)
-environment = { MACOSX_DEPLOYMENT_TARGET="10.13" }
+environment = { ARCHFLAGS="-arch x86_64 -arch arm64", MACOSX_DEPLOYMENT_TARGET="10.13", _PYTHON_HOST_PLATFORM="macosx-10.13-universal2" }
 repair-wheel-command = ""
+test-skip = ["*-macosx_universal2:x86_64"]  # Skip x86_64 testing under Rosetta 2
 test-command = "python -c \"from pybeepop import PyBeePop; bee = PyBeePop(engine='python'); print('✓ Python engine working on macOS')\""
 test-requires = ["pandas>=2.0.0", "matplotlib>=3.1.0"]
 
