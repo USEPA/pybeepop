@@ -58,7 +58,7 @@ before-all = [
 
 [tool.cibuildwheel.macos]
 # Note: macOS wheels use Python engine only (no C++ library)
-skip = "pp38-*_arm64" # Skip PyPy 3.8 on ARM64 - dependencies like contourpy lack compatible wheels
+skip = "pp*" # Skip PyPy on macOS (very slow to compile)
 environment = { MACOSX_DEPLOYMENT_TARGET="10.13" }
 repair-wheel-command = ""  # Pure Python wheels don't need repair
 test-command = "python -c \"from pybeepop import PyBeePop; bee = PyBeePop(engine='python'); print('Python engine working on macOS')\""
