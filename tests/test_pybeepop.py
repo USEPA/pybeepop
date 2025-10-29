@@ -1,5 +1,6 @@
 from pybeepop import PyBeePop
 import pytest
+import platform
 import numpy as np
 import os
 import pandas as pd
@@ -112,6 +113,9 @@ def test_regression_run_model(engine_type):
     assert results_last["Rain (mm)"] == 0.0
 
 
+@pytest.mark.skipif(
+    platform.system() == "Darwin", reason="Requires C++ library not available on macOS"
+)
 def test_init_default_lib(monkeypatch):
     # Patch os.path.isfile to always return True for library file
     monkeypatch.setattr(os.path, "isfile", lambda x: True)
@@ -437,6 +441,9 @@ def test_plot_output_invalid_column(monkeypatch):
         beepop.plot_output(columns=["NotAColumn"])
 
 
+@pytest.mark.skipif(
+    platform.system() == "Darwin", reason="Requires C++ library not available on macOS"
+)
 def test_get_error_and_info_log(monkeypatch):
     import pybeepop.pybeepop as pbp
     import pybeepop.tools as tools
@@ -465,6 +472,9 @@ def test_get_error_and_info_log(monkeypatch):
     assert beepop.get_info_log() == "info log"
 
 
+@pytest.mark.skipif(
+    platform.system() == "Darwin", reason="Requires C++ library not available on macOS"
+)
 def test_version_and_exit(monkeypatch):
     import pybeepop.pybeepop as pbp
     import pybeepop.tools as tools

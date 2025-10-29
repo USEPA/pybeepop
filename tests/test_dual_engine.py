@@ -12,6 +12,7 @@ including:
 
 import pytest
 import os
+import platform
 import tempfile
 from datetime import datetime, timedelta
 import random
@@ -143,7 +144,7 @@ class TestParameterHandling:
             retrieved = model.get_parameters()
             # Check that key parameters were set
             assert "ICWorkerAdults" in retrieved or len(retrieved) > 0
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -160,7 +161,7 @@ class TestParameterHandling:
             # Verify parameters were loaded
             params = model.get_parameters()
             assert len(params) > 0  # Should have some parameters
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -200,7 +201,7 @@ class TestSimulationExecution:
             assert "Date" in results.columns
             # Both engines should produce colony size data
             assert any("Colony" in col or "Adult" in col for col in results.columns)
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -245,7 +246,7 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(ValueError, match="is not a valid parameter"):
                 model.set_parameters({"Invalid_Parameter_Name": "123"})
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -259,7 +260,7 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(TypeError, match="must be a named dictionary"):
                 model.set_parameters(["not", "a", "dict"])
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -273,7 +274,7 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(TypeError, match="Cannot set weather file to None"):
                 model.load_weather(None)
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -287,8 +288,10 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(FileNotFoundError):
                 model.load_weather("nonexistent_weather.txt")
-        except FileNotFoundError as e:
-            if engine_type == "cpp" and "library" in str(e).lower():
+        except (FileNotFoundError, NotImplementedError) as e:
+            if engine_type == "cpp" and (
+                "library" in str(e).lower() or isinstance(e, NotImplementedError)
+            ):
                 pytest.skip("C++ engine not available")
             raise
 
@@ -301,8 +304,10 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(FileNotFoundError):
                 model.load_parameter_file("nonexistent_params.txt")
-        except FileNotFoundError as e:
-            if engine_type == "cpp" and "library" in str(e).lower():
+        except (FileNotFoundError, NotImplementedError) as e:
+            if engine_type == "cpp" and (
+                "library" in str(e).lower() or isinstance(e, NotImplementedError)
+            ):
                 pytest.skip("C++ engine not available")
             raise
 
@@ -315,8 +320,10 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(FileNotFoundError):
                 model.load_residue_file("nonexistent_residue.txt")
-        except FileNotFoundError as e:
-            if engine_type == "cpp" and "library" in str(e).lower():
+        except (FileNotFoundError, NotImplementedError) as e:
+            if engine_type == "cpp" and (
+                "library" in str(e).lower() or isinstance(e, NotImplementedError)
+            ):
                 pytest.skip("C++ engine not available")
             raise
 
@@ -333,7 +340,7 @@ class TestExceptionParity:
             model = PyBeePop(engine=engine_type)
             with pytest.raises(ValueError, match="is not a valid parameter"):
                 model.load_parameter_file(str(param_file))
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -348,7 +355,7 @@ class TestExceptionParity:
             model.set_parameters({"ICWorkerAdults": "10000"})
             with pytest.raises(RuntimeError, match="Weather must be set"):
                 model.run_model()
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -367,7 +374,7 @@ class TestExceptionParity:
             # This should raise OSError or RuntimeError depending on how badly formatted
             with pytest.raises((OSError, RuntimeError)):
                 model.load_weather(str(weather_file))
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             if engine_type == "cpp":
                 pytest.skip("C++ engine not available")
             raise
@@ -398,7 +405,7 @@ class TestExceptionMessages:
 
             error_msg = str(exc_info.value).lower()
             assert "badparam" in error_msg or "not a valid parameter" in error_msg
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             pytest.skip("C++ engine not available")
 
 
