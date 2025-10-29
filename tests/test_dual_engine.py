@@ -103,7 +103,7 @@ class TestEngineInitialization:
             model = PyBeePop(engine="cpp")
             assert model.engine_type == "cpp"
             assert model.engine is not None
-        except FileNotFoundError:
+        except (FileNotFoundError, NotImplementedError):
             pytest.skip("C++ library not available on this platform")
 
     def test_invalid_engine_selection(self):
