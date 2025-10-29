@@ -1,13 +1,15 @@
-name: Run PyTests on Ubuntu
+name: PyTests
 
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: Run tests (Ubuntu)
-    runs-on: ubuntu-latest
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.x"]
 
     steps:

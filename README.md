@@ -12,7 +12,7 @@
 [Installation](#quick-start-guide) •
 [Documentation](https://usepa.github.io/pybeepop/) •
 [Examples](#example-notebook) •
-[Contributing](#contributing-to-pybeepop)
+[Contributing](#contributing)
 
 </div>
 
@@ -37,7 +37,7 @@
 - [Example Notebook](#example-notebook)
 - [API Documentation](#api-documentation)
 - [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
-- [Contributing to pybeepop+](#contributing-to-pybeepop)
+- [Contributing to pybeepop+](#contributing)
 
 ## Requirements
 
@@ -229,7 +229,6 @@ A  Jupyter notebook demonstrating `pybeepop+` usage is available here:
 
 **→** [pybeepop_example.ipynb](https://github.com/USEPA/pybeepop/blob/main/pybeepop_example.ipynb)
 
----
 
 ## API Documentation
 
@@ -237,7 +236,6 @@ Complete API reference and usage guide:
 
 **→** [https://usepa.github.io/pybeepop/](https://usepa.github.io/pybeepop/)
 
----
 
 ## Compiling BeePop+ on Linux
 
@@ -290,8 +288,6 @@ Found a bug? Please [open an issue](https://github.com/USEPA/pybeepop/issues) wi
 
 ### Support & Questions
 Need help? [Open an issue](https://github.com/USEPA/pybeepop/issues) on GitHub.
-
----
 
 ## Disclaimer
 
