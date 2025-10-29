@@ -1,141 +1,189 @@
-# pybeepop+ :honeybee:
+# pybeepop+ 🐝
+
+<div align="center">
 
 [![Tests (Windows)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml)
 [![Tests (Linux)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml)
 [![PyPI version](https://badge.fury.io/py/pybeepop-plus.svg)](https://badge.fury.io/py/pybeepop-plus)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-Python-based interface for the USDA/EPA's honey bee colony model **BeePop+**.
+**A Python interface for the USDA/EPA BeePop+ honey bee colony simulation model**
 
-For more information about **BeePop+** see [Garber *et al.* 2022](https://doi.org/10.3390/ecologies3030022).
+[Installation](#quick-start-guide) •
+[Documentation](https://usepa.github.io/pybeepop/) •
+[Examples](#example-notebook) •
+[Contributing](#contributing)
 
-Developed by: Jeffrey Minucci 
+</div>
+
+## About
+
+**pybeepop+** provides a Python interface to BeePop+, an agent-based model for simulating honey bee (*Apis mellifera* L.) colony dynamics. The model is designed for ecological risk assessment and research applications.
+
+> **References**: 
+> 
+> Minucci, J. (2025). "pybeepop+: A Python Interface for the BeePop+ Honey Bee Colony Model." *Journal of Open Research Software*, 13(1). [https://doi.org/10.5334/jors.550](https://doi.org/10.5334/jors.550)
+>
+> Garber, K., et al. (2022). "Simulating the Effects of Pesticides on Honey Bee (Apis mellifera L.) Colonies with BeePop+." *Ecologies*, 3(3), 22. [https://doi.org/10.3390/ecologies3030022](https://doi.org/10.3390/ecologies3030022)
+
+**Package author**: Jeffrey Minucci, U.S. Environmental Protection Agency 
 
 ## Table of Contents
 
 - [Requirements](#requirements)
+- [Choosing a Simulation Engine](#choosing-a-simulation-engine)
 - [Quick Start Guide](#quick-start-guide)
 - [Minimal Working Example](#minimal-working-example)
 - [Example Notebook](#example-notebook)
 - [API Documentation](#api-documentation)
 - [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
-- [Contributing to pybeepop+](#contributing-to-pybeepop)
+- [Contributing to pybeepop+](#contributing)
 
 ## Requirements
 
-* Supported platforms: 
-    * Windows 64-bit
-    * Linux 64-bit
-* For **Windows**: [Microsoft Visual C++ Redistributable 2015-2022](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
-* For **Linux**, the bundled BeePop+ library was compiled for the **manylinux/musllinux** standards (musllinux via wheel only). 
-If you encounter errors loading the library, you can try compiling BeePop+ yourself from source. Instructions for compiling BeePop+
-for Linux are [below](#compiling-beepop-on-linux). Source code is available on [the project's GitHub page](https://github.com/quanted/vpoplib).
-* Python version 3.8 or above.
-* pandas > 2.0.0
-* matplotlib > 3.1.0
+### Core Dependencies (All Engines)
+
+| Package | Version | Purpose |
+|---------|---------|----------|
+| Python | ≥ 3.8 | Runtime environment |
+| pandas | > 2.0.0 | Data handling |
+| matplotlib | > 3.1.0 | Visualization |
+
+### C++ Engine Requirements (Optional)
+
+> **Tip**: If you can't meet these requirements,  use the Python engine instead.
+
+#### Supported Platforms
+- Windows 64-bit
+- Linux 64-bit
+- macOS (Python engine only)
+
+#### Platform-Specific Dependencies
+
+**Windows**  
+- [Microsoft Visual C++ Redistributable 2015-2022](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
+
+**Linux**  
+- The bundled library supports **manylinux/musllinux** standards (musllinux via wheel only)
+- If you encounter loading errors, see [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
+- Source code: [github.com/quanted/vpoplib](https://github.com/quanted/vpoplib)
+
+**macOS**
+- Only the Python engine is supported (C++ engine unavailable due to architecture compatibility issues)
+
+
+## Choosing a Simulation Engine
+
+**pybeepop+** supports two simulation engines:
+- **C++ engine** (default on Windows/Linux): The original published C++ implementation, requires compiled binaries
+- **Python engine** (default on macOS): A pure Python port for improved portability and easier code inspection, with no binary dependencies
+
+Both engines produce nearly identical results, with only negligible differences in some floating-point calculations.
+
+> **Note**: On macOS, only the Python engine is available. The C++ engine is not supported due to architecture-specific compatibility issues.
+
+### Selecting an Engine
+
+Specify the engine when creating a `PyBeePop` instance using the `engine` parameter:
+
+```python
+from pybeepop import PyBeePop
+
+# Automatic selection (default) - tries C++ first, falls back to Python
+beepop = PyBeePop(engine='auto')
+
+# Explicitly use C++ engine
+beepop = PyBeePop(engine='cpp')
+
+# Explicitly use Python engine  
+beepop = PyBeePop(engine='python')
+```
 
 
 ## Quick Start Guide
 
-1. **Install the package** into your Python environment using pip:
+### Installation
 
-    ```sh
-    pip install pybeepop-plus
-    ```
-    
-2.  **Import the PyBeePop class** in your python code, e.g.:
-    
-    ```python
-    from pybeepop import PyBeePop
-    ```
-  
-3. **Create a BeePop+ object**:
+```bash
+pip install pybeepop-plus
+```
 
-    ```python
-    beepop = PyBeePop()
-    ```
-    
-4. **Set parameters, weather and pesticide exposure levels (optional)**.
+### Basic Usage
 
-    ```python
-    # define a dictionary of BeePop+ parameters (parameter_name: value)
-    params = {"ICWorkerAdults": 10000, "ICWorkerBrood": 8000, 
-        "SimStart": "04/13/2015", "SimEnd": "09/15/2015",
-        "AIAdultLD50": 0.04}
-    beepop.set_parameters(params)
-    
-    # load your weather file by giving its path
-    weather = '/home/example/test_weather.txt'
-    beepop.load_weather(weather)
-    
-    # load your pesticide residue file by giving its path (optional)
-    pesticide_file = '/home/example/pesticide_residues.txt'
-    beepop.load_residue_file(pesticide_file)
-    ```
-    
-    <br>Parameters that are not set by the user will take on the BeePop+ default values. For more information see [the BeePop+ publication](https://doi.org/10.3390/ecologies3030022).
-    
-    For a list of exposed BeePop+ parameters, see [the documentation page](https://usepa.github.io/pybeepop/pybeepop.html).
-    
-    For an explanation of the **weather file format**, see [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt).
+```python
+from pybeepop import PyBeePop
 
-    For an explanation of the **residue file format**, see [docs/residue_file_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/residue_file_readme.txt).
+# 1. Create a BeePop+ instance (auto-selects best available engine)
+beepop = PyBeePop()
 
-    **Example files** to run the model can be found at [example_files/](https://github.com/USEPA/pybeepop/tree/main/example_data).
-    
-5. **Run the Model** and get the results as a pandas DataFrame
-    ```python
-    results = beepop.run_model()
-    print(results)
-    ```
+# 2. Configure simulation parameters
+params = {
+    "ICWorkerAdults": 10000,
+    "ICWorkerBrood": 8000,
+    "SimStart": "04/13/2015",
+    "SimEnd": "09/15/2015",
+    "AIAdultLD50": 0.04
+}
+beepop.set_parameters(params)
 
-6. **Results from last simulation** can also be returned using the get_output function, with options to return a DataFrame or a json string.
-    ```python
-    output = beepop.get_output()  # pandas dataframe
-    output_json = beepop.get_output(json_str=True)  # json string
-    ```
+# 3. Load weather data
+beepop.load_weather('path/to/weather.txt')
 
-7. You can pass new parameters and/or update previously set ones (and optionally set a new weather file), and then run the model again. Parameters that were previously defined will remain set
+# 4. (Optional) Load pesticide exposure data
+beepop.load_residue_file('path/to/residues.txt')
 
-    ```python
-    # update value for ICWorkerAdults, InitColPollen, other values set previously remain
-    params_new = {"ICWorkerAdults": 22200, "InitColPollen": 4000}
-    beepop.set_parameters(parameters = params_new)
-    new_results = beepop.run_model()
-    ```
+# 5. Run simulation
+results = beepop.run_model()
+print(results)
+```
 
-8. You can also set parameters using a .txt file where each line gives a parameter in the format "Parameter=Value". 
 
-    Example my_parameters.txt:
-    
-    ```
-    RQEggLayDelay=10
-    RQReQueenDate=06/25/2015
-    RQEnableReQueen=False
-    ```
 
-    In Python:
+### Working with Results
 
-    ```python
-    parameter_file = 'home/example/my_parameters.txt'
-    my_parameters = beepop.load_input_file()
-    print(my_parameters)
-    ```
+```python
+# Get results as DataFrame
+results_df = beepop.get_output()
 
-9. To get a list of the user-defined parameters:
+# Get results as JSON
+results_json = beepop.get_output(json_str=True)
 
-    ```python
-    my_parameters = beepop.get_parameters()
-    print(my_parameters)
-    ```
+# Visualize time series
+beepop.plot_output()  # default columns
+beepop.plot_output(["Colony Size", "Adult Workers"])  # custom columns
+```
 
-10. To plot the last output as a time series:
+### Updating Parameters Between Runs
 
-    ```python
-    ax = beepop.plot_output()  # default columns
+```python
+# Update specific parameters (others remain unchanged)
+beepop.set_parameters({"ICWorkerAdults": 22200, "InitColPollen": 4000})
+results_updated = beepop.run_model()
+```
 
-    cols_to_plot = ["Dead Worker Adults", "Dead Foragers"]
-    ax = beepop.plot_output(cols_to_plot)  # custom columns
-    ```
+### Loading Parameters from File
+
+```python
+# Parameters file format (key=value per line)
+# Example: my_parameters.txt
+#   RQEggLayDelay=10
+#   RQReQueenDate=06/25/2015
+#   RQEnableReQueen=False
+
+beepop.load_parameter_file('my_parameters.txt')
+params = beepop.get_parameters()
+```
+
+---
+
+### Additional Resources
+
+- **Parameter Reference**: [Exposed BeePop+ Parameters](https://usepa.github.io/pybeepop/pybeepop.html)
+- **Weather File Format**: [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt)
+- **Residue File Format**: [docs/residue_file_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/residue_file_readme.txt)
+- **Example Files**: [example_data/](https://github.com/USEPA/pybeepop/tree/main/example_data)
+
+> **Note**: Parameters not explicitly set will use BeePop+ default values. See the [publication](https://doi.org/10.3390/ecologies3030022) for details.
 
 
 ## Minimal Working Example
@@ -175,51 +223,72 @@ finally:
 ```
 
 
-## Example notebook
+## Example Notebook
 
-A Jupyter notebook with a working example of using `pybeepop+` is available [here](https://github.com/USEPA/pybeepop/blob/main/pybeepop_example.ipynb).
+A  Jupyter notebook demonstrating `pybeepop+` usage is available here:
+
+**→** [pybeepop_example.ipynb](https://github.com/USEPA/pybeepop/blob/main/pybeepop_example.ipynb)
 
 
 ## API Documentation
 
-Documentation of the pybeepop+ API can be found at: https://usepa.github.io/pybeepop/.
+Complete API reference and usage guide:
+
+**→** [https://usepa.github.io/pybeepop/](https://usepa.github.io/pybeepop/)
 
 
 ## Compiling BeePop+ on Linux
 
 
-### Requirements for compilation
-* cmake > 3.2
-* gcc or g++ 
+### Build Requirements
+- `cmake` ≥ 3.2
+- `gcc` or `g++`
 
-### Compiling BeePop+ from source on Linux
+### Compilation Steps
 
-1. Clone the BeePop+ repo:
+```bash
+# 1. Clone the BeePop+ repository
+git clone https://github.com/quanted/VPopLib.git
+cd VPopLib
 
-        git clone https://github.com/quanted/VPopLib.git
-    
-2. Create a build directory:
+# 2. Create and enter build directory
+mkdir build
+cd build
 
-        cd VPopLib
-        mkdir build
-        cd build
-    
-3. Build the shared library:
+# 3. Build the shared library
+cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+cmake --build . --config Release
+```
 
-        cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..  	
-        cmake --build . --config Release
- 
-4. Now the .so file liblibvpop.so should have been created inside the /build directory. This shared library can be moved or renamed. You can pass the path to this .so file as lib_path when creating a PyBeePop object:
-        
-        # pass the path to your previously compiled shared library file
-        lib_file = '/home/example/liblibvpop.so'
-        beepop = PyBeePop(lib_file)
+### Using Your Custom Build
+
+The compiled library (`liblibvpop.so`) will be in the `build/` directory. Use it with pybeepop:
+
+```python
+from pybeepop import PyBeePop
+
+# Pass the path to your compiled library
+beepop = PyBeePop(lib_file='/home/example/liblibvpop.so')
+```
 
 
-## Contributing to pybeepop+
+## Contributing
 
-For those in the user community wishing to contribute to this project:
+We welcome community contributions. Here's how you can help:
 
-- Code updates or enhancements can be made by forking and submitting pull requests that will be reviewed by repository admins.
-- Software, code, or algorithm related bugs and issues can be submitted directly as issues on the GitHub repository.
-- Support can be requested through GitHub issues.
+### Code Contributions
+Fork the repository and submit pull requests. All submissions will be reviewed by maintainers.
+
+### Bug Reports
+Found a bug? Please [open an issue](https://github.com/USEPA/pybeepop/issues) with:
+- Description of the problem
+- Steps to reproduce
+- Expected vs. actual behavior
+- System information (OS, Python version, etc.)
+
+### Support & Questions
+Need help? [Open an issue](https://github.com/USEPA/pybeepop/issues) on GitHub.
+
+## Disclaimer
+
+This software is provided "as is" without warranty of any kind. The views expressed in this package are those of the authors and do not necessarily represent the views or policies of the U.S. Environmental Protection Agency.

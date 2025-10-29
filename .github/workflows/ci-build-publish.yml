@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 
     steps:
       - uses: actions/checkout@v4
@@ -33,6 +33,8 @@ jobs:
             repository: quanted/vpoplib
             ref: dev
             path: beepop
+        # Note: macOS builds don't use C++ code (Python engine only)
+        if: matrix.os != 'macos-13' && matrix.os != 'macos-14'
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.0

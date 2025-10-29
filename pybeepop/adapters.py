@@ -1,0 +1,482 @@
+"""
+Engine adapters for PyBeePop dual-engine architecture.
+
+This module provides adapter classes that wrap both the C++ engine (BeePopModel)
+and Python engine (beepop.BeePop) to provide a consistent interface conforming
+to the BeepopEngineInterface protocol.
+"""
+
+import os
+from typing import Dict, Optional, Type
+import pandas as pd
+
+from .exceptions import (
+    BeepopException,
+    BeepopParameterError,
+    BeepopRuntimeError,
+    BeepopFileError,
+)
+
+
+class CppEngineAdapter:
+    """
+    Adapter for C++ BeePop+ engine.
+
+    Wraps the existing BeePopModel class (ctypes wrapper around C++ library)
+    to conform to the BeepopEngineInterface protocol.
+
+    Attributes:
+        engine_type (str): Always 'cpp'
+        model (BeePopModel): The underlying C++ engine wrapper
+    """
+
+    def __init__(self, lib_file: str, verbose: bool = False):
+        """
+        Initialize C++ engine adapter.
+
+        Args:
+            lib_file: Path to BeePop+ shared library (.dll or .so)
+            verbose: Enable verbose output
+
+        Raises:
+            FileNotFoundError: If lib_file doesn't exist
+            RuntimeError: If C++ library initialization fails
+        """
+        from .tools import BeePopModel
+
+        if not os.path.isfile(lib_file):
+            raise FileNotFoundError(f"C++ library not found: {lib_file}")
+
+        self.model = BeePopModel(lib_file, verbose=verbose)
+        self.engine_type = "cpp"
+        self.verbose = verbose
+        self.lib_file = lib_file  # Store for backward compatibility
+        self._parameters = {}  # Track parameters set
+
+    def _raise_with_log(
+        self, exception_class: Type[BeepopException], message: str
+    ) -> None:
+        """
+        Raise exception with BeePop+ error log included.
+
+        Args:
+            exception_class: The exception class to raise (BeepopParameterError, etc.)
+            message: The error message
+
+        Raises:
+            exception_class: Raised with error log and info log included
+        """
+        error_log = self.get_error_log()
+        info_log = self.get_info_log()
+        raise exception_class(
+            message=message,
+            error_log=error_log,
+            info_log=info_log,
+            engine_type=self.engine_type,
+        )
+
+    def set_parameters(self, parameters: Dict[str, str]) -> Dict[str, str]:
+        """Set parameters via BeePopModel."""
+        result = self.model.set_parameters(parameters)
+        self._parameters.update(result)
+        return result
+
+    def get_parameters(self) -> Dict[str, str]:
+        """Get parameters from BeePopModel."""
+        return self.model.get_parameters()
+
+    def load_parameter_file(self, file_path: str) -> bool:
+        """Load parameter file via BeePopModel."""
+        try:
+            self.model.load_input_file(file_path)
+            return True
+        except ValueError as e:
+            # Re-raise as BeepopParameterError with error logs
+            self._raise_with_log(BeepopParameterError, str(e))
+        except OSError as e:
+            # Re-raise as BeepopFileError with error logs
+            self._raise_with_log(BeepopFileError, str(e))
+        except Exception as e:
+            if self.verbose:
+                print(f"Error loading parameter file: {e}")
+            return False
+
+    def load_weather_file(self, file_path: str) -> bool:
+        """Load weather file via BeePopModel."""
+        try:
+            self.model.load_weather(file_path)
+            return True
+        except OSError as e:
+            # Re-raise as BeepopFileError with error logs
+            self._raise_with_log(BeepopFileError, str(e))
+        except Exception as e:
+            if self.verbose:
+                print(f"Error loading weather file: {e}")
+            return False
+
+    def load_residue_file(self, file_path: str) -> bool:
+        """Load residue file via BeePopModel."""
+        try:
+            self.model.load_contam_file(file_path)
+            return True
+        except OSError as e:
+            # Re-raise as BeepopFileError with error logs
+            self._raise_with_log(BeepopFileError, str(e))
+        except Exception as e:
+            if self.verbose:
+                print(f"Error loading residue file: {e}")
+            return False
+
+    def set_latitude(self, latitude: float) -> bool:
+        """Set latitude via BeePopModel."""
+        try:
+            self.model.set_latitude(latitude)
+            return True
+        except Exception as e:
+            if self.verbose:
+                print(f"Error setting latitude: {e}")
+            return False
+
+    def run_simulation(self) -> Optional[pd.DataFrame]:
+        """Run simulation via BeePopModel."""
+        try:
+            return self.model.run_beepop()
+        except Exception as e:
+            if self.verbose:
+                print(f"Error running simulation: {e}")
+            return None
+
+    def get_error_log(self) -> str:
+        """Get error log from BeePopModel."""
+        try:
+            return self.model.get_errors()
+        except Exception:
+            return ""
+
+    def get_info_log(self) -> str:
+        """Get info log from BeePopModel."""
+        try:
+            return self.model.get_info()
+        except Exception:
+            return ""
+
+    def get_version(self) -> str:
+        """Get version from BeePopModel."""
+        try:
+            return self.model.get_version()
+        except Exception:
+            return "Unknown"
+
+    def cleanup(self) -> None:
+        """Clean up C++ library resources."""
+        if hasattr(self.model, "close_library"):
+            try:
+                self.model.close_library()
+            except Exception as e:
+                if self.verbose:
+                    print(f"Warning during cleanup: {e}")
+
+
+class PythonEngineAdapter:
+    """
+    Adapter for pure Python BeePop+ engine.
+
+    Wraps the Python port (beepop.BeePop) to conform to the BeepopEngineInterface
+    protocol, handling format conversions between PyBeePop's dict-based API and
+    the Python engine's list-based parameter format.
+
+    Attributes:
+        engine_type (str): Always 'python'
+        model (BeePop): The underlying Python engine
+    """
+
+    def __init__(self, verbose: bool = False):
+        """
+        Initialize Python engine adapter.
+
+        Args:
+            verbose: Enable verbose output
+        """
+        from pybeepop.beepop import BeePop
+
+        self.model = BeePop()
+        self.engine_type = "python"
+        self.verbose = verbose
+        self._parameters = {}  # Track parameters set
+
+        # Load valid parameters for validation (matching C++ engine behavior)
+        parent = os.path.dirname(os.path.abspath(__file__))
+        self.valid_parameters = pd.read_csv(
+            os.path.join(parent, "data/BeePop_exposed_parameters.csv"), skiprows=1
+        )["Exposed Variable Name"].tolist()
+
+        # Initialize model during adapter construction
+        self.model.initialize_model()
+
+        if verbose:
+            self.model.enable_error_reporting(True)
+            self.model.enable_info_reporting(True)
+
+    def _raise_with_log(
+        self, exception_class: Type[BeepopException], message: str
+    ) -> None:
+        """
+        Raise exception with BeePop+ error log included.
+
+        Args:
+            exception_class: The exception class to raise (BeepopParameterError, etc.)
+            message: The error message
+
+        Raises:
+            exception_class: Raised with error log and info log included
+        """
+        error_log = self.get_error_log()
+        info_log = self.get_info_log()
+        raise exception_class(
+            message=message,
+            error_log=error_log,
+            info_log=None,  # info_log,
+            engine_type=self.engine_type,
+        )
+
+    def set_parameters(self, parameters: Dict[str, str]) -> Dict[str, str]:
+        """
+        Set parameters, converting from dict to list format.
+
+        Python engine expects: ["ParamName=value", ...]
+        PyBeePop provides: {"ParamName": "value", ...}
+
+        Raises:
+            BeepopParameterError: If parameter name is not valid
+            BeepopRuntimeError: If parameters cannot be set
+        """
+        try:
+            # Validate parameter names (matching C++ engine behavior)
+            for par_name in parameters.keys():
+                if par_name.lower() not in [x.lower() for x in self.valid_parameters]:
+                    self._raise_with_log(
+                        BeepopParameterError, f"{par_name} is not a valid parameter."
+                    )
+
+            # Convert dict to list format
+            param_list = [f"{k}={v}" for k, v in parameters.items()]
+
+            # Set parameters (don't reset ICs to preserve previous settings)
+            success = self.model.set_ic_variables_v(param_list, reset_ics=False)
+
+            if success:
+                self._parameters.update(parameters)
+                return parameters
+            else:
+                self._raise_with_log(BeepopRuntimeError, "Error setting parameters")
+        except BeepopException:
+            # Re-raise our custom exceptions
+            raise
+        except Exception as e:
+            if self.verbose:
+                print(f"Error setting parameters: {e}")
+            self._raise_with_log(BeepopRuntimeError, f"Error setting parameters: {e}")
+
+    def get_parameters(self) -> Dict[str, str]:
+        """Get currently set parameters with lowercase keys."""
+        return {k.lower(): v for k, v in self._parameters.items()}
+
+    def load_parameter_file(self, file_path: str) -> bool:
+        """
+        Load parameter file via Python engine.
+
+        Raises:
+            BeepopFileError: If file cannot be opened or read
+            BeepopParameterError: If parameter is invalid
+            BeepopRuntimeError: If parameters cannot be loaded
+        """
+        try:
+            # Try to open and read file to catch OSError early
+            with open(file_path, "r") as f:
+                lines = f.readlines()
+
+            # Validate parameter names before loading
+            for line in lines:
+                clean_line = line.strip()
+                if clean_line and not clean_line.startswith("#") and "=" in clean_line:
+                    param_name = clean_line.split("=", 1)[0].strip().lower()
+                    if param_name not in [x.lower() for x in self.valid_parameters]:
+                        self._raise_with_log(
+                            BeepopParameterError,
+                            f"{param_name} is not a valid parameter.",
+                        )
+
+            success = self.model.load_parameter_file(file_path)
+
+            # If successful, parse file to track parameters
+            if success:
+                for line in lines:
+                    clean_line = line.strip()
+                    if (
+                        clean_line
+                        and not clean_line.startswith("#")
+                        and "=" in clean_line
+                    ):
+                        key, value = clean_line.split("=", 1)
+                        self._parameters[key.strip()] = value.strip()
+                return True
+            else:
+                self._raise_with_log(BeepopRuntimeError, "Error loading parameter file")
+        except BeepopException:
+            # Re-raise our custom exceptions
+            raise
+        except OSError as e:
+            # Re-raise as BeepopFileError with error logs
+            self._raise_with_log(BeepopFileError, str(e))
+        except Exception as e:
+            if self.verbose:
+                print(f"Error loading parameter file: {e}")
+            self._raise_with_log(
+                BeepopRuntimeError, f"Error loading parameter file: {e}"
+            )
+
+    def load_weather_file(self, file_path: str) -> bool:
+        """
+        Load weather file via Python engine.
+
+        Raises:
+            BeepopFileError: If file cannot be opened or read
+            BeepopRuntimeError: If weather cannot be loaded
+        """
+        try:
+            # Try to open file to catch OSError early (matching C++ engine)
+            with open(file_path, "r") as f:
+                f.read()
+
+            success = self.model.set_weather_from_file(file_path)
+            if success:
+                return True
+            else:
+                self._raise_with_log(BeepopRuntimeError, "Error Loading Weather")
+        except BeepopException:
+            # Re-raise our custom exceptions
+            raise
+        except OSError:
+            # Re-raise as BeepopFileError with error logs
+            self._raise_with_log(BeepopFileError, "Weather file is invalid.")
+        except Exception as e:
+            if self.verbose:
+                print(f"Error loading weather file: {e}")
+            self._raise_with_log(BeepopRuntimeError, f"Error loading weather file: {e}")
+
+    def load_residue_file(self, file_path: str) -> bool:
+        """
+        Load residue file, converting to list format.
+
+        Python engine expects list of strings, not a file path.
+        We need to parse the file ourselves.
+
+        Raises:
+            BeepopFileError: If file cannot be opened or read
+            BeepopRuntimeError: If residue file cannot be loaded
+        """
+        try:
+            with open(file_path, "r") as f:
+                lines = [
+                    line.strip()
+                    for line in f
+                    if line.strip() and not line.startswith("#")
+                ]
+        except Exception:
+            self._raise_with_log(BeepopFileError, "Residue file is invalid.")
+
+        try:
+            success = self.model.set_contamination_table(lines)
+            if success:
+                return True
+            else:
+                self._raise_with_log(BeepopRuntimeError, "Error loading residue file")
+        except BeepopException:
+            # Re-raise our custom exceptions
+            raise
+        except Exception as e:
+            if self.verbose:
+                print(f"Error loading residue file: {e}")
+            self._raise_with_log(BeepopRuntimeError, f"Error loading residue file: {e}")
+
+    def set_latitude(self, latitude: float) -> bool:
+        """Set latitude via Python engine."""
+        try:
+            return self.model.set_latitude(latitude)
+        except Exception as e:
+            if self.verbose:
+                print(f"Error setting latitude: {e}")
+            return False
+
+    def run_simulation(self) -> Optional[pd.DataFrame]:
+        """
+        Run simulation via Python engine.
+
+        Raises:
+            BeepopRuntimeError: If simulation fails to run
+        """
+        try:
+            success = self.model.run_simulation()
+            if success:
+                success, df = self.model.get_results_dataframe()
+                if success:
+                    return df
+                else:
+                    self._raise_with_log(
+                        BeepopRuntimeError, "Error running BeePop+ simulation."
+                    )
+            else:
+                self._raise_with_log(
+                    BeepopRuntimeError, "Error running BeePop+ simulation."
+                )
+        except BeepopException:
+            # Re-raise our custom exceptions
+            raise
+        except Exception as e:
+            if self.verbose:
+                print(f"Error running simulation: {e}")
+            self._raise_with_log(
+                BeepopRuntimeError, f"Error running BeePop+ simulation: {e}"
+            )
+
+    def get_error_log(self) -> str:
+        """
+        Get error log, converting from tuple format to string.
+
+        Python engine returns: (success: bool, errors: List[str])
+        We need: string (newline-separated)
+        """
+        try:
+            success, errors = self.model.get_error_list()
+            if success and errors:
+                return "\n".join(errors)
+            return ""
+        except Exception:
+            return ""
+
+    def get_info_log(self) -> str:
+        """
+        Get info log, converting from tuple format to string.
+
+        Python engine returns: (success: bool, info: List[str])
+        We need: string (newline-separated)
+        """
+        try:
+            success, info = self.model.get_info_list()
+            if success and info:
+                return "\n".join(info)
+            return ""
+        except Exception:
+            return ""
+
+    def get_version(self) -> str:
+        """Get version from Python engine."""
+        try:
+            success, version = self.model.get_lib_version()
+            return version if success else "Unknown"
+        except Exception:
+            return "Unknown"
+
+    def cleanup(self) -> None:
+        """Python engine handles cleanup automatically via garbage collection."""
+        pass  # No explicit cleanup needed
