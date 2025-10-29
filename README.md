@@ -2,8 +2,7 @@
 
 <div align="center">
 
-[![Tests (Windows)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-windows.yml)
-[![Tests (Linux)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests-ubuntu.yml)
+[![Tests](https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml)
 [![PyPI version](https://badge.fury.io/py/pybeepop-plus.svg)](https://badge.fury.io/py/pybeepop-plus)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
