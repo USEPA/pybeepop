@@ -33,15 +33,11 @@ List Management:
     - Mite loads and other attributes track with bee cohorts
 """
 
-from pybeepop.beepop.bee import Bee
 from pybeepop.beepop.adult import Adult
 from pybeepop.beepop.brood import Brood
 from pybeepop.beepop.larva import Larva
 from pybeepop.beepop.egg import Egg
-from pybeepop.beepop.mite import Mite
 from pybeepop.beepop.globaloptions import GlobalOptions
-from pybeepop.beepop.daterangevalues import DateRangeValues
-from datetime import datetime
 
 
 class BeeList:

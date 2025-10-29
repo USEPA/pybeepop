@@ -129,5 +129,3 @@ class DateRangeValues:
         ]
         destination.enabled = self.enabled
         destination.file_format_version = self.file_format_version
-        destination.enabled = self.enabled
-        destination.file_format_version = self.file_format_version

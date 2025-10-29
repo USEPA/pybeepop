@@ -57,7 +57,7 @@ from datetime import datetime
 import re
 import io
 import pandas as pd
-from typing import List, Tuple, Dict, Optional, Any
+from typing import List, Tuple, Optional, Any
 from pybeepop.beepop.session import VarroaPopSession
 from pybeepop.beepop.colony import Colony
 from pybeepop.beepop.weatherevents import Event, WeatherEvents
@@ -718,7 +718,7 @@ class BeePop:
             return True
         except Exception as e:
             raise e
-            return False
+            # return False
 
     def enable_info_reporting(self, enable: bool) -> bool:
         """
@@ -817,7 +817,7 @@ class BeePop:
             if self.session.is_error_reporting_enabled():
                 self.session.add_to_error_list(f"Exception in run_simulation: {str(e)}")
             raise e
-            return False
+            # return False
 
     def get_results(self) -> Tuple[bool, List[str]]:
         """

@@ -174,7 +174,6 @@ def test_init_default_lib(monkeypatch):
 def test_set_parameters_type_error(monkeypatch):
     import pybeepop.pybeepop as pbp
     import pybeepop.tools as tools
-    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -447,7 +446,6 @@ def test_plot_output_invalid_column(monkeypatch):
 def test_get_error_and_info_log(monkeypatch):
     import pybeepop.pybeepop as pbp
     import pybeepop.tools as tools
-    import pybeepop.tools as tools
 
     class DummyBeePopModel:
         def __init__(self, *a, **k):
@@ -477,7 +475,6 @@ def test_get_error_and_info_log(monkeypatch):
 )
 def test_version_and_exit(monkeypatch):
     import pybeepop.pybeepop as pbp
-    import pybeepop.tools as tools
     import pybeepop.tools as tools
 
     class DummyBeePopModel:

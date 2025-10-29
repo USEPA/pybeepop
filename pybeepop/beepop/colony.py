@@ -494,14 +494,6 @@ class Colony:
         """Get the lower N value."""
         return self.get_n_today_lower()
 
-    def set_start_sample_period(self):
-        """Start a sample period."""
-        pass  # Placeholder implementation
-
-    def clear(self):
-        """Clear colony data."""
-        pass  # Placeholder implementation
-
     def set_mite_pct_resistance(self, pct):
         self.m_InitMitePctResistant = pct
 
