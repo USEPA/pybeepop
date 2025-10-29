@@ -9,6 +9,7 @@ on:
       - pybeepop/**
       - tests/**
       - .github/workflows/generate-docs-site.yml
+      - docs/**/*.html
 
 permissions:
   contents: read
