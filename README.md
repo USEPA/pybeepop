@@ -74,8 +74,8 @@
 ## Choosing a Simulation Engine
 
 **pybeepop+** supports two simulation engines:
-- **C++ engine** (default on Windows/Linux): The original published C++ implementation, requires compiled binaries
-- **Python engine** (default on macOS): A pure Python port for improved portability and easier code inspection, with no binary dependencies
+- **Python engine** (default): A pure Python port for improved portability and easier code inspection, with no binary dependencies
+- **C++ engine** (optional): The original published C++ implementation, requires compiled binaries
 
 Both engines produce nearly identical results, with only negligible differences in some floating-point calculations.
 
@@ -88,8 +88,8 @@ Specify the engine when creating a `PyBeePop` instance using the `engine` parame
 ```python
 from pybeepop import PyBeePop
 
-# Automatic selection (default) - tries C++ first, falls back to Python
-beepop = PyBeePop(engine='auto')
+# Default behavior - use the Python engine
+beepop = PyBeePop()
 
 # Explicitly use C++ engine
 beepop = PyBeePop(engine='cpp')
@@ -112,7 +112,7 @@ pip install pybeepop-plus
 ```python
 from pybeepop import PyBeePop
 
-# 1. Create a BeePop+ instance (auto-selects best available engine)
+# 1. Create a BeePop+ instance
 beepop = PyBeePop()
 
 # 2. Configure simulation parameters
@@ -177,7 +177,7 @@ params = beepop.get_parameters()
 
 ### Additional Resources
 
-- **Parameter Reference**: [Exposed BeePop+ Parameters](https://usepa.github.io/pybeepop/pybeepop.html)
+- **Parameter Reference**: [Exposed BeePop+ Parameters](https://usepa.github.io/pybeepop/parameters.html)
 - **Weather File Format**: [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt)
 - **Residue File Format**: [docs/residue_file_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/residue_file_readme.txt)
 - **Example Files**: [example_data/](https://github.com/USEPA/pybeepop/tree/main/example_data)

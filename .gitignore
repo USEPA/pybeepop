@@ -1,5 +1,3 @@
-example_beepop_results.csv
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -165,3 +163,11 @@ cython_debug/
 #.idea/
 
 .vscode
+
+# local development files
+.github/copilot-instructions.md
+.github/prompts
+
+# local test files
+example_beepop_results.csv
+pybeepop/beepop_test_files/

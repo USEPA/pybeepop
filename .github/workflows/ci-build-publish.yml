@@ -22,7 +22,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        include:
+          - os: ubuntu-latest
+            cibw_archs: auto64
+          - os: windows-latest
+            cibw_archs: auto64
+          - os: macos-15
+            cibw_archs: arm64
+          - os: macos-15-intel
+            cibw_archs: x86_64
 
     steps:
       - uses: actions/checkout@v4
@@ -34,12 +42,27 @@ jobs:
             ref: dev
             path: beepop
         # Note: macOS builds don't use C++ code (Python engine only)
-        if: matrix.os != 'macos-13' && matrix.os != 'macos-14'
+        if: matrix.os != 'macos-15' && matrix.os != 'macos-15-intel'
+
+      - name: Pre-download virtualenv to avoid GitHub rate limits
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            CACHE_DIR="$LOCALAPPDATA/pypa/cibuildwheel/Cache"
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            CACHE_DIR="$HOME/Library/Caches/cibuildwheel"
+          else
+            CACHE_DIR="$HOME/.cache/cibuildwheel"
+          fi
+          mkdir -p "$CACHE_DIR"
+          curl --retry 5 --retry-delay 10 --retry-all-errors -L \
+            "https://github.com/pypa/get-virtualenv/blob/20.30.0/public/virtualenv.pyz?raw=true" \
+            -o "$CACHE_DIR/virtualenv-20.30.0.pyz"
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21.0
+        uses: pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_ARCHS: auto64
+          CIBW_ARCHS: ${{ matrix.cibw_archs }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
         with:

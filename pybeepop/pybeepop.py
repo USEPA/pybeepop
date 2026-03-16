@@ -4,6 +4,7 @@ pybeepop - BeePop+ interface for Python
 
 import os
 import platform
+from pathlib import Path
 import pandas as pd
 from typing import Optional
 from .tools import BeePopModel
@@ -34,7 +35,7 @@ class PyBeePop:
 
     def __init__(
         self,
-        engine="auto",
+        engine="python",
         lib_file=None,
         parameter_file=None,
         weather_file=None,
@@ -47,18 +48,17 @@ class PyBeePop:
 
         Args:
             engine (str, optional): Simulation engine to use. Options:
-                - 'auto' (default): Automatically select engine. Tries C++ first on
-                  Windows/Linux, uses Python on macOS. Falls back to Python if C++
-                  unavailable or initialization fails.
+                - 'python' (default): Use the pure Python engine. Available on all
+                  platforms and requires no compiled BeePop+ library.
                 - 'cpp': Force C++ engine. Raises error if unavailable. Not supported on macOS.
-                - 'python': Force pure Python engine (available on all platforms).
 
             lib_file (str, optional): Path to BeePop+ shared library (.dll or .so).
-                Only relevant when engine='cpp' or engine='auto'. If None, attempts
-                to auto-detect based on OS and architecture.
+                Only relevant when engine='cpp'. If None, attempts to auto-detect
+                based on OS and architecture.
 
-            parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). See https://doi.org/10.3390/ecologies3030022
-                or the documentation for valid parameters.
+            parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). If provided,
+                it is loaded after the bundled default parameter file so user values override package defaults. See
+                https://doi.org/10.3390/ecologies3030022 or the documentation for valid parameters.
             weather_file (str, optional): Path to a .csv or comma-separated .txt file containing weather data, where each row denotes:
                 Date (MM/DD/YY), Max Temp (C), Min Temp (C), Avg Temp (C), Windspeed (m/s), Rainfall (mm), Hours of daylight (optional).
             residue_file (str, optional): Path to a .csv or comma-separated .txt file containing pesticide residue data. Each row should specify Date (MM/DD/YYYY),
@@ -72,7 +72,7 @@ class PyBeePop:
             ValueError: If engine parameter is invalid or latitude is outside the valid range.
 
         Examples:
-            >>> # Auto-select engine (backward compatible)
+            >>> # Default to the Python engine
             >>> model = PyBeePop(weather_file='weather.csv')
             >>> results = model.run_model()
 
@@ -101,12 +101,6 @@ class PyBeePop:
                     "The C++ engine is not supported on macOS due to architecture compatibility issues. "
                     "Please use engine='python' instead."
                 )
-            elif engine == "auto":
-                if verbose:
-                    print(
-                        "macOS detected: using Python engine (C++ engine not supported on macOS)"
-                    )
-                engine = "python"
 
         if engine == "python":
             self.engine = self._initialize_python_engine()
@@ -117,28 +111,10 @@ class PyBeePop:
             # Store lib_file for backward compatibility
             if hasattr(self.engine, "lib_file"):
                 self.lib_file = self.engine.lib_file
-        elif engine == "auto":
-            # Try C++ first (backward compatible), fall back to Python
-            try:
-                self.engine = self._initialize_cpp_engine(lib_file)
-                self.engine_type = "cpp"
-                # Store lib_file for backward compatibility
-                if hasattr(self.engine, "lib_file"):
-                    self.lib_file = self.engine.lib_file
-                if verbose:
-                    print("Using C++ engine")
-            except Exception as e:
-                if verbose:
-                    print(f"C++ engine initialization failed: {e}")
-                    print("Falling back to Python engine...")
-                self.engine = self._initialize_python_engine()
-                self.engine_type = "python"
-                if verbose:
-                    print("Using Python engine")
         else:
             raise ValueError(
                 f"Invalid engine type: '{engine}'. "
-                f"Must be 'auto', 'cpp', or 'python'."
+                f"Must be 'cpp' or 'python'."
             )
 
         # Validate and set latitude
@@ -153,9 +129,13 @@ class PyBeePop:
         self.residue_file = None
         self.parameters = {}
         self.output = None
+        self.default_parameter_file = self._get_default_parameter_file()
 
         # Add backward compatibility alias
         self.beepop = self.engine
+
+        # Load bundled defaults before any user-supplied parameter files.
+        self._load_default_parameter_file()
 
         # Load files if provided
         if parameter_file is not None:
@@ -166,6 +146,15 @@ class PyBeePop:
 
         if residue_file is not None:
             self.load_residue_file(residue_file)
+
+    def _get_default_parameter_file(self) -> str:
+        """Return the packaged default parameter file path."""
+        return str(Path(__file__).resolve().parent / "data" / "default_parameters.txt")
+
+    def _load_default_parameter_file(self) -> None:
+        """Load bundled default parameters without marking them as a user file."""
+        self.load_parameter_file(self.default_parameter_file)
+        self.parameter_file = None
 
     def _initialize_cpp_engine(self, lib_file) -> BeepopEngineInterface:
         """
@@ -384,7 +373,7 @@ class PyBeePop:
         """
         # check to see if parameters have been supplied
         if (self.parameter_file is None) and (not self.parameters):
-            print("No parameters have been set. Running with default settings.")
+            print("No user parameters have been set. Running with bundled default settings.")
         if self.weather_file is None:
             raise RuntimeError("Weather must be set before running BeePop+!")
 

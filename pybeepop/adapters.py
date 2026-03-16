@@ -386,8 +386,12 @@ class PythonEngineAdapter:
             self._raise_with_log(BeepopFileError, "Residue file is invalid.")
 
         try:
+            # Load the contamination table
             success = self.model.set_contamination_table(lines)
             if success:
+                self.set_parameters(
+                    {"NecPolFileEnable": "true"}
+                )  # Enable residue file mode
                 return True
             else:
                 self._raise_with_log(BeepopRuntimeError, "Error loading residue file")
