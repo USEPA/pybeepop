@@ -177,7 +177,7 @@ params = beepop.get_parameters()
 
 ### Additional Resources
 
-- **Parameter Reference**: [Exposed BeePop+ Parameters](https://usepa.github.io/pybeepop/pybeepop.html)
+- **Parameter Reference**: [Exposed BeePop+ Parameters](https://usepa.github.io/pybeepop/parameters.html)
 - **Weather File Format**: [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt)
 - **Residue File Format**: [docs/residue_file_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/residue_file_readme.txt)
 - **Example Files**: [example_data/](https://github.com/USEPA/pybeepop/tree/main/example_data)
