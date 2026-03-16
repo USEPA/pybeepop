@@ -50,6 +50,7 @@ jobs:
           CIBW_ARCHS: ${{ matrix.cibw_archs }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
+          CIBW_ENVIRONMENT: "PIP_RETRIES=5 PIP_TIMEOUT=60"
         with:
           config-file: "pyproject.toml"
 
