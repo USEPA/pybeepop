@@ -45,12 +45,14 @@ jobs:
         if: matrix.os != 'macos-15' && matrix.os != 'macos-15-intel'
 
       - name: Pre-download virtualenv to avoid GitHub rate limits
+        shell: bash
         run: |
-          CACHE_DIR="${HOME}/Library/Caches/cibuildwheel"
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            CACHE_DIR="${HOME}/.cache/cibuildwheel"
-          elif [ "$RUNNER_OS" = "Windows" ]; then
-            CACHE_DIR="${LOCALAPPDATA}/pypa/cibuildwheel/Cache"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            CACHE_DIR="$LOCALAPPDATA/pypa/cibuildwheel/Cache"
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            CACHE_DIR="$HOME/Library/Caches/cibuildwheel"
+          else
+            CACHE_DIR="$HOME/.cache/cibuildwheel"
           fi
           mkdir -p "$CACHE_DIR"
           curl --retry 5 --retry-delay 10 --retry-all-errors -L \
