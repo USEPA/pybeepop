@@ -79,13 +79,12 @@ def sample_parameter_file(tmp_path):
 class TestEngineInitialization:
     """Test engine initialization and selection."""
 
-    def test_auto_engine_selection(self):
-        """Test automatic engine selection."""
+    def test_removed_auto_engine_selection(self):
+        """Test that the legacy auto engine option is no longer supported."""
         from pybeepop import PyBeePop
 
-        model = PyBeePop(engine="auto")
-        assert model.engine_type in ["cpp", "python"]
-        assert model.engine is not None
+        with pytest.raises(ValueError, match="Must be 'cpp' or 'python'"):
+            PyBeePop(engine="auto")
 
     def test_python_engine_selection(self):
         """Test forcing Python engine."""
@@ -114,14 +113,12 @@ class TestEngineInitialization:
             PyBeePop(engine="invalid")
 
     def test_backward_compatibility_default(self):
-        """Test that default behavior is backward compatible."""
+        """Test that the default constructor uses the Python engine."""
         from pybeepop import PyBeePop
 
-        # Default should still work (auto-select)
         model = PyBeePop()
         assert model.engine is not None
-        # Should select an engine
-        assert model.engine_type in ["cpp", "python"]
+        assert model.engine_type == "python"
 
 
 # ============================================================================
