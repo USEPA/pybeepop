@@ -44,13 +44,15 @@ jobs:
         # Note: macOS builds don't use C++ code (Python engine only)
         if: matrix.os != 'macos-15' && matrix.os != 'macos-15-intel'
 
+      - name: Pre-install virtualenv to avoid PyPI rate limits
+        run: pipx install virtualenv
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_ARCHS: ${{ matrix.cibw_archs }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.8"
-          CIBW_ENVIRONMENT: "PIP_RETRIES=5 PIP_TIMEOUT=60"
         with:
           config-file: "pyproject.toml"
 
