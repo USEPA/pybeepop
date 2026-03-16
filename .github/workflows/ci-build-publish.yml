@@ -44,8 +44,18 @@ jobs:
         # Note: macOS builds don't use C++ code (Python engine only)
         if: matrix.os != 'macos-15' && matrix.os != 'macos-15-intel'
 
-      - name: Pre-install virtualenv to avoid PyPI rate limits
-        run: pipx install virtualenv
+      - name: Pre-download virtualenv to avoid GitHub rate limits
+        run: |
+          CACHE_DIR="${HOME}/Library/Caches/cibuildwheel"
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            CACHE_DIR="${HOME}/.cache/cibuildwheel"
+          elif [ "$RUNNER_OS" = "Windows" ]; then
+            CACHE_DIR="${LOCALAPPDATA}/pypa/cibuildwheel/Cache"
+          fi
+          mkdir -p "$CACHE_DIR"
+          curl --retry 5 --retry-delay 10 --retry-all-errors -L \
+            "https://github.com/pypa/get-virtualenv/blob/20.30.0/public/virtualenv.pyz?raw=true" \
+            -o "$CACHE_DIR/virtualenv-20.30.0.pyz"
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.3
