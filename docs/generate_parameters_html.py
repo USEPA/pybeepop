@@ -6,10 +6,10 @@ from pathlib import Path
 
 import pandas as pd
 
-
 DOCS_DIR = Path(__file__).resolve().parent
 CSV_PATH = DOCS_DIR / "BeePop_exposed_parameters.csv"
 HTML_PATH = DOCS_DIR / "parameters.html"
+HERO_FRAGMENT_PATH = DOCS_DIR / "_hero_fragment.html"
 
 
 def read_note(csv_path: Path) -> str:
@@ -31,96 +31,34 @@ def build_html_table(csv_path: Path) -> str:
     )
 
 
+def build_hero(active_page: str) -> str:
+    fragment = HERO_FRAGMENT_PATH.read_text(encoding="utf-8")
+    return (
+        fragment.replace("__ACTIVE_HOME__", " active" if active_page == "home" else "")
+        .replace("__ACTIVE_INTRO__", " active" if active_page == "intro" else "")
+        .replace("__ACTIVE_PARAMS__", " active" if active_page == "params" else "")
+    )
+
+
 def build_document(note_text: str, table_html: str) -> str:
     escaped_note = html.escape(note_text)
+    hero_html = build_hero("params")
     return f"""<!DOCTYPE html>
-<html lang=\"en\">
+<html lang="en">
 <head>
-    <meta charset=\"utf-8\">
+    <meta charset="utf-8">
     <title>BeePop+ Exposed Parameters</title>
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-    <style>
-        body {{
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f8fafc;
-            color: #1f2937;
-        }}
-        .container {{
-            max-width: 1320px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(60, 72, 88, 0.10);
-            padding: 32px 24px 24px 24px;
-        }}
-        h1 {{
-            color: #1a202c;
-            font-size: 2.2rem;
-            margin-bottom: 24px;
-        }}
-        .note {{
-            background: #fffbe6;
-            border-left: 4px solid #fec44f;
-            padding: 12px 18px;
-            margin-bottom: 24px;
-            color: #444;
-        }}
-        .table-wrap {{
-            overflow-x: auto;
-        }}
-        table.parameter-table {{
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            font-size: 0.96rem;
-        }}
-        table.parameter-table th,
-        table.parameter-table td {{
-            border: 1px solid #e2e8f0;
-            padding: 8px 10px;
-            text-align: left;
-            vertical-align: top;
-        }}
-        table.parameter-table th {{
-            background: #fec44f;
-            color: #222;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }}
-        table.parameter-table tbody tr:nth-child(even) {{
-            background: #f9fafb;
-        }}
-        .footer-link {{
-            color: #888;
-            font-size: 0.98rem;
-        }}
-        .back-link {{
-            color: #2563eb;
-        }}
-        @media (max-width: 700px) {{
-            .container {{
-                padding: 10px 2vw;
-            }}
-            table.parameter-table,
-            table.parameter-table th,
-            table.parameter-table td {{
-                font-size: 0.92rem;
-            }}
-        }}
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class=\"container\">
-        <h1>BeePop+ Exposed Parameters</h1>
-        <div class=\"note\">{escaped_note}</div>
-        <div class=\"table-wrap\">
+    {hero_html}
+    <div class="container wide">
+        <div class="note">{escaped_note}</div>
+        <div class="table-wrap">
             {table_html}
         </div>
-        <p class=\"footer-link\">For the full list and latest details, see <a href=\"https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv\">BeePop_exposed_parameters.csv on GitHub</a>.</p>
-        <a class=\"back-link\" href=\"index.html\">&larr; Back to Documentation Home</a>
+        <p class="footer-link">For the full list and latest details, see <a href="https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv">BeePop_exposed_parameters.csv on GitHub</a>.</p>
     </div>
 </body>
 </html>

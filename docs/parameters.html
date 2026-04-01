@@ -4,82 +4,31 @@
     <meta charset="utf-8">
     <title>BeePop+ Exposed Parameters</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f8fafc;
-            color: #1f2937;
-        }
-        .container {
-            max-width: 1320px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(60, 72, 88, 0.10);
-            padding: 32px 24px 24px 24px;
-        }
-        h1 {
-            color: #1a202c;
-            font-size: 2.2rem;
-            margin-bottom: 24px;
-        }
-        .note {
-            background: #fffbe6;
-            border-left: 4px solid #fec44f;
-            padding: 12px 18px;
-            margin-bottom: 24px;
-            color: #444;
-        }
-        .table-wrap {
-            overflow-x: auto;
-        }
-        table.parameter-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            font-size: 0.96rem;
-        }
-        table.parameter-table th,
-        table.parameter-table td {
-            border: 1px solid #e2e8f0;
-            padding: 8px 10px;
-            text-align: left;
-            vertical-align: top;
-        }
-        table.parameter-table th {
-            background: #fec44f;
-            color: #222;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-        table.parameter-table tbody tr:nth-child(even) {
-            background: #f9fafb;
-        }
-        .footer-link {
-            color: #888;
-            font-size: 0.98rem;
-        }
-        .back-link {
-            color: #2563eb;
-        }
-        @media (max-width: 700px) {
-            .container {
-                padding: 10px 2vw;
-            }
-            table.parameter-table,
-            table.parameter-table th,
-            table.parameter-table td {
-                font-size: 0.92rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>BeePop+ Exposed Parameters</h1>
+    <section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Bee colony modeling</span>
+        <h1><a href="index.html">🐝 pybeepop+</a></h1>
+        <p>Python interface for BeePop+, the EPA/USDA honey bee colony simulation model.</p>
+        <div class="hero-actions">
+            <a class="tertiary" href="index.html">Home</a>
+            <a class="primary" href="introduction.html">Read the Introduction</a>
+            <a class="secondary active" href="parameters.html">Browse Parameters</a>
+        </div>
+        <div class="badges">
+            <img src="https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml/badge.svg" alt="Tests">
+            <img src="https://badge.fury.io/py/pybeepop-plus.svg" alt="PyPI version">
+        </div>
+        <p>For more information about <b>BeePop+</b> see <a href="https://doi.org/10.3390/ecologies3030022">Garber <i>et al.</i> 2022, Ecologies</a>.<br>For more information about <b>pybeepop+</b> see <a href="">Minucci 2025, Journal of Open Research Software</a>.</p>
+    </div>
+    <div class="hero-art">
+        <img src="assets/beepop_logo_transparent_clean.png" alt="BeePop+ logo">
+    </div>
+</section>
+
+    <div class="container wide">
         <div class="note">Note: All values in the input file are text strings.  The &quot;Type&quot; column below indicates the internal type the string is converted to using standard C++ conversion rules.  Ex: 2.677 in an integer field is converted to 2.</div>
         <div class="table-wrap">
             <table class="dataframe parameter-table">
@@ -472,28 +421,6 @@
       <td>False</td>
     </tr>
     <tr>
-      <td>VTTreatmentDuration</td>
-      <td></td>
-      <td>Integer</td>
-      <td>1</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>days</td>
-      <td>Legacy Python-only varroa treatment duration. Parsed by the current Python port but planned for removal in favor of VTData.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>VTMortality</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Legacy Python-only mite-treatment mortality for susceptible mites. Parsed by the current Python port but planned for removal in favor of VTData.</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>VTEnable</td>
       <td></td>
       <td>Boolean</td>
@@ -505,14 +432,14 @@
       <td>False</td>
     </tr>
     <tr>
-      <td>VTTreatmentStart</td>
+      <td>VTData</td>
       <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
+      <td>String</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Schedules a Varroa Treatment using start_date,duration_weeks,mortality%,resistant%</td>
       <td></td>
-      <td>Legacy Python-only varroa treatment start date. Parsed by the current Python port but planned for removal in favor of VTData.</td>
+      <td>Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%,resistant%. e.g. 6/2/2015,6,75,5. Use VTData=Clear to reset.</td>
       <td></td>
     </tr>
     <tr>
@@ -1322,7 +1249,6 @@
 </table>
         </div>
         <p class="footer-link">For the full list and latest details, see <a href="https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv">BeePop_exposed_parameters.csv on GitHub</a>.</p>
-        <a class="back-link" href="index.html">&larr; Back to Documentation Home</a>
     </div>
 </body>
 </html>

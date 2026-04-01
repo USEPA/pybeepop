@@ -172,3 +172,4 @@ cython_debug/
 example_beepop_results.csv
 pybeepop/beepop_test_files/
 scripts/
+docs/pybeepop/

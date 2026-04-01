@@ -1,0 +1,306 @@
+/* ===================================================================
+   pybeepop+ Documentation – Shared Styles
+   =================================================================== */
+
+/* ---------- Design tokens ---------- */
+:root {
+    --honey-50: #fff8e8;
+    --honey-100: #ffe8a3;
+    --honey-300: #fec44f;
+    --amber-500: #f48c25;
+    --brown-800: #4a261d;
+    --brown-900: #2d160f;
+    --slate-700: #334155;
+}
+
+/* ---------- Base ---------- */
+body {
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: var(--brown-900);
+    font-size: 1.02rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background:
+        radial-gradient(circle at top left, rgba(254, 196, 79, 0.42), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(244, 140, 37, 0.32), transparent 34%),
+        linear-gradient(135deg, #fffcf0 0%, #f7edd8 100%);
+    background-attachment: fixed;
+}
+
+a {
+    color: #7c3a12;
+    text-decoration: none;
+    font-weight: 500;
+}
+a:hover {
+    text-decoration: underline;
+    color: #5c2d0e;
+}
+
+h2 {
+    margin-top: 0;
+    color: #222;
+    font-size: 1.4rem;
+}
+
+ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px 24px 12px 24px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(180px, 280px);
+    gap: 20px;
+    align-items: center;
+}
+
+.hero-copy {
+    padding: 12px 4px;
+}
+
+.eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(254, 196, 79, 0.25);
+    color: var(--brown-800);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--brown-900);
+}
+
+.hero h1 a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: inherit;
+}
+.hero h1 a:hover {
+    text-decoration: none;
+    opacity: 0.85;
+}
+
+.hero p {
+    max-width: 640px;
+    margin: 12px 0 0 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--slate-700);
+}
+
+.hero-art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-art img {
+    width: min(100%, 220px);
+    height: auto;
+    filter: drop-shadow(0 14px 24px rgba(74, 38, 29, 0.18));
+}
+
+/* ---------- Hero nav buttons ---------- */
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0 0 0;
+}
+
+.hero-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.hero-actions a:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.hero-actions .primary {
+    background: var(--brown-800);
+    color: var(--honey-50);
+    box-shadow: 0 10px 24px rgba(74, 38, 29, 0.18);
+}
+
+.hero-actions .secondary {
+    border: 1px solid rgba(74, 38, 29, 0.18);
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(4px);
+    color: var(--brown-800);
+}
+
+.hero-actions .tertiary {
+    border: 1px solid rgba(74, 38, 29, 0.12);
+    background: transparent;
+    color: var(--slate-700);
+    font-weight: 600;
+    font-size: 0.92em;
+}
+
+/* Active-page indicator */
+.hero-actions .active {
+    background: var(--amber-500);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(244, 140, 37, 0.30);
+    pointer-events: none;
+}
+
+/* ---------- Badges ---------- */
+.badges {
+    margin: 16px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.badges img {
+    vertical-align: middle;
+    height: 24px;
+}
+
+/* ---------- Container ---------- */
+.container {
+    max-width: 850px;
+    margin: 0 auto 40px auto;
+    padding: 32px 24px 24px 24px;
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 12px;
+    box-shadow: 0 6px 32px rgba(60, 72, 88, 0.10), 0 1.5px 6px rgba(60, 72, 88, 0.08);
+}
+
+/* Wide container for parameter table */
+.container.wide {
+    max-width: 1320px;
+}
+
+/* ---------- Back link ---------- */
+.back-link {
+    margin-bottom: 18px;
+    display: block;
+}
+
+/* ---------- Index-page cards ---------- */
+.box {
+    border: 1px solid #e2e8f0;
+    padding: 28px 24px;
+    margin: 28px 0;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255, 251, 240, 0.9), rgba(249, 250, 251, 0.96));
+    box-shadow: 0 2px 8px rgba(60, 72, 88, 0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+}
+.box:hover {
+    box-shadow: 0 8px 32px rgba(60, 72, 88, 0.18), 0 2px 8px rgba(60, 72, 88, 0.10);
+    transform: translateY(-2px) scale(1.01);
+}
+
+/* ---------- Parameter table ---------- */
+.note {
+    background: #fffbe6;
+    border-left: 4px solid #fec44f;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    color: #444;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table.parameter-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 0.96rem;
+}
+table.parameter-table th,
+table.parameter-table td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+table.parameter-table th {
+    background: #fec44f;
+    color: #222;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+table.parameter-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.footer-link {
+    color: #888;
+    font-size: 0.98rem;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px 24px 32px 24px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--slate-700);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 700px) {
+    .container.wide {
+        padding: 10px 2vw;
+    }
+    table.parameter-table,
+    table.parameter-table th,
+    table.parameter-table td {
+        font-size: 0.92rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero {
+        grid-template-columns: 1fr;
+        padding: 20px 16px 10px 16px;
+        text-align: center;
+    }
+    .hero p {
+        max-width: none;
+    }
+    .hero-actions,
+    .badges {
+        justify-content: center;
+    }
+    .hero-art {
+        order: -1;
+    }
+    .container {
+        padding: 12px 2vw;
+    }
+    .box {
+        padding: 16px 8px;
+    }
+}
