@@ -50,7 +50,6 @@ import datetime
 from pybeepop.beepop.colony import Colony
 from pybeepop.beepop.weatherevents import WeatherEvents
 from pybeepop.beepop.mite import Mite
-from pybeepop.beepop.mitetreatments import MiteTreatmentItem
 
 
 class VarroaPopSession:
@@ -178,9 +177,6 @@ class VarroaPopSession:
         self.rq_once = 0
         self.rq_requeen_date = None
         # Varroa Miticide Treatment Data
-        self.vt_treatment_start = None
-        self.vt_treatment_duration = 0
-        self.vt_mortality = 0
         self.init_mite_pct_resistant = 0.0
         self.vt_enable = False
         # Varroa Spore Treatment Data
@@ -383,19 +379,6 @@ class VarroaPopSession:
                     self.sim_start_time, self.sim_end_time, self.immigration_end_date
                 ):
                     warn_strings.append("     Immigration End")
-                    consistent = False
-
-            # Check Varroa Treatment dates if enabled
-            if (
-                hasattr(self, "vt_enable")
-                and self.vt_enable
-                and hasattr(self, "vt_treatment_start")
-                and self.vt_treatment_start
-            ):
-                if not self.date_in_range(
-                    self.sim_start_time, self.sim_end_time, self.vt_treatment_start
-                ):
-                    warn_strings.append("     Varroa Treatment Start")
                     consistent = False
 
             # Display warnings if enabled and inconsistencies found
@@ -1732,6 +1715,43 @@ class VarroaPopSession:
         if name == "vtenable":
             self.vt_enable = parse_bool(value)
             return True
+        if name == "vtdata":
+            if not self.colony or not hasattr(self.colony, "m_mite_treatment_info"):
+                self.add_to_error_list("Unable to store vtdata: colony mite treatment info is unavailable")
+                return False
+
+            if value.strip().lower() == "clear":
+                self.colony.m_mite_treatment_info.clear_all()
+                return True
+
+            parts = [part.strip() for part in value.split(",")]
+            if len(parts) != 4:
+                self.add_to_error_list(
+                    f"Invalid vtdata format: {value}. Expected start_date,duration_weeks,mortality%,resistant%"
+                )
+                return False
+
+            start_date_str, duration_str, pct_mortality_str, pct_resistant_str = parts
+            start_date = parse_date(start_date_str)
+            if not start_date:
+                self.add_to_error_list(f"Invalid vtdata start date: {start_date_str}")
+                return False
+
+            try:
+                duration = int(duration_str)
+                pct_mortality = float(pct_mortality_str)
+                pct_resistant = float(pct_resistant_str)
+            except Exception:
+                self.add_to_error_list(f"Invalid vtdata values: {value}")
+                return False
+
+            self.colony.m_mite_treatment_info.add_item_by_values(
+                start_date,
+                duration,
+                pct_mortality,
+                pct_resistant,
+            )
+            return True
 
         # Immigration parameters
         if name == "immenabled":
@@ -1812,34 +1832,6 @@ class VarroaPopSession:
         if name == "rqonce":
             self.rq_once = 0 if parse_bool(value) else 1
             return True
-
-        # Treatment parameters
-        if name == "vttreatmentduration":
-            try:
-                self.vt_treatment_duration = int(value)
-                return True
-            except Exception:
-                self.add_to_error_list(f"Invalid vttreatmentduration: {value}")
-                return False
-        if name == "vtmortality":
-            try:
-                self.vt_mortality = int(value)
-                return True
-            except Exception:
-                self.add_to_error_list(f"Invalid vtmortality: {value}")
-                return False
-        if name == "vttreatmentstart":
-            dt = parse_date(value)
-            if dt:
-                self.vt_treatment_start = dt
-                return True
-            self.add_to_error_list(f"Invalid vttreatmentstart: {value}")
-            return False
-        if name == "vtenable":
-            if self.colony and hasattr(self.colony, "set_vt_enable"):
-                self.colony.set_vt_enable(parse_bool(value))
-                return True
-            return False
 
         # Add more explicit parameter handling for other classes (nutrient contamination, cold storage, etc.) as needed
         # Example: cold storage
@@ -1953,40 +1945,6 @@ class VarroaPopSession:
             # Transfer VT enable flag from session to colony
             if hasattr(self, "vt_enable"):
                 self.colony.set_vt_enable(self.vt_enable)
-
-            # PYTHON-SPECIFIC EXTENSION: Create VT treatment item from individual parameters
-            # This functionality is MISSING from the C++ implementation!
-            # The C++ code stores VT parameters but never converts them into a treatment item.
-            # This is a bug fix/enhancement that the Python port provides.
-            if (
-                hasattr(self, "vt_enable")
-                and self.vt_enable
-                and hasattr(self, "vt_treatment_start")
-                and self.vt_treatment_start
-                and hasattr(self, "vt_treatment_duration")
-                and self.vt_treatment_duration > 0
-                and hasattr(self, "vt_mortality")
-                and self.vt_mortality > 0
-            ):
-
-                # Create the VT treatment item from the individual VT parameters
-                # This bridges the gap between parameter storage and actual treatment application
-                # Use the init_mite_pct_resistant as the resistance percentage for VT treatment
-                # This matches the expected behavior where VT treatment affects mites based on resistance
-                vt_treatment = MiteTreatmentItem(
-                    start_time=self.vt_treatment_start,
-                    duration=self.vt_treatment_duration,
-                    pct_mortality=float(self.vt_mortality),
-                    pct_resistant=float(self.init_mite_pct_resistant),
-                )
-
-                # Add the VT treatment to the colony's mite treatment info
-                self.colony.m_mite_treatment_info.add_item(vt_treatment)
-
-                if self.is_error_reporting_enabled():
-                    self.add_to_info_list(
-                        f"VT Treatment created: Start={self.vt_treatment_start.strftime('%m/%d/%Y')}, Duration={self.vt_treatment_duration} days, Mortality={self.vt_mortality}%, Resistance={self.init_mite_pct_resistant}%"
-                    )
 
         self.cum_immigrating_mites = 0
         self.first_result_entry = True

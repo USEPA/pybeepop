@@ -26,13 +26,13 @@ class MiteTreatmentItem:
 
     Attributes:
         start_time (datetime): Treatment application start date
-        duration (int): Treatment duration in days
+        duration (int): Treatment duration in weeks
         pct_mortality (float): Mortality rate for susceptible mites (0-100%)
         pct_resistant (float): Proportion of mites resistant to treatment (0-100%)
     """
 
     start_time: datetime
-    duration: int  # in days
+    duration: int  # in weeks
     pct_mortality: float  # percent mortality (0-100)
     pct_resistant: float  # percent resistant (0-100)
     # TODO: Need to change logic in rest of program to treat pct_mortality like a float (percentage)
@@ -83,7 +83,7 @@ class MiteTreatments:
             if (
                 item.start_time
                 <= date
-                < item.start_time + timedelta(days=item.duration)
+                < item.start_time + timedelta(days=item.duration * 7)
             ):
                 return item
         return None

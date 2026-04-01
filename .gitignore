@@ -171,3 +171,4 @@ cython_debug/
 # local test files
 example_beepop_results.csv
 pybeepop/beepop_test_files/
+scripts/

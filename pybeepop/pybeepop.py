@@ -2,15 +2,14 @@
 pybeepop - BeePop+ interface for Python
 """
 
+import json
 import os
 import platform
 from pathlib import Path
-import pandas as pd
 from typing import Optional
-from .tools import BeePopModel
-from .plots import plot_timeseries
+
 from .engine_interface import BeepopEngineInterface
-import json
+from .plots import plot_timeseries
 
 
 class PyBeePop:
@@ -113,8 +112,7 @@ class PyBeePop:
                 self.lib_file = self.engine.lib_file
         else:
             raise ValueError(
-                f"Invalid engine type: '{engine}'. "
-                f"Must be 'cpp' or 'python'."
+                f"Invalid engine type: '{engine}'. Must be 'cpp' or 'python'."
             )
 
         # Validate and set latitude
@@ -373,7 +371,9 @@ class PyBeePop:
         """
         # check to see if parameters have been supplied
         if (self.parameter_file is None) and (not self.parameters):
-            print("No user parameters have been set. Running with bundled default settings.")
+            print(
+                "No user parameters have been set. Running with bundled default settings."
+            )
         if self.weather_file is None:
             raise RuntimeError("Weather must be set before running BeePop+!")
 

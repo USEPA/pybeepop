@@ -294,10 +294,7 @@ class Colony:
         self.m_mites_dying_this_period = 0.0
 
         # Additional attributes from colony.h
-        self.m_VTStart = 0
         self.m_SPStart = 0
-        self.m_VTDuration = 0
-        self.m_VTMortality = 0
         self.m_SPEnable = False
         self.m_SPTreatmentActive = False
         self.m_InitMitePctResistant = 0.0
