@@ -57,29 +57,29 @@ Notes:
 """
 
 # Imports for referenced objects
-from pybeepop.beepop.epadata import EPAData
-from pybeepop.beepop.colonyresource import ColonyResource, ResourceItem
-from pybeepop.beepop.queen import Queen
-from pybeepop.beepop.nutrientcontaminationtable import NutrientContaminationTable
+import math
+from datetime import datetime, timedelta
+from types import SimpleNamespace
+
 from pybeepop.beepop.beelist import (
-    ForagerListA,
     AdultList,
     BroodList,
-    LarvaList,
     EggList,
+    ForagerListA,
+    LarvaList,
 )
-from pybeepop.beepop.mite import Mite
 from pybeepop.beepop.brood import Brood
-from pybeepop.beepop.mitetreatments import MiteTreatments
+from pybeepop.beepop.coldstoragesimulator import ColdStorageSimulator
+from pybeepop.beepop.colonyresource import ColonyResource, ResourceItem
 from pybeepop.beepop.daterangevalues import DateRangeValues
 from pybeepop.beepop.egg import Egg
-from pybeepop.beepop.coldstoragesimulator import ColdStorageSimulator
-import math
+from pybeepop.beepop.epadata import EPAData
 from pybeepop.beepop.globaloptions import GlobalOptions
+from pybeepop.beepop.mite import Mite
+from pybeepop.beepop.mitetreatments import MiteTreatments
+from pybeepop.beepop.nutrientcontaminationtable import NutrientContaminationTable
+from pybeepop.beepop.queen import Queen
 from pybeepop.beepop.spores import Spores
-from types import SimpleNamespace
-from datetime import datetime, timedelta
-
 
 # Life stage durations (from colony.h)
 EGGLIFE = 3
@@ -1094,10 +1094,8 @@ class Colony:
                 reset_adult = self.dadl.get_bee_class()()  # CAdult reset
                 reset_adult.reset()
                 self.foragers.update(reset_adult, self, event)
-            self.m_InOutEvent.m_DeadForagers = (
-                self.foragers.get_caboose().get_number()
-                if self.foragers.get_caboose().get_number() > 0
-                else 0
+            self.m_InOutEvent.m_DeadForagers = max(
+                0, self.foragers.get_caboose().get_number()
             )
 
         # Apply pesticide mortality impacts
@@ -1154,10 +1152,8 @@ class Colony:
                 virgins.get_total() / total_run if total_run > 0 else 1.0
             )
         # Constrain proportion to be [0..1]
-        if self.prop_rm_virgins > 1.0:
-            self.prop_rm_virgins = 1.0
-        if self.prop_rm_virgins < 0.0:
-            self.prop_rm_virgins = 0.0
+        self.prop_rm_virgins = min(self.prop_rm_virgins, 1.0)
+        self.prop_rm_virgins = max(self.prop_rm_virgins, 0.0)
 
     def initialize_mites(self):
         # Initial condition infestation of capped brood (port of CColony::InitializeMites)
@@ -1243,8 +1239,7 @@ class Colony:
             rD = 6.49 * (DrnBrood.get_number() / B)
             rW = 0.56 * (WkrBrood.get_number() / B)
             I = 1 - math.exp(-(rD + rW))
-            if I < 0.0:
-                I = 0.0
+            I = max(I, 0.0)
         else:
             I = 0.0
 
@@ -1254,8 +1249,7 @@ class Colony:
         # Likelihood of finding drone cell
         if WkrBrood.get_number() > 0:
             Likelihood = float(DrnBrood.get_number()) / float(WkrBrood.get_number())
-            if Likelihood > 1.0:
-                Likelihood = 1.0
+            Likelihood = min(Likelihood, 1.0)
         else:
             Likelihood = 1.0
 
@@ -1451,10 +1445,8 @@ class Colony:
                 else 1.0
             )
             # Clamp
-            if self.prop_rm_virgins > 1.0:
-                self.prop_rm_virgins = 1.0
-            if self.prop_rm_virgins < 0.0:
-                self.prop_rm_virgins = 0.0
+            self.prop_rm_virgins = min(self.prop_rm_virgins, 1.0)
+            self.prop_rm_virgins = max(self.prop_rm_virgins, 0.0)
 
         # Kill NonResistant Running Mites if Treatment Enabled
         if self.m_vt_enable and hasattr(self.m_mite_treatment_info, "get_active_item"):
@@ -1757,8 +1749,9 @@ class Colony:
             self.m_epadata.m_AI_LarvaLD50,
             self.m_epadata.m_AI_LarvaSlope,
         )
-        if self.m_epadata.m_D_L4 > self.m_epadata.m_D_L4_Max:
-            self.m_epadata.m_D_L4_Max = self.m_epadata.m_D_L4
+        self.m_epadata.m_D_L4_Max = max(
+            self.m_epadata.m_D_L4_Max, self.m_epadata.m_D_L4
+        )
         # }
 
         # Worker Larvae 5
@@ -2027,7 +2020,6 @@ class Colony:
             and current_date >= self.m_epadata.m_FoliarForageBegin
             and current_date < self.m_epadata.m_FoliarForageEnd
         ):
-
             # Calculate days since application (matches C++ LONG DaysSinceApplication)
             days_since_application = (
                 current_date - self.m_epadata.m_FoliarAppDate
@@ -2474,7 +2466,6 @@ class Colony:
                 and cur_date >= self.m_epadata.m_FoliarForageBegin
                 and cur_date < self.m_epadata.m_FoliarForageEnd
             ):
-
                 # Base concentration from foliar spray
                 incoming_concentration = 110.0 * self.m_epadata.m_E_AppRate / 1000000.0
                 # Apply decay due to active ingredient half-life
@@ -2496,7 +2487,9 @@ class Colony:
                 and cur_date < self.m_epadata.m_SeedForageEnd
                 and self.m_epadata.m_SeedEnabled
             ):
-                incoming_concentration += self.m_epadata.m_E_SeedAppRate * 18e-9 # 18 ng ai per mg/seed app rate
+                incoming_concentration += (
+                    self.m_epadata.m_E_SeedAppRate * 18e-9
+                )  # 18 ng ai/g per (mg ai/seed)
                 self.add_event_notification(
                     cur_date.strftime("%m/%d/%Y"), "Incoming Seed Pollen Pesticide"
                 )
@@ -2556,7 +2549,6 @@ class Colony:
                 and cur_date >= self.m_epadata.m_FoliarForageBegin
                 and cur_date < self.m_epadata.m_FoliarForageEnd
             ):
-
                 # Base concentration from foliar spray
                 incoming_concentration = 110.0 * self.m_epadata.m_E_AppRate / 1000000.0
 
@@ -2579,7 +2571,9 @@ class Colony:
                 and cur_date < self.m_epadata.m_SeedForageEnd
                 and self.m_epadata.m_SeedEnabled
             ):
-                incoming_concentration += self.m_epadata.m_E_SeedAppRate * 45e-9  # 45 ng ai per mg/seed app rate
+                incoming_concentration += (
+                    self.m_epadata.m_E_SeedAppRate * 45e-9
+                )  # 45  ng ai/g per (mg ai/seed)
                 self.add_event_notification(
                     cur_date.strftime("%m/%d/%Y"), "Incoming Seed Nectar Pesticide"
                 )
@@ -2723,8 +2717,7 @@ class Colony:
         prop_full = self.resources.get_nectar_quantity() / self.m_ColonyNecMaxAmount
         reduction = 1 - prop_full
 
-        if reduction < 0:
-            reduction = 0  # Don't exceed max value
+        reduction = max(reduction, 0)  # Don't exceed max value
 
         if prop_full > 0.9:
             resource.resource_quantity *= reduction

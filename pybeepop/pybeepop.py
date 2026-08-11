@@ -5,7 +5,6 @@ pybeepop - BeePop+ interface for Python
 import json
 import os
 from pathlib import Path
-from typing import Optional
 
 from .engine_interface import BeepopEngineInterface
 from .plots import plot_timeseries
@@ -73,9 +72,9 @@ class PyBeePop:
             >>> results = model.run_model()
         """
         self.verbose = verbose
-        self.engine_type: Optional[str] = None
-        self.engine: Optional[BeepopEngineInterface] = None
-        self.lib_file: Optional[str] = None  # For backward compatibility
+        self.engine_type: str | None = None
+        self.engine: BeepopEngineInterface | None = None
+        self.lib_file: str | None = None  # For backward compatibility
 
         self._check_removed_cpp_options(engine, lib_file)
 
@@ -133,7 +132,7 @@ class PyBeePop:
             raise ValueError(
                 "The C++ engine was removed in pybeepop+ 0.3.0. Remove the engine "
                 "argument, or pass engine='python'. The Python engine requires no "
-                "compiled library and runs on macOS."
+                "compiled library."
             )
         if engine != "python":
             raise ValueError(
@@ -245,7 +244,7 @@ class PyBeePop:
             raise TypeError("Cannot set weather file to None")
         if not os.path.isfile(weather_file):
             raise FileNotFoundError(
-                "Weather file does not exist at path: {}!".format(weather_file)
+                f"Weather file does not exist at path: {weather_file}!"
             )
         self.weather_file = weather_file
 
@@ -267,7 +266,7 @@ class PyBeePop:
         """
         if not os.path.isfile(parameter_file):
             raise FileNotFoundError(
-                "Paramter file does not exist at path: {}!".format(parameter_file)
+                f"Paramter file does not exist at path: {parameter_file}!"
             )
         self.parameter_file = parameter_file
 
@@ -290,7 +289,7 @@ class PyBeePop:
         """
         if not os.path.isfile(residue_file):
             raise FileNotFoundError(
-                "Residue file does not exist at path: {}!".format(residue_file)
+                f"Residue file does not exist at path: {residue_file}!"
             )
         self.residue_file = residue_file
 
@@ -378,9 +377,7 @@ class PyBeePop:
         invalid_cols = [col not in self.output.columns for col in columns]
         if any(invalid_cols):
             raise IndexError(
-                "The column name {} is not a valid output column.".format(
-                    [i for (i, v) in zip(columns, invalid_cols) if v]
-                )
+                f"The column name {[i for (i, v) in zip(columns, invalid_cols) if v]} is not a valid output column."
             )
         plot = plot_timeseries(output=self.output, columns=columns)
         return plot
