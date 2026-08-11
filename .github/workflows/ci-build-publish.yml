@@ -8,15 +8,11 @@ on:
         - pybeepop/**
         - .github/workflows/ci-build-publish.yml
         - pyproject.toml
-        - build.py
-      #    tags:
-  #      - '*.*.*'
     pull_request:
       paths:
         - pybeepop/**
         - .github/workflows/ci-build-publish.yml
         - pyproject.toml
-        - build.py
     release:
       types: [ published ]
     workflow_dispatch:
@@ -26,94 +22,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            cibw_archs: auto64
-          - os: windows-latest
-            cibw_archs: auto64
-          - os: macos-15
-            cibw_archs: arm64
-          - os: macos-15-intel
-            cibw_archs: x86_64
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Checkout BeePop+ code
-        uses: actions/checkout@v4
-        with:
-            repository: quanted/vpoplib
-            ref: dev
-            path: beepop
-        # Note: macOS builds don't use C++ code (Python engine only)
-        if: matrix.os != 'macos-15' && matrix.os != 'macos-15-intel'
-
-      - name: Pre-download virtualenv to avoid GitHub rate limits
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            CACHE_DIR="$LOCALAPPDATA/pypa/cibuildwheel/Cache"
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            CACHE_DIR="$HOME/Library/Caches/cibuildwheel"
-          else
-            CACHE_DIR="$HOME/.cache/cibuildwheel"
-          fi
-          mkdir -p "$CACHE_DIR"
-          curl --retry 5 --retry-delay 10 --retry-all-errors -L \
-            "https://github.com/pypa/get-virtualenv/blob/20.30.0/public/virtualenv.pyz?raw=true" \
-            -o "$CACHE_DIR/virtualenv-20.30.0.pyz"
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.23.3
-        env:
-          CIBW_ARCHS: ${{ matrix.cibw_archs }}
-          CIBW_BUILD_VERBOSITY: 1
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.10"
-        with:
-          config-file: "pyproject.toml"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-          path: ./wheelhouse/*.whl
-
-  build_sdist:
-    name: Build source distribution
+  build:
+    name: Build wheel and source distribution
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build sdist
-        run: pipx run poetry build --format=sdist
+      - name: Build
+        run: pipx run poetry build
+
+      - name: Check wheel is platform independent
+        run: |
+          ls dist/
+          test -n "$(find dist -name '*-py3-none-any.whl')"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cibw-sdist
-          path: dist/*.tar.gz
+          name: dist
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
 
   upload_testpypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build]
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: testpypi
       url: https://test.pypi.org/p/pybeepop-plus
     permissions:
       id-token: write
     if: github.event_name != 'pull_request'
-    # or, alternatively, upload to PyPI on every tag starting with 'v' (remove on: release above to use this)
-    # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/download-artifact@v4
         with:
-          # unpacks all CIBW artifacts into dist/
-          pattern: cibw-*
+          name: dist
           path: dist
-          merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -121,23 +64,19 @@ jobs:
           skip-existing: true
 
   upload_pypi:
-      needs: [build_wheels, build_sdist]
+      needs: [build]
       runs-on: ubuntu-latest
-      environment: 
+      environment:
         name: pypi
         url: https://pypi.org/p/pybeepop-plus
       permissions:
         id-token: write
       if: github.event_name == 'release' && github.event.action == 'published'
-      # or, alternatively, upload to PyPI on every tag starting with 'v' (remove on: release above to use this)
-      # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
       steps:
         - uses: actions/download-artifact@v4
           with:
-            # unpacks all CIBW artifacts into dist/
-            pattern: cibw-*
+            name: dist
             path: dist
-            merge-multiple: true
 
         - uses: pypa/gh-action-pypi-publish@release/v1
           with:

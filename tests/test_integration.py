@@ -1,12 +1,11 @@
 """
-Dual-engine integration and exception parity tests for PyBeePop.
+Integration tests for PyBeePop.
 
-This module verifies that PyBeePop works correctly with both C++ and Python engines,
-including:
-- Engine selection and initialization
+This module verifies that PyBeePop works correctly end to end, including:
+- Initialization and rejection of the removed C++ engine options
 - Parameter handling and file loading
 - Simulation execution
-- Exception consistency between engines
+- Exception behavior
 - Backward compatibility with legacy code patterns
 """
 
@@ -83,27 +82,30 @@ class TestEngineInitialization:
         """Test that the legacy auto engine option is no longer supported."""
         from pybeepop import PyBeePop
 
-        with pytest.raises(ValueError, match="Must be 'cpp' or 'python'"):
+        with pytest.raises(ValueError, match="'python' is the only option"):
             PyBeePop(engine="auto")
 
     def test_python_engine_selection(self):
-        """Test forcing Python engine."""
+        """Test that engine='python' is still accepted."""
         from pybeepop import PyBeePop
 
         model = PyBeePop(engine="python")
         assert model.engine_type == "python"
         assert model.engine is not None
 
-    def test_cpp_engine_selection_with_lib(self):
-        """Test forcing C++ engine (if library available)."""
+    def test_cpp_engine_raises_migration_error(self):
+        """Test that engine='cpp' explains the 0.3.0 removal."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine="cpp")
-            assert model.engine_type == "cpp"
-            assert model.engine is not None
-        except (FileNotFoundError, NotImplementedError):
-            pytest.skip("C++ library not available on this platform")
+        with pytest.raises(ValueError, match="engine was removed in pybeepop"):
+            PyBeePop(engine="cpp")
+
+    def test_lib_file_raises_migration_error(self):
+        """Test that lib_file explains the 0.3.0 removal."""
+        from pybeepop import PyBeePop
+
+        with pytest.raises(ValueError, match="lib_file argument is no longer supported"):
+            PyBeePop(lib_file="/path/to/beepop.so")
 
     def test_invalid_engine_selection(self):
         """Test that invalid engine raises ValueError."""
@@ -127,44 +129,32 @@ class TestEngineInitialization:
 
 
 class TestParameterHandling:
-    """Test parameter handling with both engines."""
+    """Test parameter handling."""
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_set_parameters(self, engine_type, sample_parameters):
-        """Test setting parameters with both engines."""
+    def test_set_parameters(self, sample_parameters):
+        """Test setting parameters."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            model.set_parameters(sample_parameters)
+        model = PyBeePop()
+        model.set_parameters(sample_parameters)
 
-            retrieved = model.get_parameters()
-            # Check that key parameters were set
-            assert "ICWorkerAdults" in retrieved or len(retrieved) > 0
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        retrieved = model.get_parameters()
+        # Check that key parameters were set
+        assert "ICWorkerAdults" in retrieved or len(retrieved) > 0
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_load_parameter_file(self, engine_type, sample_parameter_file):
-        """Test loading parameter file with both engines."""
+    def test_load_parameter_file(self, sample_parameter_file):
+        """Test loading a parameter file."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            model.load_parameter_file(sample_parameter_file)
+        model = PyBeePop()
+        model.load_parameter_file(sample_parameter_file)
 
-            # Verify parameters were loaded
-            params = model.get_parameters()
-            assert len(params) > 0  # Should have some parameters
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        # Verify parameters were loaded
+        params = model.get_parameters()
+        assert len(params) > 0  # Should have some parameters
 
     def test_parameter_file_in_constructor_python(self, sample_parameter_file):
-        """Test loading parameter file via constructor with Python engine."""
+        """Test loading a parameter file via the constructor."""
         from pybeepop import PyBeePop
 
         model = PyBeePop(engine="python", parameter_file=sample_parameter_file)
@@ -178,30 +168,24 @@ class TestParameterHandling:
 
 
 class TestSimulationExecution:
-    """Test running simulations with both engines."""
+    """Test running simulations."""
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_run_simulation(self, engine_type, sample_weather_file, sample_parameters):
-        """Test running simulation with both engines."""
+    def test_run_simulation(self, sample_weather_file, sample_parameters):
+        """Test running a simulation."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            model.set_parameters(sample_parameters)
-            model.load_weather(sample_weather_file)
+        model = PyBeePop()
+        model.set_parameters(sample_parameters)
+        model.load_weather(sample_weather_file)
 
-            results = model.run_model()
+        results = model.run_model()
 
-            # Verify results structure
-            assert results is not None
-            assert len(results) > 0
-            assert "Date" in results.columns
-            # Both engines should produce colony size data
-            assert any("Colony" in col or "Adult" in col for col in results.columns)
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        # Verify results structure
+        assert results is not None
+        assert len(results) > 0
+        assert "Date" in results.columns
+        # Should produce colony size data
+        assert any("Colony" in col or "Adult" in col for col in results.columns)
 
     def test_simulation_without_weather_raises_error(self):
         """Test that simulation without weather raises error."""
@@ -215,7 +199,7 @@ class TestSimulationExecution:
     def test_weather_file_in_constructor_python(
         self, sample_weather_file, sample_parameters
     ):
-        """Test loading weather file via constructor with Python engine."""
+        """Test loading a weather file via the constructor."""
         from pybeepop import PyBeePop
 
         model = PyBeePop(engine="python", weather_file=sample_weather_file)
@@ -227,183 +211,114 @@ class TestSimulationExecution:
 
 
 # ============================================================================
-# Exception Parity Tests
+# Exception Behavior Tests
 # ============================================================================
 
 
 class TestExceptionParity:
-    """Test that both engines raise identical exceptions for error conditions."""
+    """Test exceptions raised for error conditions."""
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_invalid_parameter_raises_valueerror(self, engine_type):
-        """Both engines should raise ValueError for invalid parameter names."""
+    def test_invalid_parameter_raises_valueerror(self):
+        """Should raise ValueError for invalid parameter names."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(ValueError, match="is not a valid parameter"):
-                model.set_parameters({"Invalid_Parameter_Name": "123"})
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(ValueError, match="is not a valid parameter"):
+            model.set_parameters({"Invalid_Parameter_Name": "123"})
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_wrong_parameter_type_raises_typeerror(self, engine_type):
-        """Both engines should raise TypeError for non-dict parameters."""
+    def test_wrong_parameter_type_raises_typeerror(self):
+        """Should raise TypeError for non-dict parameters."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(TypeError, match="must be a named dictionary"):
-                model.set_parameters(["not", "a", "dict"])
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(TypeError, match="must be a named dictionary"):
+            model.set_parameters(["not", "a", "dict"])
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_none_weather_file_raises_typeerror(self, engine_type):
-        """Both engines should raise TypeError when weather_file is None."""
+    def test_none_weather_file_raises_typeerror(self):
+        """Should raise TypeError when weather_file is None."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(TypeError, match="Cannot set weather file to None"):
-                model.load_weather(None)
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(TypeError, match="Cannot set weather file to None"):
+            model.load_weather(None)
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_missing_weather_file_raises_filenotfounderror(self, engine_type):
-        """Both engines should raise FileNotFoundError for missing weather file."""
+    def test_missing_weather_file_raises_filenotfounderror(self):
+        """Should raise FileNotFoundError for missing weather file."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(FileNotFoundError):
-                model.load_weather("nonexistent_weather.txt")
-        except (FileNotFoundError, NotImplementedError) as e:
-            if engine_type == "cpp" and (
-                "library" in str(e).lower() or isinstance(e, NotImplementedError)
-            ):
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(FileNotFoundError):
+            model.load_weather("nonexistent_weather.txt")
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_missing_parameter_file_raises_filenotfounderror(self, engine_type):
-        """Both engines should raise FileNotFoundError for missing parameter file."""
+    def test_missing_parameter_file_raises_filenotfounderror(self):
+        """Should raise FileNotFoundError for missing parameter file."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(FileNotFoundError):
-                model.load_parameter_file("nonexistent_params.txt")
-        except (FileNotFoundError, NotImplementedError) as e:
-            if engine_type == "cpp" and (
-                "library" in str(e).lower() or isinstance(e, NotImplementedError)
-            ):
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(FileNotFoundError):
+            model.load_parameter_file("nonexistent_params.txt")
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_missing_residue_file_raises_filenotfounderror(self, engine_type):
-        """Both engines should raise FileNotFoundError for missing residue file."""
+    def test_missing_residue_file_raises_filenotfounderror(self):
+        """Should raise FileNotFoundError for missing residue file."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(FileNotFoundError):
-                model.load_residue_file("nonexistent_residue.txt")
-        except (FileNotFoundError, NotImplementedError) as e:
-            if engine_type == "cpp" and (
-                "library" in str(e).lower() or isinstance(e, NotImplementedError)
-            ):
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(FileNotFoundError):
+            model.load_residue_file("nonexistent_residue.txt")
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_invalid_parameter_in_file_raises_valueerror(self, engine_type, tmp_path):
-        """Both engines should raise ValueError for invalid parameters in file."""
+    def test_invalid_parameter_in_file_raises_valueerror(self, tmp_path):
+        """Should raise ValueError for invalid parameters in file."""
         from pybeepop import PyBeePop
 
         # Create a parameter file with invalid parameter
         param_file = tmp_path / "invalid_params.txt"
         param_file.write_text("InvalidParameterName=12345\n")
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            with pytest.raises(ValueError, match="is not a valid parameter"):
-                model.load_parameter_file(str(param_file))
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        with pytest.raises(ValueError, match="is not a valid parameter"):
+            model.load_parameter_file(str(param_file))
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_run_without_weather_raises_runtimeerror(self, engine_type):
-        """Both engines should raise RuntimeError when running without weather."""
+    def test_run_without_weather_raises_runtimeerror(self):
+        """Should raise RuntimeError when running without weather."""
         from pybeepop import PyBeePop
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            model.set_parameters({"ICWorkerAdults": "10000"})
-            with pytest.raises(RuntimeError, match="Weather must be set"):
-                model.run_model()
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        model.set_parameters({"ICWorkerAdults": "10000"})
+        with pytest.raises(RuntimeError, match="Weather must be set"):
+            model.run_model()
 
-    @pytest.mark.parametrize("engine_type", ["python", "cpp"])
-    def test_invalid_weather_file_format_raises_oserror(self, engine_type, tmp_path):
-        """Both engines should raise OSError for invalid weather file format."""
+    def test_invalid_weather_file_format_raises_oserror(self, tmp_path):
+        """Should raise OSError for invalid weather file format."""
         from pybeepop import PyBeePop
 
         # Create a weather file with invalid content
         weather_file = tmp_path / "invalid_weather.txt"
         weather_file.write_text("This is not valid weather data\n")
 
-        try:
-            model = PyBeePop(engine=engine_type)
-            # This should raise OSError or RuntimeError depending on how badly formatted
-            with pytest.raises((OSError, RuntimeError)):
-                model.load_weather(str(weather_file))
-        except (FileNotFoundError, NotImplementedError):
-            if engine_type == "cpp":
-                pytest.skip("C++ engine not available")
-            raise
+        model = PyBeePop()
+        # This should raise OSError or RuntimeError depending on how badly formatted
+        with pytest.raises((OSError, RuntimeError)):
+            model.load_weather(str(weather_file))
+
+
+# ============================================================================
+# Exception Message Tests
+# ============================================================================
 
 
 class TestExceptionMessages:
-    """Test that exception messages are consistent between engines."""
+    """Test that exception messages are helpful."""
 
-    def test_invalid_parameter_message_format_python(self):
-        """Python engine should provide helpful parameter error messages."""
+    def test_invalid_parameter_message_format(self):
+        """Invalid parameter errors should name the offending parameter."""
         from pybeepop import PyBeePop
 
-        model = PyBeePop(engine="python")
+        model = PyBeePop()
         with pytest.raises(ValueError) as exc_info:
             model.set_parameters({"BadParam": "123"})
 
         error_msg = str(exc_info.value).lower()
         assert "badparam" in error_msg or "not a valid parameter" in error_msg
-
-    def test_invalid_parameter_message_format_cpp(self):
-        """C++ engine should provide helpful parameter error messages."""
-        from pybeepop import PyBeePop
-
-        try:
-            model = PyBeePop(engine="cpp")
-            with pytest.raises(ValueError) as exc_info:
-                model.set_parameters({"BadParam": "123"})
-
-            error_msg = str(exc_info.value).lower()
-            assert "badparam" in error_msg or "not a valid parameter" in error_msg
-        except (FileNotFoundError, NotImplementedError):
-            pytest.skip("C++ engine not available")
 
 
 # ============================================================================
@@ -479,7 +394,7 @@ class TestEngineSpecificFeatures:
         assert len(version) > 0
 
     def test_error_and_info_logs(self, sample_weather_file, sample_parameters):
-        """Test that logging works with both engines."""
+        """Test that error and info logs are accessible."""
         from pybeepop import PyBeePop
 
         model = PyBeePop(engine="python")
