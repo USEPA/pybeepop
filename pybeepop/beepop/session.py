@@ -1252,13 +1252,13 @@ class VarroaPopSession:
                 except Exception:
                     self.add_to_error_list(f"Invalid esoilconcentration: {value}")
                     return False
-        if name == "eseedconcentration":
+        if name == "eseedapprate":
             if self.colony and hasattr(self.colony, "m_epadata"):
                 try:
-                    self.colony.m_epadata.m_E_SeedConcentration = float(value)
+                    self.colony.m_epadata.m_E_SeedAppRate = float(value)
                     return True
                 except Exception:
-                    self.add_to_error_list(f"Invalid eseedconcentration: {value}")
+                    self.add_to_error_list(f"Invalid eseedapprate: {value}")
                     return False
 
         # Foliar Date Parameters - following C++ session.cpp pattern

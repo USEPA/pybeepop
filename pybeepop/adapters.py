@@ -16,6 +16,23 @@ from .exceptions import (
     BeepopFileError,
 )
 
+# Parameters removed from pybeepop+, mapped to migration guidance. Keys are lowercase.
+RETIRED_PARAMETERS = {
+    "eseedconcentration": (
+        "ESeedConcentration was removed in pybeepop+ 0.3.0. Use ESeedAppRate instead, "
+        "the seed treatment application rate in mg a.i./seed. Nectar and pollen residues "
+        "are now derived separately from that rate rather than sharing one concentration."
+    ),
+}
+
+
+def invalid_parameter_message(par_name: str) -> str:
+    """Return the error message for an unrecognized parameter name."""
+    retired = RETIRED_PARAMETERS.get(par_name.strip().lower())
+    if retired is not None:
+        return retired
+    return f"{par_name} is not a valid parameter."
+
 
 class PythonEngineAdapter:
     """
@@ -95,7 +112,7 @@ class PythonEngineAdapter:
             for par_name in parameters.keys():
                 if par_name.lower() not in [x.lower() for x in self.valid_parameters]:
                     self._raise_with_log(
-                        BeepopParameterError, f"{par_name} is not a valid parameter."
+                        BeepopParameterError, invalid_parameter_message(par_name)
                     )
 
             # Convert dict to list format
@@ -143,7 +160,7 @@ class PythonEngineAdapter:
                     if param_name not in [x.lower() for x in self.valid_parameters]:
                         self._raise_with_log(
                             BeepopParameterError,
-                            f"{param_name} is not a valid parameter.",
+                            invalid_parameter_message(param_name),
                         )
 
             success = self.model.load_parameter_file(file_path)

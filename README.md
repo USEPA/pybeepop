@@ -17,7 +17,7 @@
 
 ## About
 
-**pybeepop+** provides a Python interface to BeePop+, an agent-based model for simulating honey bee (*Apis mellifera* L.) colony dynamics. The model is designed for ecological risk assessment and research applications.
+**pybeepop+** provides the Python implementation of BeePop+, an agent-based model for simulating honey bee (*Apis mellifera* L.) colony dynamics. The model is designed for ecological risk assessment and research applications.
 
 > **References**: 
 > 
