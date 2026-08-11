@@ -76,7 +76,7 @@ ESoilTheta,,Float,0,,Max value only constrained by data type,cm3 water/cm3 soil,
 ESoilP,,Float,1.4,1.8,,g/cm3,Soil bulk density used in the soil contamination pathway soil-water partition term.,1.400000
 ESoilFoc,,Float,0.005,0.05,,g organic carbon/g dry soil,Fraction of bulk soil mass that is organic carbon used in the soil contamination pathway soil-water partition term.,0.020000
 ESoilConcentration,,Float,0,,Max value only constrained by data type,ug/g soil,"Soil concentration input for the soil contamination pathway. Combined with AIKOW, AIKOC, soil bulk density, soil water content, and soil organic-carbon fraction to estimate incoming nectar and pollen concentrations.",0.000000
-ESeedConcentration,,Float,0,,Max value only constrained by data type,ug/g nectar or pollen,Seed-treatment residue concentration applied equally to incoming nectar and incoming pollen during the seed forage window.,0.000000
+ESeedAppRate,,Float,0,,Max value only constrained by data type,mg ai/seed,"Application rate of seed treatment active ingredient, in mg a.i./seed. During the seed forage window, incoming pollen residue is set to AppRate x 18 ng a.i./g and incoming nectar residue to AppRate x 45 ng a.i./g.",0.000000
 FoliarAppDate,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Foliar application date.,
 FoliarForageBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start date of the foliar foraging exposure window.,
 FoliarForageEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End date of the foliar foraging exposure window.,

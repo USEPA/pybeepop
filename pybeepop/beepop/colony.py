@@ -2496,9 +2496,7 @@ class Colony:
                 and cur_date < self.m_epadata.m_SeedForageEnd
                 and self.m_epadata.m_SeedEnabled
             ):
-                incoming_concentration += (
-                    self.m_epadata.m_E_SeedConcentration / 1000000.0
-                )
+                incoming_concentration += self.m_epadata.m_E_SeedAppRate * 18e-9 # 18 ng ai per mg/seed app rate
                 self.add_event_notification(
                     cur_date.strftime("%m/%d/%Y"), "Incoming Seed Pollen Pesticide"
                 )
@@ -2581,9 +2579,7 @@ class Colony:
                 and cur_date < self.m_epadata.m_SeedForageEnd
                 and self.m_epadata.m_SeedEnabled
             ):
-                incoming_concentration += (
-                    self.m_epadata.m_E_SeedConcentration / 1000000.0
-                )
+                incoming_concentration += self.m_epadata.m_E_SeedAppRate * 45e-9  # 45 ng ai per mg/seed app rate
                 self.add_event_notification(
                     cur_date.strftime("%m/%d/%Y"), "Incoming Seed Nectar Pesticide"
                 )
