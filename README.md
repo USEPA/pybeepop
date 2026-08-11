@@ -4,7 +4,7 @@
 
 [![Tests](https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml)
 [![PyPI version](https://badge.fury.io/py/pybeepop-plus.svg)](https://badge.fury.io/py/pybeepop-plus)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
 **A Python interface for the USDA/EPA BeePop+ honey bee colony simulation model**
 
@@ -30,73 +30,25 @@
 ## Table of Contents
 
 - [Requirements](#requirements)
-- [Choosing a Simulation Engine](#choosing-a-simulation-engine)
 - [Quick Start Guide](#quick-start-guide)
 - [Minimal Working Example](#minimal-working-example)
 - [Example Notebook](#example-notebook)
 - [API Documentation](#api-documentation)
-- [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
 - [Contributing to pybeepop+](#contributing)
 
 ## Requirements
 
-### Core Dependencies (All Engines)
+**pybeepop+** is pure Python and runs on Windows, Linux, and macOS.
 
 | Package | Version | Purpose |
 |---------|---------|----------|
-| Python | ≥ 3.8 | Runtime environment |
+| Python | ≥ 3.10 | Runtime environment |
 | pandas | > 2.0.0 | Data handling |
 | matplotlib | > 3.1.0 | Visualization |
 
-### C++ Engine Requirements (Optional)
-
-> **Tip**: If you can't meet these requirements,  use the Python engine instead.
-
-#### Supported Platforms
-- Windows 64-bit
-- Linux 64-bit
-- macOS (Python engine only)
-
-#### Platform-Specific Dependencies
-
-**Windows**  
-- [Microsoft Visual C++ Redistributable 2015-2022](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
-
-**Linux**  
-- The bundled library supports **manylinux/musllinux** standards (musllinux via wheel only)
-- If you encounter loading errors, see [Compiling BeePop+ on Linux](#compiling-beepop-on-linux)
-- Source code: [github.com/quanted/vpoplib](https://github.com/quanted/vpoplib)
-
-**macOS**
-- Only the Python engine is supported (C++ engine unavailable due to architecture compatibility issues)
-
-
-## Choosing a Simulation Engine
-
-**pybeepop+** supports two simulation engines:
-- **Python engine** (default): A pure Python port for improved portability and easier code inspection, with no binary dependencies
-- **C++ engine** (optional): The original published C++ implementation, requires compiled binaries
-
-Both engines produce nearly identical results, with only negligible differences in some floating-point calculations.
-
-> **Note**: On macOS, only the Python engine is available. The C++ engine is not supported due to architecture-specific compatibility issues.
-
-### Selecting an Engine
-
-Specify the engine when creating a `PyBeePop` instance using the `engine` parameter:
-
-```python
-from pybeepop import PyBeePop
-
-# Default behavior - use the Python engine
-beepop = PyBeePop()
-
-# Explicitly use C++ engine
-beepop = PyBeePop(engine='cpp')
-
-# Explicitly use Python engine  
-beepop = PyBeePop(engine='python')
-```
+> **Note**: The optional C++ engine was removed in version 0.3.0. If you previously passed
+> `engine='cpp'` or `lib_file=...`, remove those arguments — the Python engine is now the only
+> option. See the [release notes](https://github.com/USEPA/pybeepop/releases) for details.
 
 
 ## Quick Start Guide
@@ -234,41 +186,6 @@ A  Jupyter notebook demonstrating `pybeepop+` usage is available here:
 Complete API reference and usage guide:
 
 **→** [https://usepa.github.io/pybeepop/](https://usepa.github.io/pybeepop/)
-
-
-## Compiling BeePop+ on Linux
-
-
-### Build Requirements
-- `cmake` ≥ 3.2
-- `gcc` or `g++`
-
-### Compilation Steps
-
-```bash
-# 1. Clone the BeePop+ repository
-git clone https://github.com/quanted/VPopLib.git
-cd VPopLib
-
-# 2. Create and enter build directory
-mkdir build
-cd build
-
-# 3. Build the shared library
-cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-cmake --build . --config Release
-```
-
-### Using Your Custom Build
-
-The compiled library (`liblibvpop.so`) will be in the `build/` directory. Use it with pybeepop:
-
-```python
-from pybeepop import PyBeePop
-
-# Pass the path to your compiled library
-beepop = PyBeePop(lib_file='/home/example/liblibvpop.so')
-```
 
 
 ## Contributing

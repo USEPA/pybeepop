@@ -1,13 +1,11 @@
 """
 Tests for engine adapters.
 
-This module tests the CppEngineAdapter and PythonEngineAdapter classes
-to ensure they properly implement the BeepopEngineInterface protocol.
+This module tests the PythonEngineAdapter class to ensure it properly implements
+the BeepopEngineInterface protocol.
 """
 
 import pytest
-import os
-import platform as plat
 
 
 # Test helper function
@@ -153,67 +151,6 @@ def test_python_adapter_cleanup():
     adapter = PythonEngineAdapter()
     # Should not raise error
     adapter.cleanup()
-
-
-@pytest.mark.skipif(
-    not (plat.system() == "Windows" or plat.system() == "Linux"),
-    reason="C++ library only available on Windows and Linux",
-)
-def test_cpp_adapter_initialization():
-    """Test C++ adapter can be initialized (if library available)."""
-    from pybeepop.adapters import CppEngineAdapter
-
-    # Try to find library file
-    lib_file = None
-    if plat.system() == "Windows":
-        lib_file = os.path.join(
-            os.path.dirname(__file__), "..", "pybeepop", "lib", "beepop_win64.dll"
-        )
-    elif plat.system() == "Linux":
-        lib_file = os.path.join(
-            os.path.dirname(__file__), "..", "pybeepop", "lib", "beepop_linux.so"
-        )
-
-    if lib_file and os.path.exists(lib_file):
-        adapter = CppEngineAdapter(lib_file)
-        assert adapter.engine_type == "cpp"
-        assert hasattr(adapter, "model")
-    else:
-        pytest.skip("C++ library not found")
-
-
-@pytest.mark.skipif(
-    not (plat.system() == "Windows" or plat.system() == "Linux"),
-    reason="C++ library only available on Windows and Linux",
-)
-def test_cpp_adapter_interface_compliance():
-    """Test C++ adapter implements required interface (if library available)."""
-    from pybeepop.adapters import CppEngineAdapter
-
-    # Try to find library file
-    lib_file = None
-    if plat.system() == "Windows":
-        lib_file = os.path.join(
-            os.path.dirname(__file__), "..", "pybeepop", "lib", "beepop_win64.dll"
-        )
-    elif plat.system() == "Linux":
-        lib_file = os.path.join(
-            os.path.dirname(__file__), "..", "pybeepop", "lib", "beepop_linux.so"
-        )
-
-    if lib_file and os.path.exists(lib_file):
-        adapter = CppEngineAdapter(lib_file)
-        assert validate_adapter_interface(adapter)
-    else:
-        pytest.skip("C++ library not found")
-
-
-def test_cpp_adapter_filenotfound():
-    """Test C++ adapter raises error for missing library."""
-    from pybeepop.adapters import CppEngineAdapter
-
-    with pytest.raises(FileNotFoundError):
-        CppEngineAdapter("/nonexistent/path/to/library.so")
 
 
 def test_validate_adapter_interface_function():
