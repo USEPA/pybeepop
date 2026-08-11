@@ -12,9 +12,14 @@ on:
       - docs/**/*.html
       - docs/styles.css
       - docs/_hero_fragment.html
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   # Build the documentation and upload the static HTML files as an artifact.
@@ -24,15 +29,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       # Install dependencies for docs and testing
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pytest pytest-cov
-          pip install pdoc3 pandas matplotlib
-          pip install -r requirements.txt
+          pip install pdoc3
+          pip install -e .
 
       # Install pandoc for markdown to HTML conversion
       - name: Install pandoc
