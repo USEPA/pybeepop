@@ -1,4 +1,4 @@
-﻿"Note: All values in the input file are text strings.  The ""Type"" column below indicates the internal type the string is converted to.  Ex: 2.677 in an integer field is truncated to 2.",,,,,,,,
+﻿"Note: All values in the input file are text strings.  The ""Type"" column below indicates the internal type the string is converted to.  Integer fields should be given whole numbers.",,,,,,,,
 Exposed Variable Name,Internal Associated Variable,Type,Min,Max,Description,Units,Interpretation,Default
 WeatherFileName,,String,N/A,N/A,Absolute file path,,Location of weather file,
 SimStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Sets the start date of the simulation.  Must be within dates contained in weather file,

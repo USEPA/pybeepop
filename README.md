@@ -38,8 +38,7 @@
 
 ## Requirements
 
-**pybeepop+** is pure Python and runs on Windows, Linux, and macOS with no compiled
-dependencies.
+**pybeepop+** is pure Python and runs on Windows, Linux, and macOS.
 
 | Package | Version | Purpose |
 |---------|---------|----------|
@@ -49,8 +48,7 @@ dependencies.
 
 > **Note**: The optional C++ engine was removed in version 0.3.0. If you previously passed
 > `engine='cpp'` or `lib_file=...`, remove those arguments — the Python engine is now the only
-> option and requires no shared library. See the
-> [release notes](https://github.com/USEPA/pybeepop/releases) for details.
+> option. See the [release notes](https://github.com/USEPA/pybeepop/releases) for details.
 
 
 ## Quick Start Guide
