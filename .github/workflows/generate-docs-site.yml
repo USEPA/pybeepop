@@ -12,9 +12,14 @@ on:
       - docs/**/*.html
       - docs/styles.css
       - docs/_hero_fragment.html
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   # Build the documentation and upload the static HTML files as an artifact.
