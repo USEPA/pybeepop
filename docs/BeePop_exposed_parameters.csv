@@ -22,8 +22,8 @@ ICWorkerBroodInfest,,Float,0,100,,%,Initial Conditions for simuation - % worker 
 ICWorkerMiteOffspring,,Float,0,100,,mites per infesting mite,Initial Conditions for simuation - number of mite offspring per infesting mite,0
 ICWorkerMiteSurvivorship,,Float,0,100,,%,Initial Conditions for simuation - % of mites surviving and emerging from capped worker brood,0
 ImmType,,String,N/A,N/A,"Valid strings are: None, Sine, Cosine, Tangent, Exponential, Logarithmic, Polynomial",,Profile of immigration.  Total mites over timespan follow one of these curves,
+PctImmMitesResistant,,Float,0,100,,%,"Percentage of immigrating mites that are resistant to Varroa treatment. Resistant mites survive treatments.",0
 TotalImmMites,,Integer,0,,Max value only constrained by data type,mites,Total # mites immigrating into colony,
-PctImmMitesResistant,,Float,0,100,,%,% immigrating mites which are resistant to ?,
 ImmStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start Immigration,
 ImmEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End Immigration,
 ImmEnabled,,Boolean,N/A,N/A,"true, false",,Enables or disables immigration,False
@@ -35,8 +35,8 @@ RQScheduled,,Boolean,N/A,N/A,"true, false",,Either establishes Schedule (true) o
 RQQueenStrength,,Float,1,5,,1-5 scale,Sets the strength of the requeened queen,
 RQOnce,,Boolean,N/A,N/A,"true, false",,Either establishes a single requeening (true) or requeening every year on this date(false),False
 VTEnable,,Boolean,N/A,N/A,"true, false",,Enables the current varroa treatment mechanism.,False
-VTData,,String,N/A,N/A,"Schedules a Varroa Treatment using start_date,duration_weeks,mortality%,resistant%",,"Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%,resistant%. e.g. 6/2/2015,6,75,5. Use VTData=Clear to reset.",
-InitMitePctResistant,,Float,0,100,,%,"Initial mite resistance percentage setting. Parsed and stored, but current Python and C++ implementations do not apply it when initializing mites.",
+VTData,,String,N/A,N/A,"Schedules a Varroa Treatment using start_date,duration_weeks,mortality%",,"Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%. e.g. 6/2/2015,6,75. Mortality applies to treatment-susceptible free (running) mites only; mites in capped brood are unaffected. Use VTData=Clear to reset.",
+InitMitePctResistant,,Float,0,100,,%,"Percentage of the initial mite population that is resistant to Varroa treatment. Resistant mites survive treatments, so repeated treatments select for resistance.",0
 AIAdultSlope,,Float,1,9,,dimensionless,Slope parameter for the adult oral dose-response curve.,4
 AIAdultLD50,,Float,0,100,,ug/bee,"Oral median lethal dose for Adults,in ug/bee",999
 AIAdultSlopeContact,,Float,1,9,,dimensionless,Slope parameter for the adult contact dose-response curve.,4

@@ -492,6 +492,7 @@ class Colony:
         return self.get_n_today_lower()
 
     def set_mite_pct_resistance(self, pct):
+        """Set the percentage of the initial mite population resistant to treatment."""
         self.m_InitMitePctResistant = pct
 
     def set_vt_enable(self, value):
@@ -1167,6 +1168,9 @@ class Colony:
         )
         w_mites = Mite(0, w_count)
         d_mites = Mite(0, d_count)
+        # distribute_mites propagates the resistant proportion into each boxcar
+        w_mites.set_pct_resistant(self.m_InitMitePctResistant)
+        d_mites.set_pct_resistant(self.m_InitMitePctResistant)
         # Distribute mites into capped brood
         self.capwkr.distribute_mites(w_mites)
         self.capdrn.distribute_mites(d_mites)
@@ -1186,6 +1190,8 @@ class Colony:
         )
         run_mite_w = Mite(0, run_w_count)
         run_mite_d = Mite(0, run_d_count)
+        run_mite_w.set_pct_resistant(self.m_InitMitePctResistant)
+        run_mite_d.set_pct_resistant(self.m_InitMitePctResistant)
 
         self.run_mite = run_mite_d + run_mite_w
 
@@ -1456,7 +1462,8 @@ class Colony:
             has_item = the_item is not None
             if has_item and the_item:
                 Quan = self.run_mite.get_total()
-                # Reduce non-resistant proportion
+                # Only susceptible mites die; the resistant subpopulation survives, so
+                # repeated treatments select for resistance.
                 if hasattr(self.run_mite, "get_non_resistant") and hasattr(
                     self.run_mite, "set_non_resistant"
                 ):
