@@ -594,12 +594,6 @@ class VarroaPopSession:
             today >= self.immigration_start_date and today <= self.immigration_end_date
         )
 
-    def get_imm_pct_resistant(self):
-        return self.imm_mite_pct_resistant
-
-    def set_imm_pct_resistant(self, pctres):
-        self.imm_mite_pct_resistant = pctres
-
     def get_immigration_mites(self, event):
         """
         Returns the number of immigration mites for a given event (date and colony count), supporting all immigration models.
@@ -915,6 +909,13 @@ class VarroaPopSession:
                 except Exception:
                     self.add_to_error_list(f"Invalid icworkermiteoffspring: {value}")
                     return False
+        if name == "initmitepctresistant":
+            try:
+                self.init_mite_pct_resistant = float(value)
+                return True
+            except Exception:
+                self.add_to_error_list(f"Invalid initmitepctresistant: {value}")
+                return False
         if name == "icworkermitesurvivorship":
             if self.colony and hasattr(self.colony, "m_init_cond"):
                 try:
@@ -923,14 +924,6 @@ class VarroaPopSession:
                 except Exception:
                     self.add_to_error_list(f"Invalid icworkermitesurvivorship: {value}")
                     return False
-        if name == "initmitepctresistant":
-            try:
-                self.init_mite_pct_resistant = float(value)
-                return True
-            except Exception:
-                self.add_to_error_list(f"Invalid initmitepctresistant: {value}")
-                return False
-
         # AI/Pesticide Parameters (following C++ session.cpp pattern)
         if name == "ainame":
             if self.colony and hasattr(self.colony, "m_epadata"):
@@ -1725,13 +1718,21 @@ class VarroaPopSession:
                 return True
 
             parts = [part.strip() for part in value.split(",")]
-            if len(parts) != 4:
+            if len(parts) == 4:
                 self.add_to_error_list(
-                    f"Invalid vtdata format: {value}. Expected start_date,duration_weeks,mortality%,resistant%"
+                    f"Invalid vtdata format: {value}. VTData no longer takes a resistant% "
+                    "field. Expected start_date,duration_weeks,mortality%. Mite resistance "
+                    "is set on the population with InitMitePctResistant and "
+                    "PctImmMitesResistant."
+                )
+                return False
+            if len(parts) != 3:
+                self.add_to_error_list(
+                    f"Invalid vtdata format: {value}. Expected start_date,duration_weeks,mortality%"
                 )
                 return False
 
-            start_date_str, duration_str, pct_mortality_str, pct_resistant_str = parts
+            start_date_str, duration_str, pct_mortality_str = parts
             start_date = parse_date(start_date_str)
             if not start_date:
                 self.add_to_error_list(f"Invalid vtdata start date: {start_date_str}")
@@ -1740,7 +1741,6 @@ class VarroaPopSession:
             try:
                 duration = int(duration_str)
                 pct_mortality = float(pct_mortality_str)
-                pct_resistant = float(pct_resistant_str)
             except Exception:
                 self.add_to_error_list(f"Invalid vtdata values: {value}")
                 return False
@@ -1749,7 +1749,6 @@ class VarroaPopSession:
                 start_date,
                 duration,
                 pct_mortality,
-                pct_resistant,
             )
             return True
 
@@ -1939,8 +1938,10 @@ class VarroaPopSession:
         self.results_file_header.clear()
         self.inc_immigrating_mites = 0
         if self.colony:
-            self.colony.initialize_colony()
+            # Must precede initialize_colony(), which builds the initial mite
+            # population from this proportion.
             self.colony.set_mite_pct_resistance(self.init_mite_pct_resistant)
+            self.colony.initialize_colony()
 
             # Transfer VT enable flag from session to colony
             if hasattr(self, "vt_enable"):

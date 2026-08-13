@@ -17,12 +17,24 @@ from .exceptions import (
 )
 
 # Parameters removed from pybeepop+, mapped to migration guidance. Keys are lowercase.
+_VTDATA_GUIDANCE = (
+    "Varroa treatments are now scheduled with VTData, which takes "
+    "start_date,duration_weeks,mortality% (e.g. VTData=6/2/2015,6,75). Pass one VTData "
+    "entry per treatment, or VTData=Clear to reset. Mite resistance is set on the "
+    "population with InitMitePctResistant and PctImmMitesResistant."
+)
+
 RETIRED_PARAMETERS = {
     "eseedconcentration": (
         "ESeedConcentration was removed in pybeepop+ 0.3.0. Use ESeedAppRate instead, "
         "the seed treatment application rate in mg a.i./seed. Nectar and pollen residues "
         "are now derived separately from that rate rather than sharing one concentration."
     ),
+    "vttreatmentstart": f"VTTreatmentStart was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}",
+    "vttreatmentduration": (
+        f"VTTreatmentDuration was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}"
+    ),
+    "vtmortality": f"VTMortality was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}",
 }
 
 

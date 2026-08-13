@@ -289,6 +289,17 @@
       <td></td>
     </tr>
     <tr>
+      <td>PctImmMitesResistant</td>
+      <td></td>
+      <td>Float</td>
+      <td>0</td>
+      <td>100</td>
+      <td></td>
+      <td>%</td>
+      <td>Percentage of immigrating mites that are resistant to Varroa treatment. Resistant mites survive treatments.</td>
+      <td>0</td>
+    </tr>
+    <tr>
       <td>TotalImmMites</td>
       <td></td>
       <td>Integer</td>
@@ -297,17 +308,6 @@
       <td>Max value only constrained by data type</td>
       <td>mites</td>
       <td>Total # mites immigrating into colony</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>PctImmMitesResistant</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>% immigrating mites which are resistant to ?</td>
       <td></td>
     </tr>
     <tr>
@@ -437,9 +437,9 @@
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>Schedules a Varroa Treatment using start_date,duration_weeks,mortality%,resistant%</td>
+      <td>Schedules a Varroa Treatment using start_date,duration_weeks,mortality%</td>
       <td></td>
-      <td>Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%,resistant%. e.g. 6/2/2015,6,75,5. Use VTData=Clear to reset.</td>
+      <td>Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%. e.g. 6/2/2015,6,75. Mortality applies to treatment-susceptible free (running) mites only; mites in capped brood are unaffected. Use VTData=Clear to reset.</td>
       <td></td>
     </tr>
     <tr>
@@ -450,8 +450,8 @@
       <td>100</td>
       <td></td>
       <td>%</td>
-      <td>Initial mite resistance percentage setting. Parsed and stored, but current Python and C++ implementations do not apply it when initializing mites.</td>
-      <td></td>
+      <td>Percentage of the initial mite population that is resistant to Varroa treatment. Resistant mites survive treatments, so repeated treatments select for resistance.</td>
+      <td>0</td>
     </tr>
     <tr>
       <td>AIAdultSlope</td>

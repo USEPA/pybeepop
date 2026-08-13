@@ -91,11 +91,11 @@ def test_regression_run_model():
     assert results_initial["Capped Worker Brood"] == 8000
     assert results_exposure["Colony Size"] == 17913
     assert results_exposure["Capped Drone Brood"] == 219
-    assert round(results_exposure["Daylight hours"], 1) == 13.7  # linux daylight hour issue
+    assert round(results_exposure["Daylight hours"], 1) == 13.7
     assert results_exposure["Dead Foragers"] == 155
     assert results_last["Date"] == "10/10/2014"
-    assert results_last["Colony Size"] in [43442, 43445, 43614]  # platform-specific variation
-    assert results_last["Adult Drones"] in [500, 507]  # linux daylight hour issue
+    assert results_last["Colony Size"] == 43445
+    assert results_last["Adult Drones"] == 500
     assert results_last["Average Temperature (C)"] == 18.93
     assert results_last["Rain (mm)"] == 0.0
 
