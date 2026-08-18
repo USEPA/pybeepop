@@ -12,7 +12,6 @@ must agree; tests/test_parameter_validation.py compares them row by row.
 
 import math
 from dataclasses import dataclass
-from typing import Dict, Optional, Tuple
 
 INTEGER = "Integer"
 FLOAT = "Float"
@@ -27,7 +26,7 @@ class ParameterSpec:
     maximum: str = ""
 
 
-def _parse_bound(text: str) -> Optional[Tuple[float, bool]]:
+def _parse_bound(text: str) -> tuple[float, bool] | None:
     """Return ``(value, exclusive)`` for a bound string, or None if unbounded."""
     text = text.strip()
     if not text or text == "N/A":
@@ -37,7 +36,7 @@ def _parse_bound(text: str) -> Optional[Tuple[float, bool]]:
     return float(text), False
 
 
-PARAMETER_SPECS: Dict[str, ParameterSpec] = {
+PARAMETER_SPECS: dict[str, ParameterSpec] = {
     # Colony initial conditions
     "icdroneadults": ParameterSpec(INTEGER, "0"),
     "icworkeradults": ParameterSpec(INTEGER, "0"),
@@ -74,7 +73,6 @@ PARAMETER_SPECS: Dict[str, ParameterSpec] = {
     "aiadultld50contact": ParameterSpec(FLOAT, ">0"),
     "ailarvaslope": ParameterSpec(FLOAT, "0", "<20"),
     "ailarvald50": ParameterSpec(FLOAT, ">0"),
-    # log10(AIKOW) is taken directly, and AIHalfLife divides into log(2).
     "aikow": ParameterSpec(FLOAT, ">0"),
     "aikoc": ParameterSpec(FLOAT, ">0"),
     "aihalflife": ParameterSpec(FLOAT, ">0"),
@@ -105,8 +103,6 @@ PARAMETER_SPECS: Dict[str, ParameterSpec] = {
     # Pesticide application
     "eapprate": ParameterSpec(FLOAT, "0"),
     "esoiltheta": ParameterSpec(FLOAT, "0", "1"),
-    # ESoilP, AIKOC and ESoilFoc share the soil-water partition denominator with
-    # ESoilTheta, which may be zero, so none of them may reach zero.
     "esoilp": ParameterSpec(FLOAT, ">0"),
     "esoilfoc": ParameterSpec(FLOAT, ">0"),
     "esoilconcentration": ParameterSpec(FLOAT, "0"),
@@ -139,8 +135,8 @@ def _describe_range(spec: ParameterSpec) -> str:
 
 
 def validate_parameter(
-    name: str, value: str, display_name: Optional[str] = None
-) -> Tuple[bool, str, Optional[str]]:
+    name: str, value: str, display_name: str | None = None
+) -> tuple[bool, str, str | None]:
     """Check one parameter value against its spec.
 
     Args:
