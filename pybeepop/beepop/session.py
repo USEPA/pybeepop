@@ -50,6 +50,7 @@ import datetime
 from pybeepop.beepop.colony import Colony
 from pybeepop.beepop.weatherevents import WeatherEvents
 from pybeepop.beepop.mite import Mite
+from pybeepop.beepop.parameters import validate_parameter
 
 
 class VarroaPopSession:
@@ -714,6 +715,11 @@ class VarroaPopSession:
         name = param_name.strip().lower()
         value = param_value.strip()
 
+        ok, value, error = validate_parameter(name, value, param_name.strip())
+        if not ok:
+            self.add_to_error_list(error)
+            return False
+
         def parse_bool(val):
             return str(val).lower() in ("1", "true", "yes")
 
@@ -1144,9 +1150,7 @@ class VarroaPopSession:
         if name == "ipollentrips":
             if self.colony and hasattr(self.colony, "m_epadata"):
                 try:
-                    self.colony.m_epadata.m_I_PollenTrips = int(
-                        float(value)
-                    )  # Convert float to int like C++
+                    self.colony.m_epadata.m_I_PollenTrips = int(value)
                     return True
                 except Exception:
                     self.add_to_error_list(f"Invalid ipollentrips: {value}")
@@ -1154,9 +1158,7 @@ class VarroaPopSession:
         if name == "inectartrips":
             if self.colony and hasattr(self.colony, "m_epadata"):
                 try:
-                    self.colony.m_epadata.m_I_NectarTrips = int(
-                        float(value)
-                    )  # Convert float to int like C++
+                    self.colony.m_epadata.m_I_NectarTrips = int(value)
                     return True
                 except Exception:
                     self.add_to_error_list(f"Invalid inectartrips: {value}")

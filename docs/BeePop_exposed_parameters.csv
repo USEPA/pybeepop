@@ -1,29 +1,29 @@
-﻿"Note: All values in the input file are text strings.  The ""Type"" column below indicates the internal type the string is converted to.  Integer fields should be given whole numbers.",,,,,,,,
+﻿"Note: All values in the input file are text strings.  The ""Type"" column below indicates the internal type the string is converted to.  Integer fields must be whole numbers.  Values outside the listed Min/Max range are rejected with an error.",,,,,,,,
 Exposed Variable Name,Internal Associated Variable,Type,Min,Max,Description,Units,Interpretation,Default
 WeatherFileName,,String,N/A,N/A,Absolute file path,,Location of weather file,
 SimStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Sets the start date of the simulation.  Must be within dates contained in weather file,
 SimEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Sets the end date of the simulation.  Must be within dates contained in weather file,
-ICDroneAdults,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simuation - # of drone adults,0
-ICWorkerAdults,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simuation - # of worker adults,15000
-ICDroneBrood,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simuation - # of drone brood,0
-ICWorkerBrood,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simuation - # of worker brood,10000
-ICDroneLarvae,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simuation - # of drone larvae,0
-ICWorkerLarvae,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simuation - # of worker larvae,5000
-ICDroneEggs,,Integer,0,,Max value only constrained by data type,eggs,Initial Conditions for simuation - # of drone eggs,0
-ICWorkerEggs,,Integer,0,,Max value only constrained by data type,eggs,Initial Conditions for simuation - # of worker eggs,2000
-ICQueenStrength,,Float,1,5,,1-5 scale,"Initial Conditions for simuation - initial queen strenth. 1=weak, 5= string",4.000000
-ICForagerLifespan,,Integer,4,16,,days,Initial Conditions for simuation - forager lifespan in days,10
-ICDroneAdultInfest,,Float,0,100,,%,Initial Conditions for simuation - % adult drones infested with varroa,0
-ICDroneBroodInfest,,Float,0,100,,%,Initial Conditions for simuation - % drone brood infested  with varroa,0
-ICDroneMiteOffspring,,Float,0,,,mites per infesting mite,Initial Conditions for simuation - number of mite offspring per infesting mite,0
-ICDroneMiteSurvivorship,,Float,0,100,,%,Initial Conditions for simuation - % of mites surviving and emerging from capped drone brood,0
-ICWorkerAdultInfest,,Float,0,100,,%,Initial Conditions for simuation - % adult workers invested with varroa,0
-ICWorkerBroodInfest,,Float,0,100,,%,Initial Conditions for simuation - % worker brood infested with varroa,0
-ICWorkerMiteOffspring,,Float,0,100,,mites per infesting mite,Initial Conditions for simuation - number of mite offspring per infesting mite,0
-ICWorkerMiteSurvivorship,,Float,0,100,,%,Initial Conditions for simuation - % of mites surviving and emerging from capped worker brood,0
+ICDroneAdults,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simulation - # of drone adults,0
+ICWorkerAdults,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simulation - # of worker adults,15000
+ICDroneBrood,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simulation - # of drone brood,0
+ICWorkerBrood,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simulation - # of worker brood,10000
+ICDroneLarvae,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simulation - # of drone larvae,0
+ICWorkerLarvae,,Integer,0,,Max value only constrained by data type,bees,Initial Conditions for simulation - # of worker larvae,5000
+ICDroneEggs,,Integer,0,,Max value only constrained by data type,eggs,Initial Conditions for simulation - # of drone eggs,0
+ICWorkerEggs,,Integer,0,,Max value only constrained by data type,eggs,Initial Conditions for simulation - # of worker eggs,2000
+ICQueenStrength,,Float,1,5,,1-5 scale,"Initial Conditions for simulation - initial queen strength. 1=weak, 5=strong",4.000000
+ICForagerLifespan,,Integer,4,16,,days,Initial Conditions for simulation - forager lifespan in days,10
+ICDroneAdultInfest,,Float,0,100,,%,Initial Conditions for simulation - % adult drones infested with varroa,0
+ICDroneBroodInfest,,Float,0,100,,%,Initial Conditions for simulation - % drone brood infested with varroa,0
+ICDroneMiteOffspring,,Float,0,,Max value only constrained by data type,mites per infesting mite,Initial Conditions for simulation - number of mite offspring per infesting mite,0
+ICDroneMiteSurvivorship,,Float,0,100,,%,Initial Conditions for simulation - % of mites surviving and emerging from capped drone brood,0
+ICWorkerAdultInfest,,Float,0,100,,%,Initial Conditions for simulation - % adult workers infested with varroa,0
+ICWorkerBroodInfest,,Float,0,100,,%,Initial Conditions for simulation - % worker brood infested with varroa,0
+ICWorkerMiteOffspring,,Float,0,,Max value only constrained by data type,mites per infesting mite,Initial Conditions for simulation - number of mite offspring per infesting mite,0
+ICWorkerMiteSurvivorship,,Float,0,100,,%,Initial Conditions for simulation - % of mites surviving and emerging from capped worker brood,0
 ImmType,,String,N/A,N/A,"Valid strings are: None, Sine, Cosine, Tangent, Exponential, Logarithmic, Polynomial",,Profile of immigration.  Total mites over timespan follow one of these curves,
 PctImmMitesResistant,,Float,0,100,,%,"Percentage of immigrating mites that are resistant to Varroa treatment. Resistant mites survive treatments.",0
-TotalImmMites,,Integer,0,,Max value only constrained by data type,mites,Total # mites immigrating into colony,
+TotalImmMites,,Integer,0,,Max value only constrained by data type,mites,Total # mites immigrating into colony,0
 ImmStart,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start Immigration,
 ImmEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End Immigration,
 ImmEnabled,,Boolean,N/A,N/A,"true, false",,Enables or disables immigration,False
@@ -32,21 +32,21 @@ RQWkrDrnRatio,,Float,N/A,N/A,Unused,,N/A,
 RQReQueenDate,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Sets the date of requeening,
 RQEnableReQueen,,Boolean,N/A,N/A,"true, false",,Enables or disables requeening,True
 RQScheduled,,Boolean,N/A,N/A,"true, false",,Either establishes Schedule (true) or Automatic (false) requeening,False
-RQQueenStrength,,Float,1,5,,1-5 scale,Sets the strength of the requeened queen,
+RQQueenStrength,,Float,1,5,,1-5 scale,Sets the strength of the requeened queen,5.000000
 RQOnce,,Boolean,N/A,N/A,"true, false",,Either establishes a single requeening (true) or requeening every year on this date(false),False
 VTEnable,,Boolean,N/A,N/A,"true, false",,Enables the current varroa treatment mechanism.,False
 VTData,,String,N/A,N/A,"Schedules a Varroa Treatment using start_date,duration_weeks,mortality%",,"Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%. e.g. 6/2/2015,6,75. Mortality applies to treatment-susceptible free (running) mites only; mites in capped brood are unaffected. Use VTData=Clear to reset.",
 InitMitePctResistant,,Float,0,100,,%,"Percentage of the initial mite population that is resistant to Varroa treatment. Resistant mites survive treatments, so repeated treatments select for resistance.",0
-AIAdultSlope,,Float,1,9,,dimensionless,Slope parameter for the adult oral dose-response curve.,4
-AIAdultLD50,,Float,0,100,,ug/bee,"Oral median lethal dose for Adults,in ug/bee",999
-AIAdultSlopeContact,,Float,1,9,,dimensionless,Slope parameter for the adult contact dose-response curve.,4
-AIAdultLD50Contact,,Float,0,100,,ug/bee,"Contact median lethal dose for Adults,in ug/bee",999
-AILarvaSlope,,Float,1,9,,dimensionless,Slope parameter for the larval oral dose-response curve.,4
-AILarvaLD50,,Float,0,100,,ug/bee,"Oral median lethal dose for Larvae,in ug/bee",999
-AIKOW,,Float,0.1,1000000,,dimensionless,Octanol/water partition coefficient used in the soil contamination pathway to compute soil-to-plant transfer.,2.718282
-AIKOC,,Float,1,10000,,mL/g organic carbon,Organic carbon partition coefficient used in the soil contamination pathway soil-water partition term.,300.000000
-AIHalfLife,,Float,0.1,35,,days,Active ingredient half-life used to decay foliar exposure after application.,15.000000
-AIContactFactor,,Float,,,Min/Max value only constrained by data type,,Foliar-only factor used with EAppRate to convert application rate into forager contact dose.,2.7
+AIAdultSlope,,Float,0,<20,Recommended range: 1 to 9,dimensionless,Slope parameter for the adult oral dose-response curve.,4
+AIAdultLD50,,Float,>0,,Max value only constrained by data type,ug/bee,"Oral median lethal dose for Adults, in ug/bee",999
+AIAdultSlopeContact,,Float,0,<20,Recommended range: 1 to 9,dimensionless,Slope parameter for the adult contact dose-response curve.,4
+AIAdultLD50Contact,,Float,>0,,Max value only constrained by data type,ug/bee,"Contact median lethal dose for Adults, in ug/bee",999
+AILarvaSlope,,Float,0,<20,Recommended range: 1 to 9,dimensionless,Slope parameter for the larval oral dose-response curve.,4
+AILarvaLD50,,Float,>0,,Max value only constrained by data type,ug/bee,"Oral median lethal dose for Larvae, in ug/bee",999
+AIKOW,,Float,>0,,Recommended range: 0.1 to 1000000,dimensionless,Octanol/water partition coefficient used in the soil contamination pathway to compute soil-to-plant transfer.,2.718282
+AIKOC,,Float,>0,,Recommended range: 1 to 10000,mL/g organic carbon,Organic carbon partition coefficient used in the soil contamination pathway soil-water partition term.,300.000000
+AIHalfLife,,Float,>0,,Recommended range: 0.1 to 35 days,days,Active ingredient half-life used to decay foliar exposure after application.,15.000000
+AIContactFactor,,Float,0,,Max value only constrained by data type,dimensionless,Foliar-only factor used with EAppRate to convert application rate into forager contact dose.,2.7
 CL4Pollen,,Float,0,,Max value only constrained by data type,mg/day,Daily Pollen Consumption by age 4 Larvae (mg/day),1.800000
 CL4Nectar,,Float,0,,Max value only constrained by data type,mg/day,Daily Nectar Consumption by age 4 Larvae (mg/day),60.0
 CL5Pollen,,Float,0,,Max value only constrained by data type,mg/day,Daily Pollen Consumption by age 5 Larvae (mg/day),3.600000
@@ -71,10 +71,10 @@ INectarLoad,,Float,0,,Max value only constrained by data type,mg/trip/bee,mg Nec
 FoliarEnabled,,Boolean,N/A,N/A,"true, false",,"If true, enables foliar spray contamination mechanism",False
 SoilEnabled,,Boolean,N/A,N/A,"true, false",,"If true, enables soil contamination mechanism",False
 SeedEnabled,,Boolean,N/A,N/A,"true, false",,"If true, enables seed contamination mechanism",False
-EAppRate,,Float,0,,Max value only constrained by data type,,Foliar application rate used to compute foliar contact dose and incoming foliar nectar/pollen concentration.,
-ESoilTheta,,Float,0,,Max value only constrained by data type,cm3 water/cm3 soil,Volumetric soil water content used in the soil contamination pathway soil-water partition term.,0.250000
-ESoilP,,Float,1.4,1.8,,g/cm3,Soil bulk density used in the soil contamination pathway soil-water partition term.,1.400000
-ESoilFoc,,Float,0.005,0.05,,g organic carbon/g dry soil,Fraction of bulk soil mass that is organic carbon used in the soil contamination pathway soil-water partition term.,0.020000
+EAppRate,,Float,0,,Max value only constrained by data type,lb ai/acre,Foliar application rate used to compute foliar contact dose and incoming foliar nectar/pollen concentration.,0.000000
+ESoilTheta,,Float,0,1,Recommended range: 0 to 0.5,cm3 water/cm3 soil,Volumetric soil water content used in the soil contamination pathway soil-water partition term.,0.250000
+ESoilP,,Float,>0,,Recommended range: 1.4 to 1.8,g/cm3,Soil bulk density used in the soil contamination pathway soil-water partition term.,1.400000
+ESoilFoc,,Float,>0,,Recommended range: 0.005 to 0.05,g organic carbon/g dry soil,Fraction of bulk soil mass that is organic carbon used in the soil contamination pathway soil-water partition term.,0.020000
 ESoilConcentration,,Float,0,,Max value only constrained by data type,ug/g soil,"Soil concentration input for the soil contamination pathway. Combined with AIKOW, AIKOC, soil bulk density, soil water content, and soil organic-carbon fraction to estimate incoming nectar and pollen concentrations.",0.000000
 ESeedAppRate,,Float,0,,Max value only constrained by data type,mg ai/seed,"Application rate of seed treatment active ingredient, in mg a.i./seed. During the seed forage window, incoming pollen residue is set to AppRate x 18 ng a.i./g and incoming nectar residue to AppRate x 45 ng a.i./g.",0.000000
 FoliarAppDate,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Foliar application date.,
@@ -84,23 +84,23 @@ SoilForageBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start date
 SoilForageEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End date of the soil foraging exposure window.,
 SeedForageBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start date of the seed-treatment foraging exposure window.,
 SeedForageEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End date of the seed-treatment foraging exposure window.,
-NecPolFileEnable,,Boolean,N/A,N/A,"true, false",,"If true, enables the Nectar/Pollen Contamination file.",
+NecPolFileEnable,,Boolean,N/A,N/A,"true, false",,"If true, enables the Nectar/Pollen Contamination file.",False
 NecPolFileName,,String,N/A,N/A,Absolute file path,,Name of the Nectar/Pollen Contamination file,
 InitColNectar,,Float,0,,Max value only constrained by data type,grams,Mass (grams) of colony Nectar resources at start of simulation,20000
 InitColPollen,,Float,0,,Max value only constrained by data type,grams,Mass (grams) of colony Pollen resources at start of simulation,10000
 MaxColNectar,,Float,0,,Max value only constrained by data type,grams,Maximum mass (grams) of Nectar resources contained in colony during simulation,100000
 MaxColPollen,,Float,0,,Max value only constrained by data type,grams,Maximum mass (grams) of Pollen resources contained in colony during simulation,60000
 SupPollenEnable,,Boolean,N/A,N/A,"true, false",,"If true, enables supplemental pollen feeding",False
-SupPollenAmount,,Float,0,,Max value only constrained by data type,grams,Amount (grams) of pollen supplemental feed,
+SupPollenAmount,,Float,0,,Max value only constrained by data type,grams,Amount (grams) of pollen supplemental feed,0.000000
 SupPollenBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start date of pollen supplemental feeding,
 SupPollenEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End date of pollen suppemental feeding,
 SupNectarEnable,,Boolean,N/A,N/A,"true, false",,"If true, enables supplemental nectar feeding",False
-SupNectarAmount,,Float,0,,Max value only constrained by data type,grams,Amount (grams) of nectar supplemental feed,
+SupNectarAmount,,Float,0,,Max value only constrained by data type,grams,Amount (grams) of nectar supplemental feed,0.000000
 SupNectarBegin,,Date,1/1/100,12/31/9999,Commonly used date strings.,,Start date of nectar supplemental feeding,
 SupNectarEnd,,Date,1/1/100,12/31/9999,Commonly used date strings.,,End date of nectar suppemental feeding,
 ForagerMaxProp,,Float,0,1,,proportion,Max proportion of total adult worker population that can be active foragers,0.300000
 NeedResourcesToLive,,Boolean,N/A,N/A,"true, false",,"If true, colony dies when pollen or nectar mass reaches 0",False
-Latitude,,Float,-65,65,,decimal degrees,Latitude in decimal degrees for calculating day length,
+Latitude,,Float,-90,90,,decimal degrees,Latitude in decimal degrees for calculating day length. Day length beyond +/-65 degrees is calculated as at +/-65 degrees.,
 EtoLXitionEn,,Boolean,N/A,N/A,"true, false",,Enable Eggs to Larvae transition survival rate variable?,False
 LtoBXitionEn,,Boolean,N/A,N/A,"true, false",,Enable Larave to Pupae transition survival rate variable?,False
 BtoAXitionEn,,Boolean,N/A,N/A,"true, false",,Enable Pupae to Adult transition survival rate variable?,False

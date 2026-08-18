@@ -9,6 +9,7 @@ import os
 from typing import Dict, Optional, Type
 import pandas as pd
 
+from .beepop.parameters import validate_parameter
 from .exceptions import (
     BeepopException,
     BeepopParameterError,
@@ -120,12 +121,17 @@ class PythonEngineAdapter:
             BeepopRuntimeError: If parameters cannot be set
         """
         try:
-            # Validate parameter names
-            for par_name in parameters.keys():
+            # Validate parameter names and values
+            for par_name, par_value in parameters.items():
                 if par_name.lower() not in [x.lower() for x in self.valid_parameters]:
                     self._raise_with_log(
                         BeepopParameterError, invalid_parameter_message(par_name)
                     )
+                ok, _, error = validate_parameter(
+                    par_name.lower(), str(par_value).strip(), par_name
+                )
+                if not ok:
+                    self._raise_with_log(BeepopParameterError, error)
 
             # Convert dict to list format
             param_list = [f"{k}={v}" for k, v in parameters.items()]
@@ -164,16 +170,22 @@ class PythonEngineAdapter:
             with open(file_path, "r") as f:
                 lines = f.readlines()
 
-            # Validate parameter names before loading
+            # Validate parameter names and values before loading
             for line in lines:
                 clean_line = line.strip()
                 if clean_line and not clean_line.startswith("#") and "=" in clean_line:
-                    param_name = clean_line.split("=", 1)[0].strip().lower()
+                    raw_name, raw_value = clean_line.split("=", 1)
+                    param_name = raw_name.strip().lower()
                     if param_name not in [x.lower() for x in self.valid_parameters]:
                         self._raise_with_log(
                             BeepopParameterError,
                             invalid_parameter_message(param_name),
                         )
+                    ok, _, error = validate_parameter(
+                        param_name, raw_value.strip(), raw_name.strip()
+                    )
+                    if not ok:
+                        self._raise_with_log(BeepopParameterError, error)
 
             success = self.model.load_parameter_file(file_path)
 
