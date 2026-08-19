@@ -9,6 +9,7 @@ import os
 from typing import Dict, Optional, Type
 import pandas as pd
 
+from .beepop.parameters import validate_parameter
 from .exceptions import (
     BeepopException,
     BeepopParameterError,
@@ -35,6 +36,11 @@ RETIRED_PARAMETERS = {
         f"VTTreatmentDuration was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}"
     ),
     "vtmortality": f"VTMortality was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}",
+    "rqwkrdrnratio": (
+        "RQWkrDrnRatio was removed in pybeepop+ 0.3.0. It was read but never used by the "
+        "model, so removing it does not change simulation results. The worker to drone "
+        "ratio follows from the queen's sperm reserves."
+    ),
 }
 
 
@@ -78,6 +84,7 @@ class PythonEngineAdapter:
         self.valid_parameters = pd.read_csv(
             os.path.join(parent, "data/BeePop_exposed_parameters.csv"), skiprows=1
         )["Exposed Variable Name"].tolist()
+        self._valid_parameters_lower = {x.lower() for x in self.valid_parameters}
 
         # Initialize model during adapter construction
         self.model.initialize_model()
@@ -120,12 +127,17 @@ class PythonEngineAdapter:
             BeepopRuntimeError: If parameters cannot be set
         """
         try:
-            # Validate parameter names
-            for par_name in parameters.keys():
-                if par_name.lower() not in [x.lower() for x in self.valid_parameters]:
+            # Validate parameter names and values
+            for par_name, par_value in parameters.items():
+                if par_name.lower() not in self._valid_parameters_lower:
                     self._raise_with_log(
                         BeepopParameterError, invalid_parameter_message(par_name)
                     )
+                ok, _, error = validate_parameter(
+                    par_name.lower(), str(par_value).strip(), par_name
+                )
+                if not ok:
+                    self._raise_with_log(BeepopParameterError, error)
 
             # Convert dict to list format
             param_list = [f"{k}={v}" for k, v in parameters.items()]
@@ -164,16 +176,22 @@ class PythonEngineAdapter:
             with open(file_path, "r") as f:
                 lines = f.readlines()
 
-            # Validate parameter names before loading
+            # Validate parameter names and values before loading
             for line in lines:
                 clean_line = line.strip()
                 if clean_line and not clean_line.startswith("#") and "=" in clean_line:
-                    param_name = clean_line.split("=", 1)[0].strip().lower()
-                    if param_name not in [x.lower() for x in self.valid_parameters]:
+                    raw_name, raw_value = clean_line.split("=", 1)
+                    param_name = raw_name.strip().lower()
+                    if param_name not in self._valid_parameters_lower:
                         self._raise_with_log(
                             BeepopParameterError,
-                            invalid_parameter_message(param_name),
+                            invalid_parameter_message(raw_name.strip()),
                         )
+                    ok, _, error = validate_parameter(
+                        param_name, raw_value.strip(), raw_name.strip()
+                    )
+                    if not ok:
+                        self._raise_with_log(BeepopParameterError, error)
 
             success = self.model.load_parameter_file(file_path)
 

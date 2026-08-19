@@ -7,7 +7,9 @@ from pathlib import Path
 import pandas as pd
 
 DOCS_DIR = Path(__file__).resolve().parent
-CSV_PATH = DOCS_DIR / "BeePop_exposed_parameters.csv"
+CSV_PATH = (
+    DOCS_DIR.parent / "pybeepop" / "data" / "BeePop_exposed_parameters.csv"
+)
 HTML_PATH = DOCS_DIR / "parameters.html"
 HERO_FRAGMENT_PATH = DOCS_DIR / "_hero_fragment.html"
 
@@ -58,7 +60,7 @@ def build_document(note_text: str, table_html: str) -> str:
         <div class="table-wrap">
             {table_html}
         </div>
-        <p class="footer-link">For the full list and latest details, see <a href="https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv">BeePop_exposed_parameters.csv on GitHub</a>.</p>
+        <p class="footer-link">For the full list and latest details, see <a href="https://github.com/USEPA/pybeepop/blob/main/pybeepop/data/BeePop_exposed_parameters.csv">BeePop_exposed_parameters.csv on GitHub</a>.</p>
     </div>
 </body>
 </html>

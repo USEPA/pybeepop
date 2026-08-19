@@ -40,7 +40,7 @@ def test_invalid_eseedapprate_adds_error():
     success = session.update_colony_parameters("eseedapprate", "not_a_number")
 
     assert success is False
-    assert any("Invalid eseedapprate" in error for error in session.get_error_list())
+    assert any("eseedapprate must be a number" in error for error in session.get_error_list())
 
 
 def test_pollen_residue_scales_at_18_ng_per_mg_per_seed():
