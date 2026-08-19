@@ -129,12 +129,12 @@ params = beepop.get_parameters()
 
 ### Additional Resources
 
-- **Parameter Reference**: [Exposed BeePop+ Parameters](https://usepa.github.io/pybeepop/parameters.html)
+- **Parameter Reference**: [BeePop+ Parameters](https://usepa.github.io/pybeepop/parameters.html)
 - **Weather File Format**: [docs/weather_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/weather_readme.txt)
 - **Residue File Format**: [docs/residue_file_readme.txt](https://github.com/USEPA/pybeepop/blob/main/docs/residue_file_readme.txt)
 - **Example Files**: [example_data/](https://github.com/USEPA/pybeepop/tree/main/example_data)
 
-> **Note**: Parameters not explicitly set will use BeePop+ default values. See the [publication](https://doi.org/10.3390/ecologies3030022) for details.
+> **Note**: Parameters not explicitly set will use BeePop+ default values. See the [parameter list](https://usepa.github.io/pybeepop/parameters.html) for details.
 
 > **Note**: Numeric parameters are validated when they are set. A value outside the range listed for it in the [parameter reference](https://usepa.github.io/pybeepop/parameters.html), or a fractional value for an integer parameter, raises `BeepopParameterError` and leaves the previously set parameters unchanged.
 
