@@ -36,6 +36,11 @@ RETIRED_PARAMETERS = {
         f"VTTreatmentDuration was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}"
     ),
     "vtmortality": f"VTMortality was removed in pybeepop+ 0.3.0. {_VTDATA_GUIDANCE}",
+    "rqwkrdrnratio": (
+        "RQWkrDrnRatio was removed in pybeepop+ 0.3.0. It was read but never used by the "
+        "model, so removing it does not change simulation results. The worker to drone "
+        "ratio follows from the queen's sperm reserves."
+    ),
 }
 
 

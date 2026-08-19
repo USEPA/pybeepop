@@ -18,6 +18,20 @@ CSV_PATH = os.path.join(
 )
 
 
+def _same_default(documented, value):
+    """Compare two spellings of one default value.
+
+    The CSV is written for readers (15, FALSE) and default_parameters.txt for the
+    parser (15.000000, False), so compare by value rather than by string.
+    """
+    if documented.lower() in ("true", "false") or value.lower() in ("true", "false"):
+        return documented.lower() == value.lower()
+    try:
+        return float(documented) == float(value)
+    except ValueError:
+        return documented == value
+
+
 @pytest.fixture(scope="module")
 def csv_rows():
     """Parameter rows keyed by lowercased name. The column header is the second line."""
@@ -58,7 +72,6 @@ def test_every_numeric_row_has_a_spec(csv_rows):
         for name, row in csv_rows.items()
         if row["Type"].strip() in ("Integer", "Float")
         and name not in PARAMETER_SPECS
-        and row["Description"].strip() != "Unused"
     ]
     assert not unspecified, f"Numeric parameters with no range validation: {unspecified}"
 
@@ -101,7 +114,7 @@ def test_csv_defaults_match_the_packaged_default_parameter_file(csv_rows):
             mismatches.append(f"{name}: in default_parameters.txt but not in the CSV")
             continue
         documented = row["Default"].strip()
-        if documented != value:
+        if not _same_default(documented, value):
             mismatches.append(f"{name}: CSV Default {documented!r}, file has {value!r}")
 
     assert not mismatches, "Documented defaults disagree with the packaged file:\n" + "\n".join(
@@ -129,12 +142,7 @@ def test_defaults_not_in_the_file_match_the_values_the_model_initializes(csv_row
     mismatches = []
     for name, live in initialized.items():
         documented = csv_rows[name]["Default"].strip()
-        matches = (
-            str(live) == documented
-            if isinstance(live, bool)
-            else float(live) == float(documented)
-        )
-        if not matches:
+        if not _same_default(documented, str(live)):
             mismatches.append(f"{name}: CSV Default {documented!r}, model has {live!r}")
 
     assert not mismatches, "Documented defaults disagree with the model:\n" + "\n".join(

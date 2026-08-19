@@ -104,7 +104,7 @@ PARAMETER_SPECS: dict[str, ParameterSpec] = {
     "eapprate": ParameterSpec(FLOAT, "0"),
     "esoiltheta": ParameterSpec(FLOAT, "0", "1"),
     "esoilp": ParameterSpec(FLOAT, ">0"),
-    "esoilfoc": ParameterSpec(FLOAT, ">0"),
+    "esoilfoc": ParameterSpec(FLOAT, ">0", "1"),
     "esoilconcentration": ParameterSpec(FLOAT, "0"),
     "eseedapprate": ParameterSpec(FLOAT, "0"),
     # Colony resources
