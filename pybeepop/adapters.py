@@ -79,6 +79,7 @@ class PythonEngineAdapter:
         self.valid_parameters = pd.read_csv(
             os.path.join(parent, "data/BeePop_exposed_parameters.csv"), skiprows=1
         )["Exposed Variable Name"].tolist()
+        self._valid_parameters_lower = {x.lower() for x in self.valid_parameters}
 
         # Initialize model during adapter construction
         self.model.initialize_model()
@@ -123,7 +124,7 @@ class PythonEngineAdapter:
         try:
             # Validate parameter names and values
             for par_name, par_value in parameters.items():
-                if par_name.lower() not in [x.lower() for x in self.valid_parameters]:
+                if par_name.lower() not in self._valid_parameters_lower:
                     self._raise_with_log(
                         BeepopParameterError, invalid_parameter_message(par_name)
                     )
@@ -176,10 +177,10 @@ class PythonEngineAdapter:
                 if clean_line and not clean_line.startswith("#") and "=" in clean_line:
                     raw_name, raw_value = clean_line.split("=", 1)
                     param_name = raw_name.strip().lower()
-                    if param_name not in [x.lower() for x in self.valid_parameters]:
+                    if param_name not in self._valid_parameters_lower:
                         self._raise_with_log(
                             BeepopParameterError,
-                            invalid_parameter_message(param_name),
+                            invalid_parameter_message(raw_name.strip()),
                         )
                     ok, _, error = validate_parameter(
                         param_name, raw_value.strip(), raw_name.strip()

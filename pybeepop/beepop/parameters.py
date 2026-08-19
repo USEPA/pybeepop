@@ -47,7 +47,7 @@ PARAMETER_SPECS: dict[str, ParameterSpec] = {
     "icdroneeggs": ParameterSpec(INTEGER, "0"),
     "icworkereggs": ParameterSpec(INTEGER, "0"),
     "icqueenstrength": ParameterSpec(FLOAT, "1", "5"),
-    # Biological range from the published model; the code itself imposes no limit.
+    # Biological range from the published model.
     "icforagerlifespan": ParameterSpec(INTEGER, "4", "16"),
     # Varroa initial infestation
     "icdroneadultinfest": ParameterSpec(FLOAT, "0", "100"),
