@@ -120,7 +120,7 @@ class EPAData:
         self.m_E_SoilP = 0.0
         self.m_E_SoilFoc = 0.0
         self.m_E_SoilConcentration = 0.0
-        self.m_E_SeedConcentration = 0.0
+        self.m_E_SeedAppRate = 0.0
         self.m_FoliarAppDate = datetime.now()
         self.m_FoliarForageBegin = datetime.now()
         self.m_FoliarForageEnd = datetime.now()

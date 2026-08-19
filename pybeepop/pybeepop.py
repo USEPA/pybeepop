@@ -2,15 +2,12 @@
 pybeepop - BeePop+ interface for Python
 """
 
-import os
-import platform
-from pathlib import Path
-import pandas as pd
-from typing import Optional
-from .tools import BeePopModel
-from .plots import plot_timeseries
-from .engine_interface import BeepopEngineInterface
 import json
+import os
+from pathlib import Path
+
+from .engine_interface import BeepopEngineInterface
+from .plots import plot_timeseries
 
 
 class PyBeePop:
@@ -47,15 +44,10 @@ class PyBeePop:
         Initialize a PyBeePop object with choice of simulation engine.
 
         Args:
-            engine (str, optional): Simulation engine to use. Options:
-                - 'python' (default): Use the pure Python engine. Available on all
-                  platforms and requires no compiled BeePop+ library.
-                - 'cpp': Force C++ engine. Raises error if unavailable. Not supported on macOS.
-
-            lib_file (str, optional): Path to BeePop+ shared library (.dll or .so).
-                Only relevant when engine='cpp'. If None, attempts to auto-detect
-                based on OS and architecture.
-
+            engine (str, optional): Retained for backward compatibility. Only 'python'
+                is accepted; the C++ engine was removed in version 0.3.0.
+            lib_file (str, optional): Retained for backward compatibility. Accepted only
+                as None; the C++ engine was removed in version 0.3.0.
             parameter_file (str, optional): Path to a text file of BeePop+ parameters (one per line, parameter=value). If provided,
                 it is loaded after the bundled default parameter file so user values override package defaults. See
                 https://doi.org/10.3390/ecologies3030022 or the documentation for valid parameters.
@@ -68,54 +60,26 @@ class PyBeePop:
 
         Raises:
             FileNotFoundError: If a provided file does not exist at the specified path.
-            NotImplementedError: If run on a platform that is not 64-bit Windows or Linux.
-            ValueError: If engine parameter is invalid or latitude is outside the valid range.
+            ValueError: If engine or lib_file requests the removed C++ engine, or if
+                latitude is outside the valid range.
 
         Examples:
-            >>> # Default to the Python engine
             >>> model = PyBeePop(weather_file='weather.csv')
             >>> results = model.run_model()
 
-            >>> # Force Python engine
-            >>> model = PyBeePop(engine='python')
-            >>> model.load_weather('weather.csv')
-            >>> results = model.run_model()
-
-            >>> # Force C++ engine with custom library
-            >>> model = PyBeePop(engine='cpp', lib_file='/path/to/custom_beepop.so')
+            >>> model = PyBeePop()
             >>> model.load_weather('weather.csv')
             >>> results = model.run_model()
         """
         self.verbose = verbose
-        self.engine_type: Optional[str] = None
-        self.engine: Optional[BeepopEngineInterface] = None
-        self.lib_file: Optional[str] = None  # For backward compatibility
+        self.engine_type: str | None = None
+        self.engine: BeepopEngineInterface | None = None
+        self.lib_file: str | None = None  # For backward compatibility
 
-        # Engine selection logic
-        current_platform = platform.system()
+        self._check_removed_cpp_options(engine, lib_file)
 
-        # macOS only supports Python engine
-        if current_platform == "Darwin":
-            if engine == "cpp":
-                raise NotImplementedError(
-                    "The C++ engine is not supported on macOS due to architecture compatibility issues. "
-                    "Please use engine='python' instead."
-                )
-
-        if engine == "python":
-            self.engine = self._initialize_python_engine()
-            self.engine_type = "python"
-        elif engine == "cpp":
-            self.engine = self._initialize_cpp_engine(lib_file)
-            self.engine_type = "cpp"
-            # Store lib_file for backward compatibility
-            if hasattr(self.engine, "lib_file"):
-                self.lib_file = self.engine.lib_file
-        else:
-            raise ValueError(
-                f"Invalid engine type: '{engine}'. "
-                f"Must be 'cpp' or 'python'."
-            )
+        self.engine = self._initialize_python_engine()
+        self.engine_type = "python"
 
         # Validate and set latitude
         if not -90 <= latitude <= 90:
@@ -156,58 +120,31 @@ class PyBeePop:
         self.load_parameter_file(self.default_parameter_file)
         self.parameter_file = None
 
-    def _initialize_cpp_engine(self, lib_file) -> BeepopEngineInterface:
+    @staticmethod
+    def _check_removed_cpp_options(engine, lib_file) -> None:
         """
-        Initialize C++ engine.
-
-        Args:
-            lib_file: Path to shared library, or None for auto-detection
-
-        Returns:
-            CppEngineAdapter: Initialized C++ engine adapter
+        Reject arguments that requested the C++ engine, removed in version 0.3.0.
 
         Raises:
-            FileNotFoundError: If library file not found
-            RuntimeError: If initialization fails
+            ValueError: If engine is anything other than 'python', or lib_file is set.
         """
-        from .adapters import (
-            CppEngineAdapter,
-        )  # Auto-detect lib_file if not provided (existing logic)
-
-        if lib_file is None:
-            parent = os.path.dirname(os.path.abspath(__file__))
-            platform_name = platform.system()
-
-            if platform_name == "Windows":
-                if platform.architecture()[0] == "32bit":
-                    raise NotImplementedError(
-                        "Windows x86 (32-bit) is not supported by BeePop+. "
-                        "Please run on an x64 platform."
-                    )
-                lib_file = os.path.join(parent, "lib/beepop_win64.dll")
-            elif platform_name == "Linux":
-                lib_file = os.path.join(parent, "lib/beepop_linux.so")
-                if self.verbose:
-                    print(
-                        "Running in Linux mode. Trying manylinux/musllinux version.\\n"
-                        "If you encounter errors, you may need to compile your own version of BeePop+ from source and pass the path to your\\n"
-                        ".so file with the lib_file option. Currently, only 64-bit architecture is supported.\\n"
-                        "See the pybeepop README for instructions."
-                    )
-            else:
-                raise NotImplementedError(
-                    "BeePop+ C++ engine only supports Windows and Linux. "
-                    "For macOS, use engine='python'."
-                )
-
-        if not os.path.isfile(lib_file):
-            raise FileNotFoundError(
-                f"BeePop+ shared library not found at: {lib_file}\\n"
-                f"You may need to compile BeePop+ from source or use engine='python'\\n"
-                f"See https://github.com/USEPA/pybeepop/blob/main/README.md for more info."
+        if engine == "cpp":
+            raise ValueError(
+                "The C++ engine was removed in pybeepop+ 0.3.0. Remove the engine "
+                "argument, or pass engine='python'. The Python engine requires no "
+                "compiled library."
             )
-
-        return CppEngineAdapter(lib_file, verbose=self.verbose)
+        if engine != "python":
+            raise ValueError(
+                f"Invalid engine type: '{engine}'. 'python' is the only option."
+            )
+        if lib_file is not None:
+            raise ValueError(
+                "The lib_file argument is no longer supported. It pointed at a "
+                "compiled BeePop+ library for the C++ engine, which was removed in "
+                "pybeepop+ 0.3.0. Remove the argument; the Python engine needs no "
+                "shared library."
+            )
 
     def _initialize_python_engine(self) -> BeepopEngineInterface:
         """
@@ -307,7 +244,7 @@ class PyBeePop:
             raise TypeError("Cannot set weather file to None")
         if not os.path.isfile(weather_file):
             raise FileNotFoundError(
-                "Weather file does not exist at path: {}!".format(weather_file)
+                f"Weather file does not exist at path: {weather_file}!"
             )
         self.weather_file = weather_file
 
@@ -329,7 +266,7 @@ class PyBeePop:
         """
         if not os.path.isfile(parameter_file):
             raise FileNotFoundError(
-                "Paramter file does not exist at path: {}!".format(parameter_file)
+                f"Paramter file does not exist at path: {parameter_file}!"
             )
         self.parameter_file = parameter_file
 
@@ -352,7 +289,7 @@ class PyBeePop:
         """
         if not os.path.isfile(residue_file):
             raise FileNotFoundError(
-                "Residue file does not exist at path: {}!".format(residue_file)
+                f"Residue file does not exist at path: {residue_file}!"
             )
         self.residue_file = residue_file
 
@@ -373,7 +310,9 @@ class PyBeePop:
         """
         # check to see if parameters have been supplied
         if (self.parameter_file is None) and (not self.parameters):
-            print("No user parameters have been set. Running with bundled default settings.")
+            print(
+                "No user parameters have been set. Running with bundled default settings."
+            )
         if self.weather_file is None:
             raise RuntimeError("Weather must be set before running BeePop+!")
 
@@ -438,9 +377,7 @@ class PyBeePop:
         invalid_cols = [col not in self.output.columns for col in columns]
         if any(invalid_cols):
             raise IndexError(
-                "The column name {} is not a valid output column.".format(
-                    [i for (i, v) in zip(columns, invalid_cols) if v]
-                )
+                f"The column name {[i for (i, v) in zip(columns, invalid_cols) if v]} is not a valid output column."
             )
         plot = plot_timeseries(output=self.output, columns=columns)
         return plot

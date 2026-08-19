@@ -4,1325 +4,1131 @@
     <meta charset="utf-8">
     <title>BeePop+ Exposed Parameters</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f8fafc;
-            color: #1f2937;
-        }
-        .container {
-            max-width: 1320px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(60, 72, 88, 0.10);
-            padding: 32px 24px 24px 24px;
-        }
-        h1 {
-            color: #1a202c;
-            font-size: 2.2rem;
-            margin-bottom: 24px;
-        }
-        .note {
-            background: #fffbe6;
-            border-left: 4px solid #fec44f;
-            padding: 12px 18px;
-            margin-bottom: 24px;
-            color: #444;
-        }
-        .table-wrap {
-            overflow-x: auto;
-        }
-        table.parameter-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            font-size: 0.96rem;
-        }
-        table.parameter-table th,
-        table.parameter-table td {
-            border: 1px solid #e2e8f0;
-            padding: 8px 10px;
-            text-align: left;
-            vertical-align: top;
-        }
-        table.parameter-table th {
-            background: #fec44f;
-            color: #222;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-        table.parameter-table tbody tr:nth-child(even) {
-            background: #f9fafb;
-        }
-        .footer-link {
-            color: #888;
-            font-size: 0.98rem;
-        }
-        .back-link {
-            color: #2563eb;
-        }
-        @media (max-width: 700px) {
-            .container {
-                padding: 10px 2vw;
-            }
-            table.parameter-table,
-            table.parameter-table th,
-            table.parameter-table td {
-                font-size: 0.92rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>BeePop+ Exposed Parameters</h1>
-        <div class="note">Note: All values in the input file are text strings.  The &quot;Type&quot; column below indicates the internal type the string is converted to using standard C++ conversion rules.  Ex: 2.677 in an integer field is converted to 2.</div>
+    <section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Bee colony modeling</span>
+        <h1><a href="index.html">🐝 pybeepop+</a></h1>
+        <p>Python interface for BeePop+, the EPA/USDA honey bee colony simulation model.</p>
+        <div class="hero-actions">
+            <a class="tertiary" href="index.html">Home</a>
+            <a class="primary" href="introduction.html">Read the Introduction</a>
+            <a class="secondary active" href="parameters.html">Browse Parameters</a>
+        </div>
+        <div class="badges">
+            <img src="https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml/badge.svg" alt="Tests">
+            <img src="https://badge.fury.io/py/pybeepop-plus.svg" alt="PyPI version">
+        </div>
+        <p>For more information about <b>BeePop+</b> see <a href="https://doi.org/10.3390/ecologies3030022">Garber <i>et al.</i> 2022, Ecologies</a>.<br>For more information about <b>pybeepop+</b> see <a href="">Minucci 2025, Journal of Open Research Software</a>.</p>
+    </div>
+    <div class="hero-art">
+        <img src="assets/beepop_logo_transparent_clean.png" alt="BeePop+ logo">
+    </div>
+</section>
+
+    <div class="container wide">
+        <div class="note">Note: All values in the input file are text strings.  The &quot;Type&quot; column below indicates the internal type the string is converted to.  Integer fields must be whole numbers.  Values outside the listed Min/Max range are rejected with an error.</div>
         <div class="table-wrap">
             <table class="dataframe parameter-table">
   <thead>
     <tr style="text-align: left;">
       <th>Exposed Variable Name</th>
-      <th>Internal Associated Variable</th>
       <th>Type</th>
       <th>Min</th>
       <th>Max</th>
-      <th>Description</th>
-      <th>Units</th>
-      <th>Interpretation</th>
       <th>Default</th>
+      <th>Units</th>
+      <th>Notes</th>
+      <th>Interpretation</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>WeatherFileName</td>
-      <td></td>
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
+      <td></td>
+      <td></td>
       <td>Absolute file path</td>
-      <td></td>
       <td>Location of weather file</td>
-      <td></td>
     </tr>
     <tr>
       <td>SimStart</td>
-      <td></td>
       <td>Date</td>
       <td>1/1/100</td>
       <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
       <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
       <td>Sets the start date of the simulation.  Must be within dates contained in weather file</td>
-      <td></td>
     </tr>
     <tr>
       <td>SimEnd</td>
-      <td></td>
       <td>Date</td>
       <td>1/1/100</td>
       <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
       <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
       <td>Sets the end date of the simulation.  Must be within dates contained in weather file</td>
-      <td></td>
     </tr>
     <tr>
       <td>ICDroneAdults</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>bees</td>
-      <td>Initial Conditions for simuation - # of drone adults</td>
       <td>0</td>
+      <td># of individuals</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of drone adults</td>
     </tr>
     <tr>
       <td>ICWorkerAdults</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>bees</td>
-      <td>Initial Conditions for simuation - # of worker adults</td>
       <td>15000</td>
+      <td># of individuals</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of worker adults</td>
     </tr>
     <tr>
       <td>ICDroneBrood</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>bees</td>
-      <td>Initial Conditions for simuation - # of drone brood</td>
       <td>0</td>
+      <td># of individuals</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of drone brood</td>
     </tr>
     <tr>
       <td>ICWorkerBrood</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>bees</td>
-      <td>Initial Conditions for simuation - # of worker brood</td>
       <td>10000</td>
+      <td># of individuals</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of worker brood</td>
     </tr>
     <tr>
       <td>ICDroneLarvae</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>bees</td>
-      <td>Initial Conditions for simuation - # of drone larvae</td>
       <td>0</td>
+      <td># of individuals</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of drone larvae</td>
     </tr>
     <tr>
       <td>ICWorkerLarvae</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>bees</td>
-      <td>Initial Conditions for simuation - # of worker larvae</td>
       <td>5000</td>
+      <td># of individuals</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of worker larvae</td>
     </tr>
     <tr>
       <td>ICDroneEggs</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>eggs</td>
-      <td>Initial Conditions for simuation - # of drone eggs</td>
       <td>0</td>
+      <td># of eggs</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of drone eggs</td>
     </tr>
     <tr>
       <td>ICWorkerEggs</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>eggs</td>
-      <td>Initial Conditions for simuation - # of worker eggs</td>
       <td>2000</td>
+      <td># of eggs</td>
+      <td></td>
+      <td>Initial Conditions for simulation - # of worker eggs</td>
     </tr>
     <tr>
       <td>ICQueenStrength</td>
-      <td></td>
       <td>Float</td>
       <td>1</td>
       <td>5</td>
-      <td></td>
+      <td>4</td>
       <td>1-5 scale</td>
-      <td>Initial Conditions for simuation - initial queen strenth. 1=weak, 5= string</td>
-      <td>4.000000</td>
+      <td></td>
+      <td>Initial Conditions for simulation - initial queen strength. 1=weak, 5=strong</td>
     </tr>
     <tr>
       <td>ICForagerLifespan</td>
-      <td></td>
       <td>Integer</td>
       <td>4</td>
       <td>16</td>
-      <td></td>
-      <td>days</td>
-      <td>Initial Conditions for simuation - forager lifespan in days</td>
       <td>10</td>
+      <td>days</td>
+      <td></td>
+      <td>Initial Conditions for simulation - forager lifespan in days</td>
     </tr>
     <tr>
       <td>ICDroneAdultInfest</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Initial Conditions for simuation - % adult drones infested with varroa</td>
       <td>0</td>
+      <td>%</td>
+      <td></td>
+      <td>Initial Conditions for simulation - % adult drones infested with Varroa mites</td>
     </tr>
     <tr>
       <td>ICDroneBroodInfest</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Initial Conditions for simuation - % drone brood infested  with varroa</td>
       <td>0</td>
+      <td>%</td>
+      <td></td>
+      <td>Initial Conditions for simulation - % drone brood infested with Varroa mites</td>
     </tr>
     <tr>
       <td>ICDroneMiteOffspring</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td></td>
-      <td>mites per infesting mite</td>
-      <td>Initial Conditions for simuation - number of mite offspring per infesting mite</td>
       <td>0</td>
+      <td>mites per infesting mite</td>
+      <td></td>
+      <td>Initial Conditions for simulation - number of mite offspring per infesting mite</td>
     </tr>
     <tr>
       <td>ICDroneMiteSurvivorship</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Initial Conditions for simuation - % of mites surviving and emerging from capped drone brood</td>
       <td>0</td>
+      <td>%</td>
+      <td></td>
+      <td>Initial Conditions for simulation - % of mites surviving and emerging from capped drone brood</td>
     </tr>
     <tr>
       <td>ICWorkerAdultInfest</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Initial Conditions for simuation - % adult workers invested with varroa</td>
       <td>0</td>
+      <td>%</td>
+      <td></td>
+      <td>Initial Conditions for simulation - % adult workers infested with Varroa mites</td>
     </tr>
     <tr>
       <td>ICWorkerBroodInfest</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Initial Conditions for simuation - % worker brood infested with varroa</td>
       <td>0</td>
+      <td>%</td>
+      <td></td>
+      <td>Initial Conditions for simulation - % worker brood infested with Varroa mites</td>
     </tr>
     <tr>
       <td>ICWorkerMiteOffspring</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
-      <td>100</td>
       <td></td>
-      <td>mites per infesting mite</td>
-      <td>Initial Conditions for simuation - number of mite offspring per infesting mite</td>
       <td>0</td>
+      <td>mites per infesting mite</td>
+      <td></td>
+      <td>Initial Conditions for simulation - number of mite offspring per infesting mite</td>
     </tr>
     <tr>
       <td>ICWorkerMiteSurvivorship</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Initial Conditions for simuation - % of mites surviving and emerging from capped worker brood</td>
       <td>0</td>
+      <td>%</td>
+      <td></td>
+      <td>Initial Conditions for simulation - % of mites surviving and emerging from capped worker brood</td>
     </tr>
     <tr>
       <td>ImmType</td>
-      <td></td>
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
+      <td></td>
+      <td></td>
       <td>Valid strings are: None, Sine, Cosine, Tangent, Exponential, Logarithmic, Polynomial</td>
-      <td></td>
-      <td>Profile of immigration.  Total mites over timespan follow one of these curves</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>TotalImmMites</td>
-      <td></td>
-      <td>Integer</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mites</td>
-      <td>Total # mites immigrating into colony</td>
-      <td></td>
+      <td>Time series profile of daily immigration of mites over the ImmStart to ImmEnd time period.</td>
     </tr>
     <tr>
       <td>PctImmMitesResistant</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
+      <td>0</td>
       <td>%</td>
-      <td>% immigrating mites which are resistant to ?</td>
       <td></td>
+      <td>Percentage of immigrating mites that are resistant to Varroa treatment. Resistant mites survive treatments.</td>
+    </tr>
+    <tr>
+      <td>TotalImmMites</td>
+      <td>Integer</td>
+      <td>0</td>
+      <td></td>
+      <td>0</td>
+      <td># of mites</td>
+      <td></td>
+      <td>Total mites immigrating across the ImmStart to ImmEnd window, distributed by ImmType. Mites only immigrate on forage days, so fewer may arrive.</td>
     </tr>
     <tr>
       <td>ImmStart</td>
-      <td></td>
       <td>Date</td>
       <td>1/1/100</td>
       <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
       <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
       <td>Start Immigration</td>
-      <td></td>
     </tr>
     <tr>
       <td>ImmEnd</td>
-      <td></td>
       <td>Date</td>
       <td>1/1/100</td>
       <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
       <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
       <td>End Immigration</td>
-      <td></td>
     </tr>
     <tr>
       <td>ImmEnabled</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
+      <td>true, false</td>
       <td>Enables or disables immigration</td>
-      <td>False</td>
     </tr>
     <tr>
       <td>RQEggLayDelay</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>days</td>
-      <td>Delay in days after a requeening</td>
       <td>10</td>
-    </tr>
-    <tr>
-      <td>RQWkrDrnRatio</td>
+      <td>days</td>
       <td></td>
-      <td>Float</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>Unused</td>
-      <td></td>
-      <td>N/A</td>
-      <td></td>
+      <td>Delay in days after a requeening before the new queen begins laying eggs.</td>
     </tr>
     <tr>
       <td>RQReQueenDate</td>
-      <td></td>
       <td>Date</td>
       <td>1/1/100</td>
       <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
       <td></td>
-      <td>Sets the date of requeening</td>
       <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Sets the date of requeening, active when RQScheduled = true</td>
     </tr>
     <tr>
       <td>RQEnableReQueen</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>TRUE</td>
       <td></td>
+      <td>true, false</td>
       <td>Enables or disables requeening</td>
-      <td>True</td>
     </tr>
     <tr>
       <td>RQScheduled</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
-      <td>Either establishes Schedule (true) or Automatic (false) requeening</td>
-      <td>False</td>
+      <td>true, false</td>
+      <td>Either establishes Scheduled (true) or Automatic (false) requeening. Automatic requeening occurs from April-September if drone eggs exceed 15% of eggs laid due to sperm depletion. RQEnableReQueen must also be set to true.</td>
     </tr>
     <tr>
       <td>RQQueenStrength</td>
-      <td></td>
       <td>Float</td>
       <td>1</td>
       <td>5</td>
-      <td></td>
+      <td>5</td>
       <td>1-5 scale</td>
-      <td>Sets the strength of the requeened queen</td>
       <td></td>
+      <td>Sets the strength of the requeened queen</td>
     </tr>
     <tr>
       <td>RQOnce</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
+      <td>FALSE</td>
+      <td></td>
       <td>true, false</td>
-      <td></td>
       <td>Either establishes a single requeening (true) or requeening every year on this date(false)</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <td>VTTreatmentDuration</td>
-      <td></td>
-      <td>Integer</td>
-      <td>1</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>days</td>
-      <td>Legacy Python-only varroa treatment duration. Parsed by the current Python port but planned for removal in favor of VTData.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>VTMortality</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td>100</td>
-      <td></td>
-      <td>%</td>
-      <td>Legacy Python-only mite-treatment mortality for susceptible mites. Parsed by the current Python port but planned for removal in favor of VTData.</td>
-      <td></td>
     </tr>
     <tr>
       <td>VTEnable</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
-      <td>Enables the current varroa treatment mechanism.</td>
-      <td>False</td>
+      <td>true, false</td>
+      <td>Enables varroa treatments as scheduled with VTData.</td>
     </tr>
     <tr>
-      <td>VTTreatmentStart</td>
+      <td>VTData</td>
+      <td>String</td>
+      <td>N/A</td>
+      <td>N/A</td>
       <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
       <td></td>
-      <td>Legacy Python-only varroa treatment start date. Parsed by the current Python port but planned for removal in favor of VTData.</td>
-      <td></td>
+      <td>Schedules a Varroa Treatment using start_date,duration_weeks,mortality%</td>
+      <td>Schedules a Varroa Treatment. Pass more than one VTData entry to set up multiple treatments. Format: start_date,duration_weeks,mortality%. e.g. 6/2/2015,6,75. Mortality applies to treatment-susceptible free (running) mites only; mites in capped brood are unaffected. Use VTData=Clear to reset. Date string must be MM/DD/YYYY.</td>
     </tr>
     <tr>
       <td>InitMitePctResistant</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
+      <td>0</td>
       <td>%</td>
-      <td>Initial mite resistance percentage setting. Parsed and stored, but current Python and C++ implementations do not apply it when initializing mites.</td>
       <td></td>
+      <td>Percentage of the initial mite population that is resistant to Varroa treatment.</td>
     </tr>
     <tr>
       <td>AIAdultSlope</td>
-      <td></td>
       <td>Float</td>
-      <td>1</td>
-      <td>9</td>
-      <td></td>
-      <td>dimensionless</td>
-      <td>Slope parameter for the adult oral dose-response curve.</td>
+      <td>0</td>
+      <td>&lt;20</td>
       <td>4</td>
+      <td>dimensionless</td>
+      <td>Typical range: 1 to 9</td>
+      <td>Slope parameter for the adult oral dose-response curve, which is a two-parameter Hill (log-logistic) model.</td>
     </tr>
     <tr>
       <td>AIAdultLD50</td>
-      <td></td>
       <td>Float</td>
-      <td>0</td>
-      <td>100</td>
+      <td>&gt;0</td>
       <td></td>
-      <td>ug/bee</td>
-      <td>Oral median lethal dose for Adults,in ug/bee</td>
       <td>999</td>
+      <td>ug/bee</td>
+      <td></td>
+      <td>Oral median lethal dose for Adults, in ug/bee</td>
     </tr>
     <tr>
       <td>AIAdultSlopeContact</td>
-      <td></td>
       <td>Float</td>
-      <td>1</td>
-      <td>9</td>
-      <td></td>
-      <td>dimensionless</td>
-      <td>Slope parameter for the adult contact dose-response curve.</td>
+      <td>0</td>
+      <td>&lt;20</td>
       <td>4</td>
+      <td>dimensionless</td>
+      <td>Typical range: 1 to 9</td>
+      <td>Slope parameter for the adult contact dose-response curve, which is a two-parameter Hill (log-logistic) model.</td>
     </tr>
     <tr>
       <td>AIAdultLD50Contact</td>
-      <td></td>
       <td>Float</td>
-      <td>0</td>
-      <td>100</td>
+      <td>&gt;0</td>
       <td></td>
-      <td>ug/bee</td>
-      <td>Contact median lethal dose for Adults,in ug/bee</td>
       <td>999</td>
+      <td>ug/bee</td>
+      <td></td>
+      <td>Contact median lethal dose for Adults, in ug/bee</td>
     </tr>
     <tr>
       <td>AILarvaSlope</td>
-      <td></td>
       <td>Float</td>
-      <td>1</td>
-      <td>9</td>
-      <td></td>
-      <td>dimensionless</td>
-      <td>Slope parameter for the larval oral dose-response curve.</td>
+      <td>0</td>
+      <td>&lt;20</td>
       <td>4</td>
+      <td>dimensionless</td>
+      <td>Typical range: 1 to 9</td>
+      <td>Slope parameter for the larval oral dose-response curve, which is a two-parameter Hill (log-logistic) model.</td>
     </tr>
     <tr>
       <td>AILarvaLD50</td>
-      <td></td>
       <td>Float</td>
-      <td>0</td>
-      <td>100</td>
+      <td>&gt;0</td>
       <td></td>
-      <td>ug/bee</td>
-      <td>Oral median lethal dose for Larvae,in ug/bee</td>
       <td>999</td>
+      <td>ug/bee</td>
+      <td></td>
+      <td>Oral median lethal dose for Larvae, in ug/bee</td>
     </tr>
     <tr>
       <td>AIKOW</td>
-      <td></td>
       <td>Float</td>
-      <td>0.1</td>
-      <td>1000000</td>
+      <td>&gt;0</td>
       <td></td>
-      <td>dimensionless</td>
-      <td>Octanol/water partition coefficient used in the soil contamination pathway to compute soil-to-plant transfer.</td>
       <td>2.718282</td>
+      <td>dimensionless</td>
+      <td></td>
+      <td>Octanol/water partition coefficient used to compute  transpiration stream concentration factor and  root concentration factor. Only used when SoilEnabled=true.</td>
     </tr>
     <tr>
       <td>AIKOC</td>
-      <td></td>
       <td>Float</td>
-      <td>1</td>
-      <td>10000</td>
+      <td>&gt;0</td>
       <td></td>
+      <td>300</td>
       <td>mL/g organic carbon</td>
-      <td>Organic carbon partition coefficient used in the soil contamination pathway soil-water partition term.</td>
-      <td>300.000000</td>
+      <td></td>
+      <td>Organic carbon partition coefficient used in the soil contamination pathway soil-water partition term. Only used when SoilEnabled=true.</td>
     </tr>
     <tr>
       <td>AIHalfLife</td>
-      <td></td>
       <td>Float</td>
-      <td>0.1</td>
-      <td>35</td>
+      <td>&gt;0</td>
       <td></td>
+      <td>15</td>
       <td>days</td>
-      <td>Active ingredient half-life used to decay foliar exposure after application.</td>
-      <td>15.000000</td>
+      <td></td>
+      <td>Active ingredient half-life used to decay foliar exposure after application. Only used when FoliarEnable=true.</td>
     </tr>
     <tr>
       <td>AIContactFactor</td>
-      <td></td>
       <td>Float</td>
+      <td>0</td>
       <td></td>
-      <td></td>
-      <td>Min/Max value only constrained by data type</td>
-      <td></td>
-      <td>Foliar-only factor used with EAppRate to convert application rate into forager contact dose.</td>
       <td>2.7</td>
+      <td>dimensionless</td>
+      <td></td>
+      <td>Factor used with EAppRate to convert foliar application rate into forager contact dose.  Only used when FoliarEnabled=true.</td>
     </tr>
     <tr>
       <td>CL4Pollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>1.8</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Pollen Consumption by age 4 Larvae (mg/day)</td>
-      <td>1.800000</td>
     </tr>
     <tr>
       <td>CL4Nectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>60</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by age 4 Larvae (mg/day)</td>
-      <td>60.0</td>
     </tr>
     <tr>
       <td>CL5Pollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>3.6</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Pollen Consumption by age 5 Larvae (mg/day)</td>
-      <td>3.600000</td>
     </tr>
     <tr>
       <td>CL5Nectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>120</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by age 5 Larvae (mg/day)</td>
-      <td>120.0</td>
     </tr>
     <tr>
       <td>CLDPollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/day</td>
-      <td>Daily Pollen Consumption by Drone Larvae (mg/day)</td>
       <td>3.6</td>
+      <td>mg/day</td>
+      <td></td>
+      <td>Daily Pollen Consumption by Drone Larvae (mg/day)</td>
     </tr>
     <tr>
       <td>CLDNectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>130</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by Drone Larvae (mg/day)</td>
-      <td>130.0</td>
     </tr>
     <tr>
       <td>CA13Pollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/day</td>
-      <td>Daily Pollen Consumption by age 1-3 Adult Workers (mg/day)</td>
       <td>6.65</td>
+      <td>mg/day</td>
+      <td></td>
+      <td>Daily Pollen Consumption by age 1-3 Adult Workers (mg/day)</td>
     </tr>
     <tr>
       <td>CA13Nectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>60</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by age 1-3 Adult Workers (mg/day)</td>
-      <td>60.000000</td>
     </tr>
     <tr>
       <td>CA410Pollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/day</td>
-      <td>Daily Pollen Consumption by age 4-10 Adult Workers (mg/day)</td>
       <td>9.6</td>
+      <td>mg/day</td>
+      <td></td>
+      <td>Daily Pollen Consumption by age 4-10 Adult Workers (mg/day)</td>
     </tr>
     <tr>
       <td>CA410Nectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>140</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by age 4-10 Adult Workers (mg/day)</td>
-      <td>140.000000</td>
     </tr>
     <tr>
       <td>CA1120Pollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>1.7</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Pollen Consumption by age 11-20 Adult Workers (mg/day)</td>
-      <td>1.700000</td>
     </tr>
     <tr>
       <td>CA1120Nectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>60</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by age 11-20 Adult Workers (mg/day)</td>
-      <td>60.000000</td>
     </tr>
     <tr>
       <td>CADPollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/day</td>
-      <td>Daily Pollen Consumption by Drone Adults (mg/day)</td>
       <td>0.0002</td>
+      <td>mg/day</td>
+      <td></td>
+      <td>Daily Pollen Consumption by Drone Adults (mg/day)</td>
     </tr>
     <tr>
       <td>CADNectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>235</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by Drone Adults (mg/day)</td>
-      <td>235.0</td>
     </tr>
     <tr>
       <td>CForagerPollen</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/day</td>
-      <td>Daily Pollen Consumption by Foragers (mg/day)</td>
       <td>0.041</td>
+      <td>mg/day</td>
+      <td></td>
+      <td>Daily Pollen Consumption by Foragers (mg/day)</td>
     </tr>
     <tr>
       <td>CForagerNectar</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>292</td>
       <td>mg/day</td>
+      <td></td>
       <td>Daily Nectar Consumption by Foragers (mg/day)</td>
-      <td>292.000000</td>
     </tr>
     <tr>
       <td>IPollenTrips</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>trips/day</td>
-      <td>Daily Pollen trips per Forager</td>
       <td>3</td>
+      <td>trips/day</td>
+      <td></td>
+      <td>Daily Pollen trips per Forager</td>
     </tr>
     <tr>
       <td>INectarTrips</td>
-      <td></td>
       <td>Integer</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>trips/day</td>
-      <td>Daily Nectar trips per Forager</td>
       <td>17</td>
+      <td>trips/day</td>
+      <td></td>
+      <td>Daily Nectar trips per Forager</td>
     </tr>
     <tr>
       <td>IPercentNectarForagers</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>100</td>
-      <td></td>
+      <td>80</td>
       <td>%</td>
+      <td></td>
       <td>Percent of all Foragers collecting Nectar</td>
-      <td>80.000000</td>
     </tr>
     <tr>
       <td>IPollenLoad</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/trip/bee</td>
-      <td>mg Pollen per forage trip per bee</td>
       <td>26</td>
+      <td>mg/trip/bee</td>
+      <td></td>
+      <td>mg Pollen per forage trip per bee</td>
     </tr>
     <tr>
       <td>INectarLoad</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>mg/trip/bee</td>
-      <td>mg Nectar per forager trip per bee</td>
       <td>45</td>
+      <td>mg/trip/bee</td>
+      <td></td>
+      <td>mg Nectar per forager trip per bee</td>
     </tr>
     <tr>
       <td>FoliarEnabled</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
-      <td>If true, enables foliar spray contamination mechanism</td>
-      <td>False</td>
+      <td>true, false</td>
+      <td>If true, enables pesticide exposure in foliar spray mode.</td>
     </tr>
     <tr>
       <td>SoilEnabled</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
-      <td>If true, enables soil contamination mechanism</td>
-      <td>False</td>
+      <td>true, false</td>
+      <td>If true, enables pesticide exposure in soil application mode.</td>
     </tr>
     <tr>
       <td>SeedEnabled</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
-      <td>If true, enables seed contamination mechanism</td>
-      <td>False</td>
+      <td>true, false</td>
+      <td>If true, enables pesticide exposure in seed treatment mode.</td>
     </tr>
     <tr>
       <td>EAppRate</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td></td>
-      <td>Max value only constrained by data type</td>
+      <td>0</td>
+      <td>lb ai/acre</td>
       <td></td>
       <td>Foliar application rate used to compute foliar contact dose and incoming foliar nectar/pollen concentration.</td>
-      <td></td>
     </tr>
     <tr>
       <td>ESoilTheta</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>cm3 water/cm3 soil</td>
-      <td>Volumetric soil water content used in the soil contamination pathway soil-water partition term.</td>
-      <td>0.250000</td>
-    </tr>
-    <tr>
-      <td>ESoilP</td>
-      <td></td>
-      <td>Float</td>
-      <td>1.4</td>
-      <td>1.8</td>
-      <td></td>
-      <td>g/cm3</td>
-      <td>Soil bulk density used in the soil contamination pathway soil-water partition term.</td>
-      <td>1.400000</td>
-    </tr>
-    <tr>
-      <td>ESoilFoc</td>
-      <td></td>
-      <td>Float</td>
-      <td>0.005</td>
-      <td>0.05</td>
-      <td></td>
-      <td>g organic carbon/g dry soil</td>
-      <td>Fraction of bulk soil mass that is organic carbon used in the soil contamination pathway soil-water partition term.</td>
-      <td>0.020000</td>
-    </tr>
-    <tr>
-      <td>ESoilConcentration</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>ug/g soil</td>
-      <td>Soil concentration input for the soil contamination pathway. Combined with AIKOW, AIKOC, soil bulk density, soil water content, and soil organic-carbon fraction to estimate incoming nectar and pollen concentrations.</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <td>ESeedConcentration</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>ug/g nectar or pollen</td>
-      <td>Seed-treatment residue concentration applied equally to incoming nectar and incoming pollen during the seed forage window.</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <td>FoliarAppDate</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>Foliar application date.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>FoliarForageBegin</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>Start date of the foliar foraging exposure window.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>FoliarForageEnd</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>End date of the foliar foraging exposure window.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SoilForageBegin</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>Start date of the soil foraging exposure window.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SoilForageEnd</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>End date of the soil foraging exposure window.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SeedForageBegin</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>Start date of the seed-treatment foraging exposure window.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SeedForageEnd</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>End date of the seed-treatment foraging exposure window.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>NecPolFileEnable</td>
-      <td></td>
-      <td>Boolean</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>true, false</td>
-      <td></td>
-      <td>If true, enables the Nectar/Pollen Contamination file.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>NecPolFileName</td>
-      <td></td>
-      <td>String</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>Absolute file path</td>
-      <td></td>
-      <td>Name of the Nectar/Pollen Contamination file</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>InitColNectar</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>grams</td>
-      <td>Mass (grams) of colony Nectar resources at start of simulation</td>
-      <td>20000</td>
-    </tr>
-    <tr>
-      <td>InitColPollen</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>grams</td>
-      <td>Mass (grams) of colony Pollen resources at start of simulation</td>
-      <td>10000</td>
-    </tr>
-    <tr>
-      <td>MaxColNectar</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>grams</td>
-      <td>Maximum mass (grams) of Nectar resources contained in colony during simulation</td>
-      <td>100000</td>
-    </tr>
-    <tr>
-      <td>MaxColPollen</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>grams</td>
-      <td>Maximum mass (grams) of Pollen resources contained in colony during simulation</td>
-      <td>60000</td>
-    </tr>
-    <tr>
-      <td>SupPollenEnable</td>
-      <td></td>
-      <td>Boolean</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>true, false</td>
-      <td></td>
-      <td>If true, enables supplemental pollen feeding</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <td>SupPollenAmount</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>grams</td>
-      <td>Amount (grams) of pollen supplemental feed</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SupPollenBegin</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>Start date of pollen supplemental feeding</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SupPollenEnd</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>End date of pollen suppemental feeding</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SupNectarEnable</td>
-      <td></td>
-      <td>Boolean</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>true, false</td>
-      <td></td>
-      <td>If true, enables supplemental nectar feeding</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <td>SupNectarAmount</td>
-      <td></td>
-      <td>Float</td>
-      <td>0</td>
-      <td></td>
-      <td>Max value only constrained by data type</td>
-      <td>grams</td>
-      <td>Amount (grams) of nectar supplemental feed</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SupNectarBegin</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>Start date of nectar supplemental feeding</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>SupNectarEnd</td>
-      <td></td>
-      <td>Date</td>
-      <td>1/1/100</td>
-      <td>12/31/9999</td>
-      <td>Commonly used date strings.</td>
-      <td></td>
-      <td>End date of nectar suppemental feeding</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>ForagerMaxProp</td>
-      <td></td>
       <td>Float</td>
       <td>0</td>
       <td>1</td>
+      <td>0.25</td>
+      <td>cm3 water/cm3 soil</td>
+      <td>Typical range: 0 to 0.6</td>
+      <td>Volumetric soil water content. Used to estimate plant uptake from soil. Only used when SoilEnabled=true</td>
+    </tr>
+    <tr>
+      <td>ESoilP</td>
+      <td>Float</td>
+      <td>&gt;0</td>
       <td></td>
+      <td>1.4</td>
+      <td>g/cm3</td>
+      <td>Typical range: 1.0 to 1.8</td>
+      <td>Soil bulk density. Used to estimate plant uptake from soil. Only used when SoilEnabled=true</td>
+    </tr>
+    <tr>
+      <td>ESoilFoc</td>
+      <td>Float</td>
+      <td>&gt;0</td>
+      <td>1</td>
+      <td>0.02</td>
+      <td>g organic carbon/g dry soil</td>
+      <td>Typical range: 0.005 to 0.05</td>
+      <td>Fraction of bulk soil mass that is organic carbon. Used to estimate plant uptake from soil. Only used when SoilEnabled=true</td>
+    </tr>
+    <tr>
+      <td>ESoilConcentration</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>0</td>
+      <td>ug/g soil</td>
+      <td></td>
+      <td>Soil concentration input for the soil exposure pathway. Used to estimate plant uptake from soil. Only used when SoilEnabled=true</td>
+    </tr>
+    <tr>
+      <td>ESeedAppRate</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>0</td>
+      <td>mg ai/seed</td>
+      <td></td>
+      <td>Application rate of seed treatment active ingredient, in mg a.i./seed. During the seed forage window, incoming pollen residue is set to AppRate x 18 ng a.i./g and incoming nectar residue to AppRate x 45 ng a.i./g.</td>
+    </tr>
+    <tr>
+      <td>FoliarAppDate</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Foliar application date.</td>
+    </tr>
+    <tr>
+      <td>FoliarForageBegin</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Start date of the foliar foraging exposure window.</td>
+    </tr>
+    <tr>
+      <td>FoliarForageEnd</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>End date of the foliar foraging exposure window.</td>
+    </tr>
+    <tr>
+      <td>SoilForageBegin</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Start date of the soil foraging exposure window.</td>
+    </tr>
+    <tr>
+      <td>SoilForageEnd</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>End date of the soil foraging exposure window.</td>
+    </tr>
+    <tr>
+      <td>SeedForageBegin</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Start date of the seed-treatment foraging exposure window.</td>
+    </tr>
+    <tr>
+      <td>SeedForageEnd</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>End date of the seed-treatment foraging exposure window.</td>
+    </tr>
+    <tr>
+      <td>NecPolFileEnable</td>
+      <td>Boolean</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>FALSE</td>
+      <td></td>
+      <td>true, false</td>
+      <td>If true, enables the Nectar/Pollen Contamination file for direct specification of daily residue levels in pollen and nectar.</td>
+    </tr>
+    <tr>
+      <td>NecPolFileName</td>
+      <td>String</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td></td>
+      <td></td>
+      <td>Absolute file path</td>
+      <td>Name of the Nectar/Pollen Contamination file</td>
+    </tr>
+    <tr>
+      <td>InitColNectar</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>20000</td>
+      <td>grams</td>
+      <td></td>
+      <td>Mass (grams) of colony nectar resources at start of simulation</td>
+    </tr>
+    <tr>
+      <td>InitColPollen</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>10000</td>
+      <td>grams</td>
+      <td></td>
+      <td>Mass (grams) of colony pollen resources at start of simulation</td>
+    </tr>
+    <tr>
+      <td>MaxColNectar</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>100000</td>
+      <td>grams</td>
+      <td></td>
+      <td>Maximum mass (grams) of nectar resources contained in colony during simulation</td>
+    </tr>
+    <tr>
+      <td>MaxColPollen</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>60000</td>
+      <td>grams</td>
+      <td></td>
+      <td>Maximum mass (grams) of pollen resources contained in colony during simulation</td>
+    </tr>
+    <tr>
+      <td>SupPollenEnable</td>
+      <td>Boolean</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>FALSE</td>
+      <td></td>
+      <td>true, false</td>
+      <td>If true, enables supplemental pollen feeding</td>
+    </tr>
+    <tr>
+      <td>SupPollenAmount</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>0</td>
+      <td>grams</td>
+      <td></td>
+      <td>Amount (grams) of pollen supplemental feed</td>
+    </tr>
+    <tr>
+      <td>SupPollenBegin</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Start date of pollen supplemental feeding</td>
+    </tr>
+    <tr>
+      <td>SupPollenEnd</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>End date of pollen suppemental feeding</td>
+    </tr>
+    <tr>
+      <td>SupNectarEnable</td>
+      <td>Boolean</td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>FALSE</td>
+      <td></td>
+      <td>true, false</td>
+      <td>If true, enables supplemental nectar feeding</td>
+    </tr>
+    <tr>
+      <td>SupNectarAmount</td>
+      <td>Float</td>
+      <td>0</td>
+      <td></td>
+      <td>0</td>
+      <td>grams</td>
+      <td></td>
+      <td>Amount (grams) of nectar supplemental feed</td>
+    </tr>
+    <tr>
+      <td>SupNectarBegin</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>Start date of nectar supplemental feeding</td>
+    </tr>
+    <tr>
+      <td>SupNectarEnd</td>
+      <td>Date</td>
+      <td>1/1/100</td>
+      <td>12/31/9999</td>
+      <td></td>
+      <td></td>
+      <td>Date String - MM/DD/YYYY</td>
+      <td>End date of nectar suppemental feeding</td>
+    </tr>
+    <tr>
+      <td>ForagerMaxProp</td>
+      <td>Float</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.3</td>
       <td>proportion</td>
+      <td></td>
       <td>Max proportion of total adult worker population that can be active foragers</td>
-      <td>0.300000</td>
     </tr>
     <tr>
       <td>NeedResourcesToLive</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
+      <td>true, false</td>
       <td>If true, colony dies when pollen or nectar mass reaches 0</td>
-      <td>False</td>
     </tr>
     <tr>
       <td>Latitude</td>
-      <td></td>
       <td>Float</td>
-      <td>-65</td>
-      <td>65</td>
+      <td>-90</td>
+      <td>90</td>
       <td></td>
       <td>decimal degrees</td>
-      <td>Latitude in decimal degrees for calculating day length</td>
       <td></td>
+      <td>Latitude in decimal degrees for calculating day length. Day length beyond +/-65 degrees is calculated as at +/-65 degrees.</td>
     </tr>
     <tr>
       <td>EtoLXitionEn</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
+      <td>true, false</td>
       <td>Enable Eggs to Larvae transition survival rate variable?</td>
-      <td>False</td>
     </tr>
     <tr>
       <td>LtoBXitionEn</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
+      <td>true, false</td>
       <td>Enable Larave to Pupae transition survival rate variable?</td>
-      <td>False</td>
     </tr>
     <tr>
       <td>BtoAXitionEn</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
+      <td>true, false</td>
       <td>Enable Pupae to Adult transition survival rate variable?</td>
-      <td>False</td>
     </tr>
     <tr>
       <td>AtoFXitionEn</td>
-      <td></td>
       <td>Boolean</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>true, false</td>
+      <td>FALSE</td>
       <td></td>
+      <td>true, false</td>
       <td>Enable Adult to Forager transition survival rate variable?</td>
-      <td>False</td>
     </tr>
     <tr>
       <td>EtoLXition</td>
-      <td></td>
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>In the format StartDate, EndDate, float</td>
       <td></td>
-      <td>Sets the survival rate for the Eggs to Larvae Transition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
       <td></td>
+      <td>In the format StartDate, EndDate, float. Date string must be MM/DD/YYYY.</td>
+      <td>Sets the survival rate (%) for the Eggs to Larvae Transition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
     </tr>
     <tr>
       <td>LtoBXition</td>
-      <td></td>
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>In the format StartDate, EndDate, float</td>
       <td></td>
-      <td>Sets the survival rate for the Larvae to Pupae Transition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
       <td></td>
+      <td>In the format StartDate, EndDate, float. Date string must be MM/DD/YYYY.</td>
+      <td>Sets the survival rate (%) for the Larvae to Pupae Transition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
     </tr>
     <tr>
       <td>BtoAXition</td>
-      <td></td>
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>In the format StartDate, EndDate, float</td>
       <td></td>
-      <td>Sets the survival rate for the Pupae to AdultTransition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
       <td></td>
+      <td>In the format StartDate, EndDate, float. Date string must be MM/DD/YYYY.</td>
+      <td>Sets the survival rate (%) for the Pupae to AdultTransition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
     </tr>
     <tr>
       <td>AtoFXition</td>
-      <td></td>
       <td>String</td>
       <td>N/A</td>
       <td>N/A</td>
-      <td>In the format StartDate, EndDate, float</td>
       <td></td>
-      <td>Sets the survival rate for the Adult to Forager Transition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
       <td></td>
+      <td>In the format StartDate, EndDate, float. Date string must be MM/DD/YYYY.</td>
+      <td>Sets the survival rate (%) for the Adult to Forager Transition for the period between StartDate and EndDate. Example: "07/05/2016, 04/13/2017, 75.0"</td>
     </tr>
   </tbody>
 </table>
         </div>
-        <p class="footer-link">For the full list and latest details, see <a href="https://github.com/USEPA/pybeepop/blob/main/docs/BeePop_exposed_parameters.csv">BeePop_exposed_parameters.csv on GitHub</a>.</p>
-        <a class="back-link" href="index.html">&larr; Back to Documentation Home</a>
+        <p class="footer-link">For the full list and latest details, see <a href="https://github.com/USEPA/pybeepop/blob/main/pybeepop/data/BeePop_exposed_parameters.csv">BeePop_exposed_parameters.csv on GitHub</a>.</p>
     </div>
 </body>
 </html>

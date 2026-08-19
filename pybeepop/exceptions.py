@@ -19,7 +19,7 @@ class BeepopException(Exception):
         message (str): The primary error message
         error_log (str): BeePop+ error log content
         info_log (str): BeePop+ info log content
-        engine_type (str): Engine that raised the error ('cpp' or 'python')
+        engine_type (str): Engine that raised the error ('python')
 
     Example:
         >>> raise BeepopException(

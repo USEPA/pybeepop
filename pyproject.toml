@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pybeepop-plus"
-version = "0.2.1"
+version = "0.3.0"
 description = "EPA's Python interface for the EPA/USDA honey bee colony model BeePop+"
 authors = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
 maintainers = ["Jeffrey Minucci <minucci.jeffrey@epa.gov>"]
@@ -11,68 +11,22 @@ documentation = "https://usepa.github.io/pybeepop/"
 packages = [
     { include = "pybeepop", from ="." },
 ]
-include = ["lib/*.dll", "lib/*.so", "lib/*.dylib", "data/*"]
+include = ["data/*"]
 classifiers = [
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: MacOS",
+    "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Intended Audience :: Science/Research",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8.0"
+python = ">=3.10,<4.0"
 pandas = "^2.0.0"
 matplotlib = "^3.1.0"
 
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0"
+pytest-cov = ">=5.0"
+
 [build-system]
-requires = ["poetry-core", "setuptools"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.build]
-script = "build.py"
-generate-setup-file = true
-
-[tool.cibuildwheel.linux]
-before-all = ["yum -y install cmake",
-    "cd beepop",
-    "mkdir build",
-    "cd build",
-    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
-    "cmake --build . --config Release",
-    "pwd",
-    "cp liblibvpop.so ../../pybeepop/lib",
-    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
-]
-
-[tool.cibuildwheel.windows]
-before-all = [
-    "cd beepop",
-    "mkdir build",
-    "cd build",
-    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
-    "cmake --build . --config Release",
-    "copy Release\\libvpop.dll ..\\..\\pybeepop\\lib",
-    "move /y ..\\..\\pybeepop\\lib\\libvpop.dll ..\\..\\pybeepop\\lib\\beepop_win64.dll",
-]
-
-[tool.cibuildwheel.macos]
-# Note: macOS wheels use Python engine only (no C++ library)
-skip = "pp*" # Skip PyPy on macOS (very slow to compile)
-environment = { MACOSX_DEPLOYMENT_TARGET="10.13" }
-repair-wheel-command = ""  # Pure Python wheels don't need repair
-test-command = "python -c \"from pybeepop import PyBeePop; bee = PyBeePop(engine='python'); print('Python engine working on macOS')\""
-test-requires = ["pandas>=2.0.0", "matplotlib>=3.1.0"]
-
-[[tool.cibuildwheel.overrides]]
-select = "*-musllinux*"
-before-all = ["apk add cmake",
-    "cd beepop",
-    "mkdir build",
-    "cd build",
-    "cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..",
-    "cmake --build . --config Release",
-    "pwd",
-    "cp liblibvpop.so ../../pybeepop/lib",
-    "mv -f ../../pybeepop/lib/liblibvpop.so ../../pybeepop/lib/beepop_linux.so",
-]

@@ -1,8 +1,8 @@
 """
-Engine interface protocol for PyBeePop dual-engine architecture.
+Engine interface protocol for PyBeePop.
 
-This module defines the BeepopEngineInterface protocol that both C++ and Python
-engines must implement to be compatible with the PyBeePop wrapper.
+This module defines the BeepopEngineInterface protocol that a BeePop+ simulation
+engine must implement to be compatible with the PyBeePop wrapper.
 """
 
 from typing import Protocol, Dict, Optional
@@ -11,17 +11,15 @@ import pandas as pd
 
 class BeepopEngineInterface(Protocol):
     """
-    Protocol defining the interface that all BeePop simulation engines must implement.
+    Protocol defining the interface that a BeePop simulation engine must implement.
 
-    This protocol ensures that both the C++ engine (via BeePopModel) and the pure
-    Python engine (via beepop.BeePop) can be used interchangeably through adapters.
-
-    All methods should return consistent types regardless of underlying engine.
+    Implemented by PythonEngineAdapter, which wraps the pure Python engine
+    (beepop.BeePop).
 
     Note: Initialization happens in __init__(), not via a separate initialize_model() method.
     """
 
-    engine_type: str  # 'cpp' or 'python'
+    engine_type: str
 
     def set_parameters(self, parameters: Dict[str, str]) -> Dict[str, str]:
         """
