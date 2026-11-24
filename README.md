@@ -4,7 +4,7 @@
 
 [![Tests](https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml/badge.svg)](https://github.com/USEPA/pybeepop/actions/workflows/run-tests.yml)
 [![PyPI version](https://badge.fury.io/py/pybeepop-plus.svg)](https://badge.fury.io/py/pybeepop-plus)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 **A Python interface for the USDA/EPA BeePop+ honey bee colony simulation model**
 
@@ -42,7 +42,7 @@
 
 | Package | Version | Purpose |
 |---------|---------|----------|
-| Python | ≥ 3.10 | Runtime environment |
+| Python | ≥ 3.11 | Runtime environment |
 | pandas | > 2.0.0 | Data handling |
 | matplotlib | > 3.1.0 | Visualization |
 
